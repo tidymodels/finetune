@@ -40,10 +40,10 @@ tune_sim_anneal.recipe <- function(object,
                                    param_info = NULL,
                                    metrics = NULL,
                                    objective = NULL,
-                                   initial = 5,
+                                   initial = 1,
                                    control = control_sim_anneal()) {
 
-  empty_ellipses(...)
+  tune:::empty_ellipses(...)
 
   tune_sim_anneal(model, preprocessor = object, resamples = resamples,
                   iter = iter, param_info = param_info,
@@ -60,10 +60,10 @@ tune_sim_anneal.formula <- function(formula,
                                     param_info = NULL,
                                     metrics = NULL,
                                     objective = NULL,
-                                    initial = 5,
+                                    initial = 1,
                                     control = control_sim_anneal()) {
 
-  empty_ellipses(...)
+  tune:::empty_ellipses(...)
 
   tune_sim_anneal(model, preprocessor = formula, resamples = resamples,
                   iter = iter, param_info = param_info,
@@ -81,7 +81,7 @@ tune_sim_anneal.model_spec <- function(object,
                                        param_info = NULL,
                                        metrics = NULL,
                                        objective = NULL,
-                                       initial = 5,
+                                       initial = 1,
                                        control = control_sim_anneal()) {
 
   if (rlang::is_missing(preprocessor) || !is_preprocessor(preprocessor)) {
@@ -89,7 +89,7 @@ tune_sim_anneal.model_spec <- function(object,
                        "with a formula or recipe"))
   }
 
-  empty_ellipses(...)
+  tune:::empty_ellipses(...)
 
   wflow <- workflows::add_model(workflow(), object)
 
@@ -116,10 +116,10 @@ tune_sim_anneal.workflow <-
            param_info = NULL,
            metrics = NULL,
            objective = NULL,
-           initial = 5,
+           initial = 1,
            control = control_sim_anneal()) {
 
-    empty_ellipses(...)
+    tune:::empty_ellipses(...)
 
     tune_sim_anneal_workflow(object, resamples = resamples, iter = iter,
                              param_info = param_info, metrics = metrics,
@@ -132,39 +132,133 @@ tune_sim_anneal.workflow <-
 
 tune_sim_anneal_workflow <-
   function(object, resamples, iter = 10, param_info = NULL, metrics = NULL,
-           objective = NULL, initial = 5, control = control_sim_anneal(), ...) {
+           objective = NULL, initial = 5, control = control_sim_anneal()) {
     start_time <- proc.time()[3]
 
-    check_rset(resamples)
+    tune:::check_rset(resamples)
     y_names <- outcome_names(object)
     rset_info <- tune:::pull_rset_attributes(resamples)
 
     metrics <- tune:::check_metrics(metrics, object)
-    metrics_data <- tune:::metrics_info(metrics)
-    metrics_name <- metrics_data$.metric[1]
-    maximize <- metrics_data$direction[metrics_data$.metric == metrics_name] == "maximize"
+    metrics_name <- names(attr(metrics, "metrics"))[1]
+    maximize <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
 
     if (is.null(param_info)) {
       param_info <- dials::parameters(object)
     }
     tune:::check_workflow(object, check_dials = is.null(param_info), pset = param_info)
 
-    unsummarized <- tune:::check_initial(initial, param_info, object, resamples, metrics, control)
-
+    unsummarized <-
+      tune:::check_initial(initial, param_info, object, resamples, metrics, control) %>%
+      tune:::new_iteration_results(
+        parameters = param_info,
+        metrics = metrics,
+        outcomes = y_names,
+        rset_info =  rset_info
+      )
     mean_stats <- tune:::estimate_tune_results(unsummarized)
 
-    check_time(start_time, control$time_limit)
+    tune:::check_time(start_time, control$time_limit)
 
     on.exit({
-      cli::cli_alert_danger("Optimization stopped prematurely; returning current results.")
+      if (i < iter) {
+        cli::cli_alert_danger("Optimization stopped prematurely; returning current results.")
+      }
       out <- tune:::new_iteration_results(unsummarized, param_info, metrics, y_names, rset_info)
       return(out)
     })
-
-    score_card <- tune:::initial_info(mean_stats, metrics_name, maximize)
 
     if (control$verbose) {
       message(paste("Optimizing", metrics_name, "using", objective$label))
     }
 
+    ## -----------------------------------------------------------------------------
+
+    result_history <- initialize_history(unsummarized)
+
+    best_param <- tune::select_best(unsummarized, metric = metrics_name) %>% dplyr::select(-.config)
+    grid_history <- best_param
+    current_param <- best_param
+    global_param <- current_param
+
+    existing_iter <- max(result_history$.iter)
+
+    ## -----------------------------------------------------------------------------
+
+    count_improve <- count_restart <- 0
+
+    log_sa_progress(x = result_history, max_iter = iter, maximize = maximize, metric = metrics_name) # no global_best
+
+    for (i in (existing_iter + 1):(existing_iter + iter)) {
+
+      new_grid <-
+        new_in_neighborhood(current_param,
+                            param_info,
+                            radius = control$radius,
+                            flip = control$flip)
+      grid_history <- bind_rows(grid_history, new_grid)
+
+      res <-
+        object %>%
+        tune_grid(
+          resamples = resamples,
+          grid = new_grid,
+          metrics = metrics
+        ) %>%
+        mutate(.iter = i)
+
+      result_history <-
+        result_history %>%
+        update_history(res, i) %>%
+        sa_decide(metric = metrics_name, maximize = maximize)
+
+      m <- nrow(result_history)
+
+      if (result_history$results[m] == "improvement") {
+        current_param <- new_grid
+        best_param <- new_grid
+        count_improve <- 0
+
+        if (result_history$global_best[m]) {
+          global_param <- current_param
+          count_restart <- 0
+        }
+      } else {
+        count_improve <- count_improve + 1
+        count_restart <- count_restart + 1
+        if (result_history$results[m] == "accept") {
+          current_param <- new_grid
+        }
+      }
+
+      ## -----------------------------------------------------------------------------
+
+      iter_info <- iter_since_x(result_history)
+      # cat(count_restart, "/", restart_iter, "\n")
+      if (count_restart >= control$restart_iter) {
+        result_history$results[m] <- "restart"
+        current_param <- global_param
+        count_restart <- 0
+      }
+
+      ## -----------------------------------------------------------------------------
+
+      unsummarized <-
+        dplyr::bind_rows(unsummarized, res) %>%
+        tune:::new_iteration_results(
+          parameters = param_info,
+          metrics = metrics,
+          outcomes = y_names,
+          rset_info =  rset_info
+        )
+
+      ## -----------------------------------------------------------------------------
+
+      log_sa_progress(x = result_history, max_iter = iter, maximize = maximize, metric = metrics_name)
+
+      if (count_improve >= control$improve_iter) {
+        message(paste0("Stopping; no improvments in ", improve_iter, " iterations."))
+        break()
+      }
+    }
   }

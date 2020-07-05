@@ -1,3 +1,10 @@
+maximize_metric <- function(x, metric) {
+  metrics <- .get_tune_metrics(x)
+  metrics_data <- tune:::metrics_info(metrics)
+  x <- metrics_data$.metric[1]
+  metrics_data$direction[metrics_data$.metric == metric] == "maximize"
+}
+
 
 new_in_neighborhood <- function(current, pset, radius = 0.025, flip = 0.1) {
   is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
@@ -61,12 +68,12 @@ encode_set_backwards <- function(x, pset, ...) {
 
 ## -----------------------------------------------------------------------------
 
-
 update_history <- function(history, x, iter) {
+  analysis_metric <- tune::.get_tune_metric_names(x)[1]
   res <-
-    show_best(x) %>%
+    show_best(x, metric = analysis_metric) %>%
     dplyr::select(.metric, mean, n, std_err) %>%
-    mutate(
+    dplyr::mutate(
       .iter = iter,
       random = runif(1),
       accept = NA_real_,
@@ -77,7 +84,13 @@ update_history <- function(history, x, iter) {
   } else {
     history <- dplyr::bind_rows(history, res)
   }
-  best_res <- history$.iter[which.max(history$mean)]
+
+  if (maximize_metric(x, analysis_metric)) {
+    best_res <- history$.iter[which.max(history$mean)]
+  } else {
+    best_res <- history$.iter[which.min(history$mean)]
+  }
+
   history <-
     history %>%
     mutate(global_best = .iter == best_res)
@@ -92,19 +105,34 @@ get_sa_param <- function(x) {
 
 }
 
-sa_decide <- function(x, metric, ...) {
+sa_decide <- function(x, metric, maximize, ...) {
   latest_iter <- max(x$.iter)
   prev_iter <- latest_iter - 1
-  prev_metric <- x$mean[x$.metric == metric & x$.iter == prev_iter]
-  prev_metric <- max(prev_metric, na.rm = TRUE)
+  prev_metric   <- x$mean[x$.metric == metric & x$.iter == prev_iter]
   latest_metric <- x$mean[x$.metric == metric & x$.iter == latest_iter]
-  latest_metric <- max(latest_metric, na.rm = TRUE)
+
+  if (maximize) {
+    prev_metric   <- max(prev_metric, na.rm = TRUE)
+    latest_metric <- max(latest_metric, na.rm = TRUE)
+    better_result <- isTRUE(latest_metric > prev_metric)
+  } else {
+    prev_metric   <- min(prev_metric, na.rm = TRUE)
+    latest_metric <- min(latest_metric, na.rm = TRUE)
+    better_result <- isTRUE(latest_metric < prev_metric)
+  }
 
   m <- nrow(x)
 
-  x$accept[m] <- acceptance_prob(prev_metric, latest_metric, latest_iter, ...)
+  x$accept[m] <-
+    acceptance_prob(
+      current = prev_metric,
+      new = latest_metric,
+      iter = latest_iter,
+      maximize = maximize,
+      ...
+    )
 
-  if (latest_metric > prev_metric) {
+  if (better_result) {
     x$results[m] <- "improvement"
     x$random[m] <- x$accept[m] <- NA_real_
   } else {
@@ -119,8 +147,10 @@ sa_decide <- function(x, metric, ...) {
 
 initialize_history <- function(x, ...) {
   # check to see if there is existing history
-  res <- collect_metrics(x)%>%
-    mutate(
+  res <-
+    tune::collect_metrics(x)%>%
+    dplyr::filter(.metric == tune::.get_tune_metric_names(x)[1]) %>%
+    dplyr::mutate(
       .iter = 0,
       random = NA_real_,
       accept = NA_real_,
@@ -164,29 +194,29 @@ is_new_best <- function(x, iter, mset) {
   iter == x$.iter[which.max(x$mean)]
 }
 
-log_sa_progress <- function(control = list(verbose = TRUE), x, max_iter, maximize = TRUE, digits = 4) {
+log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter, maximize = TRUE, digits = 7) {
   if (!control$verbose) {
     return(invisible(NULL))
   }
   m <- nrow(x)
   new_res <- x$mean[m]
   new_event <- x$results[m]
-  is_best <- isTRUE(x$global_best[m])
   iter <- max(x$.iter)
   if (iter > 0) {
+    is_best <- isTRUE(x$global_best[m])
     prev_res <- x$mean[m - 1]
     pct_diff <- percent_diff(prev_res, new_res, maximize) *100
     pct_diff <- sprintf("%6.2f", pct_diff)
   } else {
+    is_best <- FALSE
     pct_diff <- NA_real_
   }
 
   chr_iter <- format(1:max_iter)[iter]
   dig <- paste0("%.", digits, "f")
 
-  # TODO use metric name
   if (iter > 0) {
-    msg <- paste0(" Results:  ", sprintf(dig, signif(new_res, digits = digits)))
+    msg <- paste0(" ", metric, ": ", sprintf(dig, signif(new_res, digits = digits)))
     msg <- paste0(msg,  "\t")  # "\t(", pct_diff, "%)  "
     symb <- dplyr::case_when(
       new_event == "improvement" ~ crayon::green(cli::symbol$heart),

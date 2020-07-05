@@ -16,7 +16,7 @@ tune_race_anova(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race_anova()
+  control = control_race()
 )
 
 \method{tune_race_anova}{workflow}(
@@ -26,7 +26,7 @@ tune_race_anova(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race_anova()
+  control = control_race()
 )
 }
 \arguments{
