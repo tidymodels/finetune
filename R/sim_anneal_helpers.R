@@ -53,10 +53,11 @@ random_neighbor <- function(current, pset, retain = 1, tries = 500, r = .025) {
   outside <- apply(rnd, 1, function(x) any(x > 1 | x < 0))
   rnd <- rnd[!outside,,drop = FALSE]
   retain <- min(retain, nrow(rnd))
-  rnd <- rnd[1:retain,, drop = FALSE]
   colnames(rnd) <- colnames(current)
   rnd <- as_tibble(rnd)
-  encode_set_backwards(rnd, pset)
+  rnd <- encode_set_backwards(rnd, pset)
+  selected <- rnd %>% sample_n(retain)
+  selected
 }
 
 encode_set_backwards <- function(x, pset, ...) {
