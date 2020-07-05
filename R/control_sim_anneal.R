@@ -29,8 +29,10 @@
 #' @export
 control_sim_anneal <-
   function(verbose = FALSE,
-           no_improve = 10L,
-           uncertain = Inf,
+           improve_iter = Inf,
+           restart_iter = 10L,
+           radius = 0.025,
+           flip = 0.1,
            seed = sample.int(10^5, 1),
            extract = NULL,
            save_pred = FALSE,
@@ -40,24 +42,26 @@ control_sim_anneal <-
 
     tune:::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune:::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
-    tune:::val_class_and_single(no_improve, c("numeric", "integer"), "control_sim_anneal()")
-    tune:::val_class_and_single(uncertain, c("numeric", "integer"), "control_sim_anneal()")
+    tune:::val_class_and_single(improve_iter, c("numeric", "integer"), "control_sim_anneal()")
+    tune:::val_class_and_single(restart_iter, c("numeric", "integer"), "control_sim_anneal()")
     tune:::val_class_and_single(seed, c("numeric", "integer"), "control_sim_anneal()")
     tune:::val_class_or_null(extract, "function", "control_sim_anneal()")
     tune:::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
     tune:::val_class_or_null(pkgs, "character", "control_sim_anneal()")
 
-    if (!is.infinite(uncertain) && uncertain > no_improve) {
-      cli::cli_alert_warning(
-        "Uncertainty sample scheduled after {uncertain} poor iterations but the search will stop after {no_improve}."
-      )
-    }
+    # if (!is.infinite(uncertain) && uncertain > no_improve) {
+    #   cli::cli_alert_warning(
+    #     "Uncertainty sample scheduled after {uncertain} poor iterations but the search will stop after {no_improve}."
+    #   )
+    # }
 
     res <-
       list(
         verbose = verbose,
-        no_improve = no_improve,
-        uncertain = uncertain,
+        improve_iter = improve_iter,
+        restart_iter = restart_iter,
+        radius = radius,
+        flip = flip,
         seed = seed,
         extract = extract,
         save_pred = save_pred,
