@@ -7,11 +7,17 @@
 #'   `options(tidymodels.dark = TRUE)` to print lighter colors.
 #' @param no_improve The integer cutoff for the number of iterations without
 #'   better results.
-#' @param uncertain The number of iterations with no improvement before an
-#'  uncertainty sample is created where a sample with high predicted variance is
-#'  chosen (i.e., in a region that has not yet been explored). The iteration
-#'  counter is reset after each uncertainty sample. For example, if `uncertain =
-#'  10`, this condition is triggered every 10 samples with no improvement.
+#' @param restart The number of iterations with no improvement before new tuning
+#' parameter candidates are generated from the last, overall best conditions.
+#' @param radius A real number on `(0, 1)` describing what a value "in the
+#' neighborhood" of the current result should be. If all numeric parameters were
+#' scaled to be on the `[0, 1]` scale, this is the radius of a circle used to
+#' generate new numeric parameter values.
+#' @param flip A real number between `[0, 1]` for the probability of changing
+#' any non-numeric parameter values at each iteration.
+#' @param cooling_coef A real, positive number to influence the cooling
+#' schedule. Larger values decrease the probability of accepting a sub-optimal
+#' parameter setting.
 #' @param seed An integer for controlling the random number stream.
 #' @param time_limit A number for the minimum number of _minutes_ (elapsed) that
 #'   the function should execute. The elapsed time is evaluated at internal
@@ -25,14 +31,14 @@
 #'   be saved for each model _evaluated_.
 #' @param pkgs An optional character string of R package names that should be
 #'   loaded (by namespace) during parallel processing.
-
 #' @export
 control_sim_anneal <-
   function(verbose = FALSE,
-           improve_iter = Inf,
-           restart_iter = 10L,
+           no_improve = Inf,
+           restart = 10L,
            radius = 0.025,
            flip = 0.1,
+           cooling_coef = 2,
            seed = sample.int(10^5, 1),
            extract = NULL,
            save_pred = FALSE,
@@ -42,26 +48,35 @@ control_sim_anneal <-
 
     tune:::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune:::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
-    tune:::val_class_and_single(improve_iter, c("numeric", "integer"), "control_sim_anneal()")
-    tune:::val_class_and_single(restart_iter, c("numeric", "integer"), "control_sim_anneal()")
+    tune:::val_class_and_single(no_improve, c("numeric", "integer"), "control_sim_anneal()")
+    tune:::val_class_and_single(restart, c("numeric", "integer"), "control_sim_anneal()")
+    tune:::val_class_and_single(radius, "numeric", "control_sim_anneal()")
+    tune:::val_class_and_single(flip, "numeric", "control_sim_anneal()")
+    tune:::val_class_and_single(cooling_coef, "numeric", "control_sim_anneal()")
     tune:::val_class_and_single(seed, c("numeric", "integer"), "control_sim_anneal()")
     tune:::val_class_or_null(extract, "function", "control_sim_anneal()")
     tune:::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
     tune:::val_class_or_null(pkgs, "character", "control_sim_anneal()")
+    radius[radius <= 0] <- 0.0001
+    radius[radius >= 1] <- 0.9999
+    flip[flip < 0] <- 0
+    flip[flip > 1] <- 1
+    cooling_coef[cooling_coef <= 0] <- 0.0001
 
-    # if (!is.infinite(uncertain) && uncertain > no_improve) {
-    #   cli::cli_alert_warning(
-    #     "Uncertainty sample scheduled after {uncertain} poor iterations but the search will stop after {no_improve}."
-    #   )
-    # }
+    if (!is.infinite(restart) && restart > no_improve) {
+      cli::cli_alert_warning(
+        "Parameter restart is scheduled after {restart} poor iterations but the search will stop after {no_improve}."
+      )
+    }
 
     res <-
       list(
         verbose = verbose,
-        improve_iter = improve_iter,
-        restart_iter = restart_iter,
+        no_improve = no_improve,
+        restart = restart,
         radius = radius,
         flip = flip,
+        cooling_coef = cooling_coef,
         seed = seed,
         extract = extract,
         save_pred = save_pred,

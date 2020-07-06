@@ -16,8 +16,7 @@ tune_sim_anneal(object, ...)
   iter = 10,
   param_info = NULL,
   metrics = NULL,
-  objective = NULL,
-  initial = 5,
+  initial = 1,
   control = control_sim_anneal()
 )
 
@@ -28,8 +27,7 @@ tune_sim_anneal(object, ...)
   iter = 10,
   param_info = NULL,
   metrics = NULL,
-  objective = NULL,
-  initial = 5,
+  initial = 1,
   control = control_sim_anneal()
 )
 }
@@ -41,9 +39,6 @@ tune_sim_anneal(object, ...)
 \item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} object containing information on how
 models will be evaluated for performance. The first metric in \code{metrics} is the
 one that will be optimized.}
-
-\item{objective}{A character string for what metric should be optimized or
-an acquisition function object.}
 
 \item{initial}{An initial set of results in a tidy format (as would result
 from \code{\link[=tune_grid]{tune_grid()}}) or a positive integer. It is suggested that the number of
@@ -58,5 +53,119 @@ object multiple times over iterations (at limited additional memory costs).
 }
 \description{
 \code{\link[=tune_sim_anneal]{tune_sim_anneal()}} uses models to generate new candidate tuning parameter
-combinations based on previous results.
+combinations based on previous results. It uses the generalized simulated
+annealing method of Bohachevsky, Johnson, and Stein (1986).
+}
+\details{
+Simulated annealing is a global optimization method. For model tuning, it
+can be used to iteratively search the parameter space for optimal tuning
+parameter combinations. At each iteration, a new parameter combination is
+created by perturbing the current parameters in some small way so that they
+are within a small neighborhood. This new parameter combination is used to
+fit a model and that model's performance is measured using resample (or a
+simple validation set).
+
+If the new settings have better results than the current settings, they are
+accepted and the process continues.
+
+If the new settings has worse performance, a probability threshold is
+computed for accepting these sub-optimal values. The probability is a
+function of \emph{how} sub-optimal the results are as well as how many iterations
+have elapsed. This is referred to as the "cooling schedule" for the
+algorithm. If the sub-optimal results are accepted, the next iterations
+settings are based on these inferior results. Otherwise, new parameter
+values are generated from the previous iteration's settings.
+
+This process continues for a pre-defined number of iterations and the
+overall best settings are recommended for use. The \code{\link[=control_sim_anneal]{control_sim_anneal()}}
+function can specify the number of iterations without improvement for early
+stopping. Also, that function can be used to specify a \emph{restart} threshold;
+if no globally best results have not be discovered within a certain number
+if iterations, the process can restart using the last known settings that
+globally best.
+\subsection{Creating new settings}{
+
+For each numeric parameter, the range of possible values is known as well
+as any transformations. The current values are transformed and scaled to
+have values between zero and one (based on the possible range of values). A
+candidate set of values that are on a sphere with radius \code{r} are generated.
+Infeasible values are removed and one value is chosen at random. This value
+is back transformed to the original units and scale and are used as the new
+settings. The argument \code{radius} of \code{\link[=control_sim_anneal]{control_sim_anneal()}} controls the
+neighborhood size.
+
+For categorical parameters, each is changes with a pre-defined probability.
+The \code{flip} argument of \code{\link[=control_sim_anneal]{control_sim_anneal()}} can be used to specify this
+probability.
+}
+
+\subsection{Cooling schedule}{
+
+To determine the probability of accepting a new value, the percent
+difference in performance is calculated. If the performance metric is to be
+maximized, this would be \code{d = (new-old)/old*100}. The probability is
+calculated as \code{p = exp(d * coef * iter)} were \code{coef} is a user-defined
+constant that can be used to increase or decrease the probabilities.
+
+The \code{cooling_coef} of \code{\link[=control_sim_anneal]{control_sim_anneal()}} can be used for this purpose.
+}
+
+\subsection{Parallelism}{
+
+The \code{tune} and \code{modelopt} packages currently parallelize over resamples.
+Specifying a parallel back-end will improve the generation of the initial
+set of sub-models (if any). Each iteration of the search are also run in
+parallel as long as there are 2 or more resamples.
+}
+}
+\examples{
+library(modelopt)
+library(rpart)
+library(dplyr)
+library(tune)
+library(rsample)
+library(parsnip)
+library(ggplot2)
+
+## -----------------------------------------------------------------------------
+
+data(two_class_dat, package = "modeldata")
+
+set.seed(5046)
+bt <- bootstraps(two_class_dat, times = 5)
+
+## -----------------------------------------------------------------------------
+
+cart_mod <-
+  decision_tree(cost_complexity = tune(), min_n = tune()) \%>\%
+  set_engine("rpart") \%>\%
+  set_mode("classification")
+
+## -----------------------------------------------------------------------------
+
+# For reproducibility, set the seed before running.
+set.seed(37275)
+sa_search <-
+  cart_mod \%>\%
+  tune_sim_anneal(Class ~ ., resamples = bt, iter = 10)
+
+autoplot(sa_search, metric = "roc_auc", type = "parameters") +
+  theme_bw()
+
+## -----------------------------------------------------------------------------
+# More iterations. `initial` can be any other tune_* object or an integer
+# (for new values).
+
+set.seed(1970)
+more_search <-
+  cart_mod \%>\%
+  tune_sim_anneal(Class ~ ., resamples = bt, iter = 10, initial = sa_search)
+
+}
+\references{
+Bohachevsky, Johnson, and Stein (1986) "Generalized Simulated Annealing for
+Function Optimization", \emph{Technometrics}, 28:3, 209-217
+}
+\seealso{
+\code{\link[tune:tune_grid]{tune::tune_grid()}}, \code{\link[=control_sim_anneal]{control_sim_anneal()}}, \code{\link[yardstick:metric_set]{yardstick::metric_set()}}
 }

@@ -19,7 +19,10 @@ RoxygenNote: 7.1.0.9000
 Suggests: 
     spelling,
     BradleyTerry2,
-    lme4
+    lme4,
+    rsample,
+    modeldata,
+    rpart
 Language: en-US
 Depends: 
     tune

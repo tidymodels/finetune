@@ -72,7 +72,7 @@ encode_set_backwards <- function(x, pset, ...) {
 update_history <- function(history, x, iter) {
   analysis_metric <- tune::.get_tune_metric_names(x)[1]
   res <-
-    show_best(x, metric = analysis_metric) %>%
+    tune::show_best(x, metric = analysis_metric) %>%
     dplyr::select(.metric, mean, n, std_err) %>%
     dplyr::mutate(
       .iter = iter,
@@ -94,7 +94,7 @@ update_history <- function(history, x, iter) {
 
   history <-
     history %>%
-    mutate(global_best = .iter == best_res)
+    dplyr::mutate(global_best = .iter == best_res)
   history %>%
     dplyr::select(.iter, .metric, mean, n, std_err, random, accept, results, global_best)
 }
@@ -102,11 +102,11 @@ update_history <- function(history, x, iter) {
 get_sa_param <- function(x) {
   nms <- .get_tune_parameter_names(x)
   x$.metrics[[1]] %>%
-    distinct(!!!syms(nms))
+    dplyr::distinct(!!!syms(nms))
 
 }
 
-sa_decide <- function(x, metric, maximize, ...) {
+sa_decide <- function(x, metric, maximize, coef) {
   latest_iter <- max(x$.iter)
   prev_iter <- latest_iter - 1
   prev_metric   <- x$mean[x$.metric == metric & x$.iter == prev_iter]
@@ -130,7 +130,7 @@ sa_decide <- function(x, metric, maximize, ...) {
       new = latest_metric,
       iter = latest_iter,
       maximize = maximize,
-      ...
+      coef = coef
     )
 
   if (better_result) {
@@ -215,6 +215,8 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
 
   chr_iter <- format(1:max_iter)[iter]
   dig <- paste0("%.", digits, "f")
+
+  ## TODO update colors below based on tune:::colors
 
   if (iter > 0) {
     msg <- paste0(" ", metric, ": ", sprintf(dig, signif(new_res, digits = digits)))

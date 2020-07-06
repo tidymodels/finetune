@@ -61,7 +61,7 @@ tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
                                        param_info = NULL, grid = 10, metrics = NULL,
                                        control = control_race()) {
 
-  if (rlang::is_missing(preprocessor) || !is_preprocessor(preprocessor)) {
+  if (rlang::is_missing(preprocessor) || !tune:::is_preprocessor(preprocessor)) {
     rlang::abort(paste("To tune a model spec, you must preprocess",
                        "with a formula or recipe"))
   }
@@ -70,7 +70,7 @@ tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
 
   wflow <- workflows::add_model(workflow(), object)
 
-  if (is_recipe(preprocessor)) {
+  if (tune:::is_recipe(preprocessor)) {
     wflow <- workflows::add_recipe(wflow, preprocessor)
   } else if (rlang::is_formula(preprocessor)) {
     wflow <- workflows::add_formula(wflow, preprocessor)
