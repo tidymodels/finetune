@@ -1,6 +1,6 @@
 maximize_metric <- function(x, metric) {
   metrics <- .get_tune_metrics(x)
-  metrics_data <- tune:::metrics_info(metrics)
+  metrics_data <- tune::metrics_info(metrics)
   x <- metrics_data$.metric[1]
   metrics_data$direction[metrics_data$.metric == metric] == "maximize"
 }
@@ -42,7 +42,7 @@ random_neighbor <- function(current, pset, retain = 1, tries = 500, r = .025) {
   is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
   current <- current[, is_quant]
   pset <- pset[is_quant, ]
-  encoded <- tune:::encode_set(current, pset, as_matrix = TRUE)
+  encoded <- tune::encode_set(current, pset, as_matrix = TRUE)
 
   num_param <- ncol(encoded)
   rnd <- rnorm(num_param * tries)
@@ -62,7 +62,7 @@ random_neighbor <- function(current, pset, retain = 1, tries = 500, r = .025) {
 
 encode_set_backwards <- function(x, pset, ...) {
   pset <- pset[pset$id %in% names(x),]
-  new_vals <- purrr::map2(pset$object, x, encode_unit, direction = "backward")
+  new_vals <- purrr::map2(pset$object, x, dials::encode_unit, direction = "backward")
   names(new_vals) <- names(x)
   tibble::as_tibble(new_vals)
 }
@@ -167,10 +167,10 @@ percent_diff <- function(current, new, maximize = TRUE) {
   } else {
     pct_diff <- (current - new)/current
   }
-  pct_diff
+  pct_diff * 100
 }
 
-acceptance_prob <- function(current, new, iter, maximize = TRUE, coef = 2) {
+acceptance_prob <- function(current, new, iter, maximize = TRUE, coef = 2/100) {
   pct_diff <- percent_diff(current, new, maximize)
   if (pct_diff > 0) {
     return(1.0)
@@ -216,7 +216,7 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
   chr_iter <- format(1:max_iter)[iter]
   dig <- paste0("%.", digits, "f")
 
-  ## TODO update colors below based on tune:::colors
+  ## TODO update colors below based on tune::get_colors
 
   if (iter > 0) {
     msg <- paste0(" ", metric, ": ", sprintf(dig, signif(new_res, digits = digits)))

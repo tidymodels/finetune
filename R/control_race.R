@@ -33,11 +33,11 @@ control_race <-
   function(verbose = FALSE, allow_par = TRUE, extract = NULL, save_pred = FALSE,
            burn_in = 3, alpha = 0.05, randomize = TRUE, pkgs = NULL) {
 
-    tune:::val_class_and_single(verbose, "logical", "control_grid()")
-    tune:::val_class_and_single(allow_par, "logical", "control_grid()")
-    tune:::val_class_and_single(save_pred, "logical", "control_grid()")
-    tune:::val_class_or_null(pkgs, "character", "control_grid()")
-    tune:::val_class_or_null(extract, "function", "control_grid()")
+    tune::val_class_and_single(verbose, "logical", "control_grid()")
+    tune::val_class_and_single(allow_par, "logical", "control_grid()")
+    tune::val_class_and_single(save_pred, "logical", "control_grid()")
+    tune::val_class_or_null(pkgs, "character", "control_grid()")
+    tune::val_class_or_null(extract, "function", "control_grid()")
 
     res <- list(
       verbose = verbose,

@@ -10,7 +10,7 @@ control_sim_anneal(
   restart = 10L,
   radius = 0.025,
   flip = 0.1,
-  cooling_coef = 2,
+  cooling_coef = 0.02,
   seed = sample.int(10^5, 1),
   extract = NULL,
   save_pred = FALSE,

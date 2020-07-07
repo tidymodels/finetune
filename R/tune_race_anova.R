@@ -37,7 +37,7 @@ tune_race_anova.recipe <- function(object, model, resamples, ..., param_info = N
                                    grid = 10, metrics = NULL,
                                    control = control_race()) {
 
-  tune:::empty_ellipses(...)
+  tune::empty_ellipses(...)
 
   tune_race_anova(model, preprocessor = object, resamples = resamples,
                   param_info = param_info, grid = grid,
@@ -48,7 +48,7 @@ tune_race_anova.recipe <- function(object, model, resamples, ..., param_info = N
 tune_race_anova.formula <- function(formula, model, resamples, ..., param_info = NULL,
                                     grid = 10, metrics = NULL,
                                     control = control_race()) {
-  tune:::empty_ellipses(...)
+  tune::empty_ellipses(...)
 
   tune_race_anova(model, preprocessor = formula, resamples = resamples,
                   param_info = param_info, grid = grid,
@@ -61,16 +61,16 @@ tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
                                        param_info = NULL, grid = 10, metrics = NULL,
                                        control = control_race()) {
 
-  if (rlang::is_missing(preprocessor) || !tune:::is_preprocessor(preprocessor)) {
+  if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
     rlang::abort(paste("To tune a model spec, you must preprocess",
                        "with a formula or recipe"))
   }
 
-  tune:::empty_ellipses(...)
+  tune::empty_ellipses(...)
 
   wflow <- workflows::add_model(workflow(), object)
 
-  if (tune:::is_recipe(preprocessor)) {
+  if (tune::is_recipe(preprocessor)) {
     wflow <- workflows::add_recipe(wflow, preprocessor)
   } else if (rlang::is_formula(preprocessor)) {
     wflow <- workflows::add_formula(wflow, preprocessor)
@@ -92,7 +92,7 @@ tune_race_anova.workflow <- function(object, resamples, ..., param_info = NULL,
                                      grid = 10, metrics = NULL,
                                      control = control_race()) {
 
-  tune:::empty_ellipses(...)
+  tune::empty_ellipses(...)
 
   tune_race_anova_workflow(
     object,

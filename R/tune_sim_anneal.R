@@ -86,6 +86,7 @@
 #' library(tune)
 #' library(rsample)
 #' library(parsnip)
+#' library(workflows)
 #' library(ggplot2)
 #'
 #' ## -----------------------------------------------------------------------------
@@ -148,7 +149,7 @@ tune_sim_anneal.recipe <- function(object,
                                    initial = 1,
                                    control = control_sim_anneal()) {
 
-  tune:::empty_ellipses(...)
+  tune::empty_ellipses(...)
 
   tune_sim_anneal(model, preprocessor = object, resamples = resamples,
                   iter = iter, param_info = param_info,
@@ -166,7 +167,7 @@ tune_sim_anneal.formula <- function(formula,
                                     initial = 1,
                                     control = control_sim_anneal()) {
 
-  tune:::empty_ellipses(...)
+  tune::empty_ellipses(...)
 
   tune_sim_anneal(model, preprocessor = formula, resamples = resamples,
                   iter = iter, param_info = param_info,
@@ -185,16 +186,16 @@ tune_sim_anneal.model_spec <- function(object,
                                        initial = 1,
                                        control = control_sim_anneal()) {
 
-  if (rlang::is_missing(preprocessor) || !tune:::is_preprocessor(preprocessor)) {
+  if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
     rlang::abort(paste("To tune a model spec, you must preprocess",
                        "with a formula or recipe"))
   }
 
-  tune:::empty_ellipses(...)
+  tune::empty_ellipses(...)
 
   wflow <- workflows::add_model(workflow(), object)
 
-  if (tune:::is_recipe(preprocessor)) {
+  if (tune::is_recipe(preprocessor)) {
     wflow <- workflows::add_recipe(wflow, preprocessor)
   } else if (rlang::is_formula(preprocessor)) {
     wflow <- workflows::add_formula(wflow, preprocessor)
@@ -218,7 +219,7 @@ tune_sim_anneal.workflow <-
            initial = 1,
            control = control_sim_anneal()) {
 
-    tune:::empty_ellipses(...)
+    tune::empty_ellipses(...)
 
     tune_sim_anneal_workflow(object, resamples = resamples, iter = iter,
                              param_info = param_info, metrics = metrics,
@@ -233,30 +234,30 @@ tune_sim_anneal_workflow <-
            initial = 5, control = control_sim_anneal()) {
     start_time <- proc.time()[3]
 
-    tune:::check_rset(resamples)
+    tune::check_rset(resamples)
     y_names <- outcome_names(object)
-    rset_info <- tune:::pull_rset_attributes(resamples)
+    rset_info <- tune::pull_rset_attributes(resamples)
 
-    metrics <- tune:::check_metrics(metrics, object)
+    metrics <- tune::check_metrics(metrics, object)
     metrics_name <- names(attr(metrics, "metrics"))[1]
     maximize <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
 
     if (is.null(param_info)) {
       param_info <- dials::parameters(object)
     }
-    tune:::check_workflow(object, check_dials = is.null(param_info), pset = param_info)
+    tune::check_workflow(object, check_dials = is.null(param_info), pset = param_info)
 
     unsummarized <-
-      tune:::check_initial(initial, param_info, object, resamples, metrics, control) %>%
-      tune:::new_iteration_results(
+      tune::check_initial(initial, param_info, object, resamples, metrics, control) %>%
+      tune::new_iteration_results(
         parameters = param_info,
         metrics = metrics,
         outcomes = y_names,
         rset_info =  rset_info
       )
-    mean_stats <- tune:::estimate_tune_results(unsummarized)
+    mean_stats <- tune::estimate_tune_results(unsummarized)
 
-    tune:::check_time(start_time, control$time_limit)
+    tune::check_time(start_time, control$time_limit)
 
     i <- 0 # In case things fail before iteration.
 
@@ -264,7 +265,7 @@ tune_sim_anneal_workflow <-
       if (i < iter) {
         cli::cli_alert_danger("Optimization stopped prematurely; returning current results.")
       }
-      out <- tune:::new_iteration_results(unsummarized, param_info, metrics, y_names, rset_info)
+      out <- tune::new_iteration_results(unsummarized, param_info, metrics, y_names, rset_info)
       return(out)
     })
 
@@ -290,6 +291,8 @@ tune_sim_anneal_workflow <-
     count_improve <- count_restart <- 0
 
     log_sa_progress(x = result_history, max_iter = iter, maximize = maximize, metric = metrics_name)
+
+    # TODO iterations when initializing with a previous tune object start from 1 :-O
 
     for (i in (existing_iter + 1):(existing_iter + iter)) {
       new_grid <-
@@ -345,7 +348,7 @@ tune_sim_anneal_workflow <-
 
       unsummarized <-
         dplyr::bind_rows(unsummarized, res) %>%
-        tune:::new_iteration_results(
+        tune::new_iteration_results(
           parameters = param_info,
           metrics = metrics,
           outcomes = y_names,
@@ -363,5 +366,7 @@ tune_sim_anneal_workflow <-
     }
 
     # TODO re-compute .configs?
+
+    # Note; this line is probably not executed due to on.exit():
     unsummarized
   }

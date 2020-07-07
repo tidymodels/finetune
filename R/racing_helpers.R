@@ -349,7 +349,7 @@ log_racing <- function(control, x, splits, grid_size, metric) {
   }
 
   msg <-
-    tune:::tune_color$symbol$info(
+    tune::tune_color$symbol$info(
       paste0(cli::symbol$info, " ", labs, msg, " (filtered using ", metric, ").")
     )
   message(msg)

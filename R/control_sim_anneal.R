@@ -38,7 +38,7 @@ control_sim_anneal <-
            restart = 10L,
            radius = 0.025,
            flip = 0.1,
-           cooling_coef = 2,
+           cooling_coef = 0.02,
            seed = sample.int(10^5, 1),
            extract = NULL,
            save_pred = FALSE,
@@ -46,17 +46,17 @@ control_sim_anneal <-
            pkgs = NULL) {
     # add options for seeds per resample
 
-    tune:::val_class_and_single(verbose, "logical", "control_sim_anneal()")
-    tune:::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
-    tune:::val_class_and_single(no_improve, c("numeric", "integer"), "control_sim_anneal()")
-    tune:::val_class_and_single(restart, c("numeric", "integer"), "control_sim_anneal()")
-    tune:::val_class_and_single(radius, "numeric", "control_sim_anneal()")
-    tune:::val_class_and_single(flip, "numeric", "control_sim_anneal()")
-    tune:::val_class_and_single(cooling_coef, "numeric", "control_sim_anneal()")
-    tune:::val_class_and_single(seed, c("numeric", "integer"), "control_sim_anneal()")
-    tune:::val_class_or_null(extract, "function", "control_sim_anneal()")
-    tune:::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
-    tune:::val_class_or_null(pkgs, "character", "control_sim_anneal()")
+    tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
+    tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
+    tune::val_class_and_single(no_improve, c("numeric", "integer"), "control_sim_anneal()")
+    tune::val_class_and_single(restart, c("numeric", "integer"), "control_sim_anneal()")
+    tune::val_class_and_single(radius, "numeric", "control_sim_anneal()")
+    tune::val_class_and_single(flip, "numeric", "control_sim_anneal()")
+    tune::val_class_and_single(cooling_coef, "numeric", "control_sim_anneal()")
+    tune::val_class_and_single(seed, c("numeric", "integer"), "control_sim_anneal()")
+    tune::val_class_or_null(extract, "function", "control_sim_anneal()")
+    tune::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
+    tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
     radius[radius <= 0] <- 0.0001
     radius[radius >= 1] <- 0.9999
     flip[flip < 0] <- 0
