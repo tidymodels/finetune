@@ -43,7 +43,8 @@ control_sim_anneal <-
            extract = NULL,
            save_pred = FALSE,
            time_limit = NA,
-           pkgs = NULL) {
+           pkgs = NULL,
+           save_workflow = FALSE) {
     # add options for seeds per resample
 
     tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
@@ -57,6 +58,8 @@ control_sim_anneal <-
     tune::val_class_or_null(extract, "function", "control_sim_anneal()")
     tune::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
     tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
+    tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
+
     radius[radius <= 0] <- 0.0001
     radius[radius >= 1] <- 0.9999
     flip[flip < 0] <- 0
@@ -81,7 +84,8 @@ control_sim_anneal <-
         extract = extract,
         save_pred = save_pred,
         time_limit = time_limit,
-        pkgs = pkgs
+        pkgs = pkgs,
+        save_workflow = save_workflow
       )
 
     class(res) <- "control_sim_anneal"

@@ -12,7 +12,8 @@ control_race(
   burn_in = 3,
   alpha = 0.05,
   randomize = TRUE,
-  pkgs = NULL
+  pkgs = NULL,
+  save_workflow = FALSE
 )
 }
 \arguments{

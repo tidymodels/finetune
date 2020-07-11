@@ -125,6 +125,7 @@ library(dplyr)
 library(tune)
 library(rsample)
 library(parsnip)
+library(workflows)
 library(ggplot2)
 
 ## -----------------------------------------------------------------------------

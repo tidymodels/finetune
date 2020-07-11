@@ -15,7 +15,8 @@ control_sim_anneal(
   extract = NULL,
   save_pred = FALSE,
   time_limit = NA,
-  pkgs = NULL
+  pkgs = NULL,
+  save_workflow = FALSE
 )
 }
 \arguments{

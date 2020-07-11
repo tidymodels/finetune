@@ -31,13 +31,15 @@
 #' @export
 control_race <-
   function(verbose = FALSE, allow_par = TRUE, extract = NULL, save_pred = FALSE,
-           burn_in = 3, alpha = 0.05, randomize = TRUE, pkgs = NULL) {
+           burn_in = 3, alpha = 0.05, randomize = TRUE, pkgs = NULL,
+           save_workflow = FALSE) {
 
     tune::val_class_and_single(verbose, "logical", "control_grid()")
     tune::val_class_and_single(allow_par, "logical", "control_grid()")
     tune::val_class_and_single(save_pred, "logical", "control_grid()")
     tune::val_class_or_null(pkgs, "character", "control_grid()")
     tune::val_class_or_null(extract, "function", "control_grid()")
+    tune::val_class_and_single(save_workflow, "logical", "control_grid()")
 
     res <- list(
       verbose = verbose,
@@ -47,7 +49,8 @@ control_race <-
       alpha = alpha,
       burn_in = burn_in,
       randomize = randomize,
-      pkgs = pkgs
+      pkgs = pkgs,
+      save_workflow = save_workflow
     )
 
     class(res) <- c("control_race")

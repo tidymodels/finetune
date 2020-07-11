@@ -127,9 +127,12 @@ test_parameters_bt <- function(x, param_names, metric, maximize, alpha =  0.05) 
   # Split data into all 2-way combinations of parameter configurations
 
   season_schedule <- make_config_pairs(analysis_data)
+  # Eliminate pairs with all ties
   season_data <- score_season(season_schedule, analysis_data, maximize)
 
-  mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2, data = season_data$scoring)
+  mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
+                            data = season_data$scoring)
+
   z_val <- qnorm(1 - alpha)
   mod_est <-
     BradleyTerry2::BTabilities(mod) %>%
@@ -348,8 +351,9 @@ log_racing <- function(control, x, splits, grid_size, metric) {
     msg <- paste(remaining, "of",  grid_size, "candidate model remains")
   }
 
+  tune_cols <- tune::get_tune_colors()
   msg <-
-    tune::tune_color$symbol$info(
+    tune_cols$symbol$info(
       paste0(cli::symbol$info, " ", labs, msg, " (filtered using ", metric, ").")
     )
   message(msg)
