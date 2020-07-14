@@ -12,7 +12,6 @@ mer2tibble <- function(x) {
 }
 
 test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05) {
-  require("lme4")
 
   res <-
     tune::collect_metrics(x, summarize = FALSE) %>%
@@ -26,6 +25,12 @@ test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05)
   configs <-
     res %>%
     dplyr::select(dplyr::starts_with("id"), .estimate, .config)
+
+  ## TODO run check_results to filter some things out
+
+  ## TODO announce randomization and analysis metric
+
+  ## TODO use rlang::info instead of message
 
   ## ---------------------------------------------------------------------------
   # regroup .configs by mean and subset on those being analyzed
@@ -100,8 +105,6 @@ test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05)
 # Racing via discrete competitions
 
 test_parameters_bt <- function(x, param_names, metric, maximize, alpha =  0.05) {
-  require("BradleyTerry2")
-
   res <-
     tune::collect_metrics(x, summarize = FALSE) %>%
     dplyr::filter(.metric == metric)
@@ -132,7 +135,7 @@ test_parameters_bt <- function(x, param_names, metric, maximize, alpha =  0.05) 
   best_team <- levels(season_data$scoring$player_1)[1]
 
   mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
-                            data = season_data$scoring)
+                            data = season_data$scoring, br = TRUE)
 
   q_val <- qt(1 - alpha, 1)
   mod_est <-
@@ -202,6 +205,16 @@ score_season <- function(x, dat, maximize = FALSE) {
   # since it will have massively large standard errors and _not_ be eliminated
   # from the candidate set.
   # Because of this, we do some computations multiple times.
+
+  ## -----------------------------------------------------------------------------
+
+  # Look for zero-variance results and duplicated columns
+  eliminated <- check_results(dat)
+  x <- x %>% dplyr::filter(!(p1 %in% eliminated) & !(p2 %in% eliminated))
+  dat <- dat %>% dplyr::filter(!(.config %in% eliminated))
+
+  ## -----------------------------------------------------------------------------
+
   player_1 <-
     dplyr::left_join(
       x %>%
@@ -250,11 +263,12 @@ score_season <- function(x, dat, maximize = FALSE) {
     dplyr::arrange(dplyr::desc(wins))
 
   if (any(player_rankings$wins == 0)) {
-    eliminated <- player_rankings$player[player_rankings$wins == 0]
-    # message("Some players lost all games: ", paste0(eliminated, collapse = ", "))
+    skunked <- player_rankings$player[player_rankings$wins == 0]
+    eliminated <- c(eliminated, skunked)
+    # message("Some players lost all games: ", paste0(skunked, collapse = ", "))
     season_results <-
       game_results %>%
-      dplyr::filter(!(player_1 %in% eliminated) & !(player_2 %in% eliminated)) %>%
+      dplyr::filter(!(player_1 %in% skunked) & !(player_2 %in% skunked)) %>%
       dplyr::group_by(player_1, player_2, pair) %>%
       dplyr::summarize(
         wins_1 = sum(wins_1, na.rm = TRUE),
@@ -272,8 +286,6 @@ score_season <- function(x, dat, maximize = FALSE) {
       dplyr::summarize(wins = sum(wins, na.rm = TRUE)) %>%
       dplyr::ungroup() %>%
       dplyr::arrange(dplyr::desc(wins))
-  } else {
-    eliminated <- character(0)
   }
 
   res <-
@@ -343,10 +355,9 @@ restore_tune <- function(x, y) {
 ## -----------------------------------------------------------------------------
 
 log_racing <- function(control, x, splits, grid_size, metric) {
-  # if (!control$verbose) {
-  #   return(invisible(NULL))
-  # }
-
+  if (!control$verbose_elim) {
+    return(invisible(NULL))
+  }
 
   if (!is.null(splits)) {
     splits <- splits[[length(splits)]]
@@ -358,9 +369,9 @@ log_racing <- function(control, x, splits, grid_size, metric) {
 
   remaining <- sum(x$pass, na.rm = TRUE)
   if (remaining > 1) {
-    msg <- paste(remaining, "of",  grid_size, "candidate models remain")
+    msg <- paste(remaining, "of",  grid_size, "candidate sub-models remain")
   } else {
-    msg <- paste(remaining, "of",  grid_size, "candidate model remains")
+    msg <- paste(remaining, "of",  grid_size, "candidate sub-model remains")
   }
 
   tune_cols <- tune::get_tune_colors()
@@ -371,3 +382,61 @@ log_racing <- function(control, x, splits, grid_size, metric) {
   message(msg)
 }
 
+
+tie_breaker <- function(res, control) {
+  param_names <- tune::.get_tune_parameter_names(res)
+  metrics     <- tune::.get_tune_metrics(res)
+  analysis_metric <- names(attr(metrics, "metrics"))[1]
+  analysis_max    <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
+  x <-
+    res %>%
+    tune::collect_metrics() %>%
+    dplyr::filter(.metric == analysis_metric)
+  all_config <- x$.config
+  max_rs <- max(x$n)
+  finalists <- x[x$n == max_rs,]
+  best <- finalists$.config[order(finalists$mean, decreasing = analysis_max)][1]
+  if (control$verbose_elim) {
+    tune_cols <- tune::get_tune_colors()
+    msg <- tune_cols$symbol$info(paste0(cli::symbol$info, " Tie broken!"))
+    if (runif(1) < .001) {
+      msg <- paste(msg, "Two models enter, one model leaves.")
+    }
+    message(msg)
+  }
+  res <-
+    dplyr::select(x, .config, !!!param_names) %>%
+    dplyr::mutate(
+      lower = 0,
+      upper = 0,
+      estimate = 0,
+      pass = ifelse(.config == best, TRUE, FALSE)
+    )
+  res
+}
+
+check_results <- function(dat, rm_zv = TRUE, rm_dup = FALSE) {
+  ids <- grep("^id", names(dat))
+  x <-
+    dat %>%
+    dplyr::select(!!!ids, .estimate, .config) %>%
+    tidyr::pivot_wider(id_cols = ids, names_from = c(.config), values_from = c(.estimate))
+
+  exclude <- character(0)
+
+  if (rm_dup) {
+    tmp <- x[, !(names(x) %in% ids)]
+    exclude <- c(exclude, names(tmp[duplicated(lapply(tmp, c))]))
+    x <- x[, !(names(x) %in% exclude)]
+  }
+
+  if (rm_zv) {
+    is_zv <- purrr::map_lgl(x, ~ length(unique(.x)) == 1)
+    if (any(is_zv)) {
+      exclude <- c(exclude, names(x)[is_zv])
+      x <- x[, !(names(x) %in% exclude)]
+    }
+  }
+
+  exclude
+}
