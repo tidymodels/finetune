@@ -129,31 +129,43 @@ test_parameters_bt <- function(x, param_names, metric, maximize, alpha =  0.05) 
   season_schedule <- make_config_pairs(analysis_data)
   # Eliminate pairs with all ties
   season_data <- score_season(season_schedule, analysis_data, maximize)
+  best_team <- levels(season_data$scoring$player_1)[1]
 
   mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
                             data = season_data$scoring)
 
-  z_val <- qnorm(1 - alpha)
+  q_val <- qt(1 - alpha, 1)
   mod_est <-
-    BradleyTerry2::BTabilities(mod) %>%
+    summary(mod) %>%
+    purrr::pluck("coefficients") %>%
     tibble::as_tibble(rownames = ".config") %>%
-    dplyr::mutate_if(is.numeric, as.numeric) %>%  # <- gets rid of `BTabilts` columns
+    dplyr::select(.config, value = Estimate, std_err = `Std. Error`) %>%
     dplyr::mutate(
-      lower = ability - z_val * s.e.,
-      upper = ability + z_val * s.e.,
+      .config = gsub("^\\.\\.", "", .config),
+      lower = value - q_val * std_err,
+      upper = value + q_val * std_err,
       # The secondary conditions are for cases when a candidate set wins
       # a single competition.
-      pass = ifelse(upper > 0 & s.e. < 500, TRUE, FALSE),
-      # keep best condition
-      pass = ifelse(ability == 0 & s.e. == 0, TRUE, pass)
+      pass = ifelse(upper > 0 & std_err < 500, TRUE, FALSE)
+    ) %>%
+    dplyr::bind_rows(
+      tibble(
+        .config = best_team,
+        value = 0,
+        std_err = 0,
+        lower = 0,
+        upper = 0,
+        pass = TRUE
+      )
     )
+
 
   if (length(season_data$eliminated) > 0) {
     elim_results <-
       tibble::tibble(
         .config = season_data$eliminated,
-        ability = NA_real_,
-        s.e. = NA_real_,
+        value = NA_real_,
+        std_err = NA_real_,
         lower = NA_real_,
         upper = NA_real_,
         pass = FALSE

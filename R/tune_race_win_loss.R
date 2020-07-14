@@ -1,6 +1,6 @@
 #' Model tuning via grid search
 #'
-#' [tune_race_compete()] computes a set of performance metrics (e.g. accuracy or RMSE)
+#' [tune_race_win_loss()] computes a set of performance metrics (e.g. accuracy or RMSE)
 #'  for a pre-defined set of tuning parameters that correspond to a model or
 #'  recipe across one or more resamples of the data.
 #'
@@ -19,45 +19,45 @@
 #' @param control An object used to modify the tuning process.
 #' @param ... Not currently used.
 #' @export
-tune_race_compete <- function(object, ...) {
-  UseMethod("tune_race_compete")
+tune_race_win_loss <- function(object, ...) {
+  UseMethod("tune_race_win_loss")
 }
 
 #' @export
-tune_race_compete.default <- function(object, ...) {
+tune_race_win_loss.default <- function(object, ...) {
   msg <- paste0(
-    "The first argument to [tune_race_compete()] should be either ",
+    "The first argument to [tune_race_win_loss()] should be either ",
     "a model or workflow."
   )
   rlang::abort(msg)
 }
 
 #' @export
-tune_race_compete.recipe <- function(object, model, resamples, ..., param_info = NULL,
-                                   grid = 10, metrics = NULL, control = control_race()) {
+tune_race_win_loss.recipe <- function(object, model, resamples, ..., param_info = NULL,
+                                      grid = 10, metrics = NULL, control = control_race()) {
 
   tune::empty_ellipses(...)
 
-  tune_race_compete(model, preprocessor = object, resamples = resamples,
-                  param_info = param_info, grid = grid,
-                  metrics = metrics, control = control)
+  tune_race_win_loss(model, preprocessor = object, resamples = resamples,
+                     param_info = param_info, grid = grid,
+                     metrics = metrics, control = control)
 }
 
 #' @export
-tune_race_compete.formula <- function(formula, model, resamples, ..., param_info = NULL,
-                                    grid = 10, metrics = NULL, control = control_race()) {
+tune_race_win_loss.formula <- function(formula, model, resamples, ..., param_info = NULL,
+                                       grid = 10, metrics = NULL, control = control_race()) {
   tune::empty_ellipses(...)
 
-  tune_race_compete(model, preprocessor = formula, resamples = resamples,
-                  param_info = param_info, grid = grid,
-                  metrics = metrics, control = control)
+  tune_race_win_loss(model, preprocessor = formula, resamples = resamples,
+                     param_info = param_info, grid = grid,
+                     metrics = metrics, control = control)
 }
 
 #' @export
-#' @rdname tune_race_compete
-tune_race_compete.model_spec <- function(object, preprocessor, resamples, ...,
-                                       param_info = NULL, grid = 10, metrics = NULL,
-                                       control = control_race()) {
+#' @rdname tune_race_win_loss
+tune_race_win_loss.model_spec <- function(object, preprocessor, resamples, ...,
+                                          param_info = NULL, grid = 10, metrics = NULL,
+                                          control = control_race()) {
 
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
     rlang::abort(paste("To tune a model spec, you must preprocess",
@@ -74,7 +74,7 @@ tune_race_compete.model_spec <- function(object, preprocessor, resamples, ...,
     wflow <- workflows::add_formula(wflow, preprocessor)
   }
 
-  tune_race_compete_workflow(
+  tune_race_win_loss_workflow(
     wflow,
     resamples = resamples,
     grid = grid,
@@ -85,14 +85,14 @@ tune_race_compete.model_spec <- function(object, preprocessor, resamples, ...,
 }
 
 #' @export
-#' @rdname tune_race_compete
-tune_race_compete.workflow <- function(object, resamples, ..., param_info = NULL,
-                                     grid = 10, metrics = NULL,
-                                     control = control_race()) {
+#' @rdname tune_race_win_loss
+tune_race_win_loss.workflow <- function(object, resamples, ..., param_info = NULL,
+                                        grid = 10, metrics = NULL,
+                                        control = control_race()) {
 
   tune::empty_ellipses(...)
 
-  tune_race_compete_workflow(
+  tune_race_win_loss_workflow(
     object,
     resamples = resamples,
     grid = grid,
@@ -104,7 +104,7 @@ tune_race_compete.workflow <- function(object, resamples, ..., param_info = NULL
 
 ## -----------------------------------------------------------------------------
 
-tune_race_compete_workflow <-
+tune_race_win_loss_workflow <-
   function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
            control = control_race()) {
 

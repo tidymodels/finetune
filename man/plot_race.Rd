@@ -14,6 +14,6 @@ A ggplot object.
 }
 \description{
 Plot difference parameter combinations versus the number of times that each
-was evaluated. The plot colors the results by the performanc metric that was
+was evaluated. The plot colors the results by the performance metric that was
 being optimized/tested.
 }
