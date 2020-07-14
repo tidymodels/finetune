@@ -1,4 +1,4 @@
-Package: modelopt
+Package: finetune
 Title: Additional Functions for Model Tuning
 Version: 0.0.0.9000
 Authors@R: 
@@ -9,7 +9,7 @@ Authors@R:
              comment = c(ORCID = "0000-0003-2402-136X")),
       person(given = "RStudio",
              role = "cph"))
-Description: 'modelopt' enhances the 'tune' package by providing more 
+Description: 'finetune' enhances the 'tune' package by providing more 
  specialized methods for finding reasonable values of model tuning parameters. 
  Two racing methods described by Kuhn (2014) <arXiv:1405.6974> are included. An
  iterative search method using generalized simulated annealing (Bohachevsky, 

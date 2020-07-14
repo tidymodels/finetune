@@ -1,4 +1,4 @@
 library(testthat)
-library(modelopt)
+library(finetune)
 
-test_check("modelopt")
+test_check("finetune")
