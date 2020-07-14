@@ -112,14 +112,14 @@ The \code{cooling_coef} of \code{\link[=control_sim_anneal]{control_sim_anneal()
 
 \subsection{Parallelism}{
 
-The \code{tune} and \code{modelopt} packages currently parallelize over resamples.
+The \code{tune} and \code{finetune} packages currently parallelize over resamples.
 Specifying a parallel back-end will improve the generation of the initial
 set of sub-models (if any). Each iteration of the search are also run in
 parallel as long as there are 2 or more resamples.
 }
 }
 \examples{
-library(modelopt)
+library(finetune)
 library(rpart)
 library(dplyr)
 library(tune)

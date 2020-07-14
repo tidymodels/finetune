@@ -136,7 +136,11 @@ tune_race_win_loss_workflow <-
     n_grid <- nrow(filters_results)
 
     log_final <- TRUE
+    num_ties <- 0
     for(rs in (min_rs + 1):B) {
+      if (sum(filters_results$pass) == 2) {
+        num_ties <- num_ties + 1
+      }
       new_grid <-
         filters_results %>%
         dplyr::filter(pass) %>%
@@ -167,6 +171,9 @@ tune_race_win_loss_workflow <-
       if (nrow(new_grid) > 1) {
         filters_results <-
           test_parameters_bt(res, param_names, analysis_metric, analysis_max, control$alpha)
+        if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
+          filters_results <- tie_breaker(res, control)
+        }
       }
     }
 

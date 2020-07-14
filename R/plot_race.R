@@ -11,10 +11,14 @@ plot_race <- function(x) {
   x %>%
     tune::collect_metrics() %>%
     dplyr::filter(.metric == met) %>%
-    dplyr::mutate(.config = reorder(.config, n)) %>%
+    dplyr::mutate(
+      .config = reorder(.config, n),
+      .lower = mean - 1.96 * std_err,
+      .upper = mean + 1.96 * std_err
+      ) %>%
     ggplot2::ggplot(ggplot2::aes(x = n, y = .config)) +
-    ggplot2::geom_point(aes(col = mean)) +
-    ggplot2::geom_linerange(ggplot2::aes(xmin = 0, xmax = n), alpha = .5) +
+    ggplot2::geom_point(aes(size = mean)) +
+    ggplot2::geom_linerange(ggplot2::aes(xmin = 0, xmax = n), alpha = .25) +
     ggplot2::labs(x = "Number of Resamples", y = NULL)
 }
 

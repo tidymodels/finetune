@@ -6,10 +6,12 @@
 \usage{
 control_race(
   verbose = FALSE,
+  verbose_elim = TRUE,
   allow_par = TRUE,
   extract = NULL,
   save_pred = FALSE,
   burn_in = 3,
+  num_ties = 10,
   alpha = 0.05,
   randomize = TRUE,
   pkgs = NULL,
@@ -23,6 +25,9 @@ theme, some logging messages might be hard to see. If this is the case,
 try setting the \code{tidymodels.dark} option with
 \code{options(tidymodels.dark = TRUE)} to print lighter colors.}
 
+\item{verbose_elim}{A logical for whether logging of the elimination of
+tuning parameter combinations should occur.}
+
 \item{allow_par}{A logical to allow parallel processing (if a parallel
 backend is registered).}
 
@@ -33,16 +38,22 @@ recipe, or other elements of the workflow.}
 \item{save_pred}{A logical for whether the out-of-sample predictions should
 be saved for each model \emph{evaluated}.}
 
+\item{burn_in}{An integer for how many resamples should be completed for all
+grid combinations before parameter filtering begins.}
+
+\item{num_ties}{An integer for when tie-breaking should occur. If there are
+two final parameter combinations being evaluated, \code{num_ties} specified how
+many more resampling iterations should be evaluated. After \code{num_ties} more
+iterations, the parameter combination with the current best results is
+retained.}
+
+\item{alpha}{The alpha level for a one-sided confidence interval for each
+parameter combination.}
+
+\item{randomize}{Should the resamples be evaluated in a random order?}
+
 \item{pkgs}{An optional character string of R package names that should be
 loaded (by namespace) during parallel processing.}
-
-\item{no_improve}{The integer cutoff for the number of iterations without
-better results.}
-
-\item{uncertain}{The number of iterations with no improvement before an
-uncertainty sample is created where a sample with high predicted variance is
-chosen (i.e., in a region that has not yet been explored). The iteration
-counter is reset after each uncertainty sample. For example, if \code{uncertain = 10}, this condition is triggered every 10 samples with no improvement.}
 
 \item{seed}{An integer for controlling the random number stream.}
 

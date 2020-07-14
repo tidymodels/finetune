@@ -5,13 +5,18 @@
 #'   theme, some logging messages might be hard to see. If this is the case,
 #'   try setting the `tidymodels.dark` option with
 #'   `options(tidymodels.dark = TRUE)` to print lighter colors.
-#' @param no_improve The integer cutoff for the number of iterations without
-#'   better results.
-#' @param uncertain The number of iterations with no improvement before an
-#'  uncertainty sample is created where a sample with high predicted variance is
-#'  chosen (i.e., in a region that has not yet been explored). The iteration
-#'  counter is reset after each uncertainty sample. For example, if `uncertain =
-#'  10`, this condition is triggered every 10 samples with no improvement.
+#' @param verbose_elim A logical for whether logging of the elimination of
+#'  tuning parameter combinations should occur.
+#' @param burn_in An integer for how many resamples should be completed for all
+#'  grid combinations before parameter filtering begins.
+#' @param num_ties An integer for when tie-breaking should occur. If there are
+#'  two final parameter combinations being evaluated, `num_ties` specified how
+#'  many more resampling iterations should be evaluated. After `num_ties` more
+#'  iterations, the parameter combination with the current best results is
+#'  retained.
+#' @param alpha The alpha level for a one-sided confidence interval for each
+#'  parameter combination.
+#' @param randomize Should the resamples be evaluated in a random order?
 #' @param seed An integer for controlling the random number stream.
 #' @param time_limit A number for the minimum number of _minutes_ (elapsed) that
 #'   the function should execute. The elapsed time is evaluated at internal
@@ -30,12 +35,18 @@
 #'
 #' @export
 control_race <-
-  function(verbose = FALSE, allow_par = TRUE, extract = NULL, save_pred = FALSE,
-           burn_in = 3, alpha = 0.05, randomize = TRUE, pkgs = NULL,
-           save_workflow = FALSE) {
+  function(verbose = FALSE, verbose_elim = TRUE, allow_par = TRUE,
+           extract = NULL, save_pred = FALSE,
+           burn_in = 3, num_ties = 10, alpha = 0.05, randomize = TRUE,
+           pkgs = NULL, save_workflow = FALSE) {
 
     tune::val_class_and_single(verbose,       "logical",   "control_grid()")
+    tune::val_class_and_single(verbose_elim,  "logical",   "control_grid()")
     tune::val_class_and_single(allow_par,     "logical",   "control_grid()")
+    tune::val_class_and_single(alpha,         "numeric",   "control_grid()")
+    tune::val_class_and_single(burn_in,       "numeric",   "control_grid()")
+    tune::val_class_and_single(randomize,     "logical",   "control_grid()")
+    tune::val_class_and_single(num_ties,      "numeric",   "control_grid()")
     tune::val_class_and_single(save_pred,     "logical",   "control_grid()")
     tune::val_class_or_null(pkgs,             "character", "control_grid()")
     tune::val_class_or_null(extract,          "function",  "control_grid()")
@@ -43,11 +54,13 @@ control_race <-
 
     res <- list(
       verbose = verbose,
+      verbose_elim = verbose_elim,
       allow_par = allow_par,
       extract = extract,
       save_pred = save_pred,
       alpha = alpha,
       burn_in = burn_in,
+      num_ties = num_ties,
       randomize = randomize,
       pkgs = pkgs,
       save_workflow = save_workflow
@@ -63,5 +76,3 @@ print.control_race <- function(x, ...) {
   invisible(x)
 }
 
-
-## TODO add a 2-way tie-breaker option?

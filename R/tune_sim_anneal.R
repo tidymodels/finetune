@@ -68,7 +68,7 @@
 #'
 #' ## Parallelism
 #'
-#' The `tune` and `modelopt` packages currently parallelize over resamples.
+#' The `tune` and `finetune` packages currently parallelize over resamples.
 #' Specifying a parallel back-end will improve the generation of the initial
 #' set of sub-models (if any). Each iteration of the search are also run in
 #' parallel as long as there are 2 or more resamples.
@@ -80,7 +80,7 @@
 #' Bohachevsky, Johnson, and Stein (1986) "Generalized Simulated Annealing for
 #' Function Optimization", _Technometrics_, 28:3, 209-217
 #' @examples
-#' library(modelopt)
+#' library(finetune)
 #' library(rpart)
 #' library(dplyr)
 #' library(tune)
