@@ -18,7 +18,62 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-finetune contains some extra functions for model tuning that exist in the tune package. 
+`finetune` contains some extra functions for model tuning that extend what is currently in the `tune` package. 
+
+Very rough version of the package right now but it works fairly well. There are two main sets of tools. 
+
+Tuning via _simulated annealing_ optimization is another iterative search tool for finding good values: 
+
+```{r sa}
+library(tidymodels)
+library(finetune)
+
+# Syntax very similar to `tune_grid()` or `tune_Bayes()`: 
+
+## -----------------------------------------------------------------------------
+
+data(two_class_dat, package = "modeldata")
+
+set.seed(6376)
+rs <- bootstraps(two_class_dat, times = 20)
+
+# optimize an xgboost model
+
+xgb <-
+  boost_tree(
+    trees = tune(),
+    min_n = tune(),
+    tree_depth = tune(),
+    learn_rate = tune(),
+    loss_reduction = tune(),
+    sample_size = tune()
+    ) %>%
+  set_engine("xgboost") %>%
+  set_mode("classification")
+
+## -----------------------------------------------------------------------------
+
+set.seed(8300)
+sa_res <- xgb %>% tune_sim_anneal(Class ~ ., resamples = rs, iter = 20)
+```
+
+The second set of methods are for "racing". We start off by doing a small set of resamples for all of the grid points, then statistically testing to see which ones should be dropped or investigated more. The two methods here are based on those should in [Kuhn (2014)](https://arxiv.org/abs/1405.6974). 
+
+For example, using an ANOVA-type analysis to filter out parameter combinations:
+
+```{r race}
+set.seed(511)
+grid <-
+  xgb %>%
+  parameters() %>%
+  grid_max_entropy(size = 20)
+
+set.seed(11)
+grid_anova <- xgb %>% tune_race_anova(Class ~ ., resamples = rs, grid = grid)
+```
+
+`tune_race_win_loss()` can also be used. 
+
 
 ## Code of Conduct
   

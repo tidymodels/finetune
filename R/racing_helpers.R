@@ -59,13 +59,13 @@ test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05)
   # function to make formula based on current resamples
   mod <- lme4::lmer(.estimate ~ .config + (1|id), data = configs)
 
-  rs_pct <-
-    VarCorr(mod) %>%
-    tibble::as_tibble(rownames = "terms") %>%
-    dplyr::mutate(var = sdcor^2, pct = var/sum(var)*100) %>%
-    dplyr::filter(grp == "id") %>%
-    dplyr::pull(pct) %>%
-    round(2)
+  # rs_pct <-
+    # lme4::VarCorr(mod) %>%
+    # tibble::as_tibble(rownames = "terms") %>%
+    # dplyr::mutate(var = sdcor^2, pct = var/sum(var)*100) %>%
+    # dplyr::filter(grp == "id") %>%
+    # dplyr::pull(pct) %>%
+    # round(2)
 
   point_est <-
     coef(summary(mod)) %>%
