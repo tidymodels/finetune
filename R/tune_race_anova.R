@@ -133,6 +133,18 @@ tune_race_anova_workflow <-
     analysis_metric <- names(attr(metrics, "metrics"))[1]
     analysis_max    <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
 
+    cols <- tune::get_tune_colors()
+    if (control$verbose_elim) {
+      msg <-
+        paste("Racing will", ifelse(analysis_max, "maximize", "minimize"),
+              "the", analysis_metric, "metric.")
+      rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
+      if (control$randomize) {
+        msg <- "Resamples are analyzed in a random order."
+        rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
+      }
+    }
+
     filters_results <-
       test_parameters_gls(res, param_names, analysis_metric, analysis_max, control$alpha)
     n_grid <- nrow(filters_results)

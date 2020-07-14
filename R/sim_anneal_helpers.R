@@ -216,8 +216,7 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
   chr_iter <- format(1:max_iter)[iter]
   dig <- paste0("%.", digits, "f")
 
-  ## TODO update colors below based on tune::get_colors
-
+  cols <- tune::get_tune_colors()
   if (iter > 0) {
     msg <- paste0(" ", metric, ": ", sprintf(dig, signif(new_res, digits = digits)))
     msg <- paste0(msg,  "\t")  # "\t(", pct_diff, "%)  "
@@ -237,6 +236,6 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
     msg <- paste0("Initial best: ", sprintf(dig, signif(initial_res, digits = digits)))
   }
 
-  message(msg)
+  rlang::inform(cols$message$info(msg))
 }
 

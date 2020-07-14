@@ -271,8 +271,9 @@ tune_sim_anneal_workflow <-
       return(out)
     })
 
+    cols <- tune::get_tune_colors()
     if (control$verbose) {
-      message(paste("Optimizing", metrics_name))
+      rlang::inform(cols$message$info(paste("Optimizing", metrics_name)))
     }
 
     ## -----------------------------------------------------------------------------
@@ -361,10 +362,15 @@ tune_sim_anneal_workflow <-
 
       ## -----------------------------------------------------------------------------
 
-      log_sa_progress(x = result_history, max_iter = iter, maximize = maximize, metric = metrics_name)
+      log_sa_progress(x = result_history, max_iter = iter, maximize = maximize,
+                      metric = metrics_name)
 
       if (count_improve >= control$no_improve) {
-        message(paste0("Stopping; no improvments in ", no_improve, " iterations."))
+        rlang::inform(
+          cols$message$danger(
+            paste0("Stopping; no improvments in ", no_improve, " iterations.")
+          )
+        )
         break()
       }
     }

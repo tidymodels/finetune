@@ -28,10 +28,6 @@ test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05)
 
   ## TODO run check_results to filter some things out
 
-  ## TODO announce randomization and analysis metric
-
-  ## TODO use rlang::info instead of message
-
   ## ---------------------------------------------------------------------------
   # regroup .configs by mean and subset on those being analyzed
 
@@ -60,12 +56,12 @@ test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05)
   mod <- lme4::lmer(.estimate ~ .config + (1|id), data = configs)
 
   # rs_pct <-
-    # lme4::VarCorr(mod) %>%
-    # tibble::as_tibble(rownames = "terms") %>%
-    # dplyr::mutate(var = sdcor^2, pct = var/sum(var)*100) %>%
-    # dplyr::filter(grp == "id") %>%
-    # dplyr::pull(pct) %>%
-    # round(2)
+  # lme4::VarCorr(mod) %>%
+  # tibble::as_tibble(rownames = "terms") %>%
+  # dplyr::mutate(var = sdcor^2, pct = var/sum(var)*100) %>%
+  # dplyr::filter(grp == "id") %>%
+  # dplyr::pull(pct) %>%
+  # round(2)
 
   point_est <-
     coef(summary(mod)) %>%
@@ -265,7 +261,6 @@ score_season <- function(x, dat, maximize = FALSE) {
   if (any(player_rankings$wins == 0)) {
     skunked <- player_rankings$player[player_rankings$wins == 0]
     eliminated <- c(eliminated, skunked)
-    # message("Some players lost all games: ", paste0(skunked, collapse = ", "))
     season_results <-
       game_results %>%
       dplyr::filter(!(player_1 %in% skunked) & !(player_2 %in% skunked)) %>%
@@ -369,17 +364,17 @@ log_racing <- function(control, x, splits, grid_size, metric) {
 
   remaining <- sum(x$pass, na.rm = TRUE)
   if (remaining > 1) {
-    msg <- paste(remaining, "of",  grid_size, "candidate sub-models remain")
+    msg <- paste(remaining, "of",  grid_size, "candidate sub-models remain.")
   } else {
-    msg <- paste(remaining, "of",  grid_size, "candidate sub-model remains")
+    msg <- paste(remaining, "of",  grid_size, "candidate sub-model remains.")
   }
 
   tune_cols <- tune::get_tune_colors()
   msg <-
-    tune_cols$symbol$info(
-      paste0(cli::symbol$info, " ", labs, msg, " (filtered using ", metric, ").")
+    tune_cols$message$info(
+      paste0(cli::symbol$info, " ", labs, msg)
     )
-  message(msg)
+  rlang::inform(msg)
 }
 
 
@@ -399,10 +394,10 @@ tie_breaker <- function(res, control) {
   if (control$verbose_elim) {
     tune_cols <- tune::get_tune_colors()
     msg <- tune_cols$symbol$info(paste0(cli::symbol$info, " Tie broken!"))
-    if (runif(1) < .001) {
+    if (runif(1) < .05) {
       msg <- paste(msg, "Two models enter, one model leaves.")
     }
-    message(msg)
+    rlang::inform(msg)
   }
   res <-
     dplyr::select(x, .config, !!!param_names) %>%
