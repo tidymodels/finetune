@@ -4,7 +4,7 @@ options(dplyr.summarise.inform = FALSE)
 # Racing via repeated measures ANOVA
 
 
-mer2tibble <- function(x) {
+mod2tibble <- function(x) {
   x %>%
     tibble::as_tibble(rownames = ".config") %>%
     dplyr::filter(grepl("\\.config", .config)) %>%
@@ -51,9 +51,7 @@ test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05)
 
   ## ---------------------------------------------------------------------------
 
-  # TODO Break out model and try/catch if errors
-  # function to make formula based on current resamples
-  mod <- lme4::lmer(.estimate ~ .config + (1|id), data = configs)
+  mod_est <- fit_anova(x, configs, alpha)
 
   # rs_pct <-
   # lme4::VarCorr(mod) %>%
@@ -63,15 +61,15 @@ test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05)
   # dplyr::pull(pct) %>%
   # round(2)
 
-  point_est <-
-    coef(summary(mod)) %>%
-    mer2tibble() %>%
-    dplyr::select(.config, estimate = Estimate)
-  mod_est <-
-    confint(mod, method = "Wald", level = 1 - alpha, quiet = TRUE) %>%
-    mer2tibble() %>%
-    setNames(c(".config", "lower", "upper")) %>%
-    dplyr::inner_join(point_est, by = ".config")
+  # point_est <-
+  #   coef(summary(mod)) %>%
+  #   mer2tibble() %>%
+  #   dplyr::select(.config, estimate = Estimate)
+  # mod_est <-
+  #   confint(mod, method = "Wald", level = 1 - alpha, quiet = TRUE) %>%
+  #   mer2tibble() %>%
+  #   setNames(c(".config", "lower", "upper")) %>%
+  #   dplyr::inner_join(point_est, by = ".config")
 
   if (maximize) {
     mod_est <-
@@ -130,6 +128,9 @@ test_parameters_bt <- function(x, param_names, metric, maximize, alpha =  0.05) 
   season_data <- score_season(season_schedule, analysis_data, maximize)
   best_team <- levels(season_data$scoring$player_1)[1]
 
+  ## TODO this model fails periodically so we should wrap in a try-catch and
+  ## pass everything if it fails. A fit_lr() function would be a good idea to
+  ## compartmentalize the fit and subsequent data manipulations.
   mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
                             data = season_data$scoring, br = TRUE)
 
@@ -159,6 +160,8 @@ test_parameters_bt <- function(x, param_names, metric, maximize, alpha =  0.05) 
     )
 
 
+  ## TODO For both racing methods, make this a function with the configs as
+  ## arguments.
   if (length(season_data$eliminated) > 0) {
     elim_results <-
       tibble::tibble(
@@ -338,6 +341,8 @@ restore_tune <- function(x, y) {
 
   att <- attributes(x)
   att$row.names <- 1:(nrow(x) + nrow(y))
+  att$class <- c("tune_race", "tune_results", class(tibble::tibble()))
+
 
   ## -----------------------------------------------------------------------------
 
@@ -435,3 +440,32 @@ check_results <- function(dat, rm_zv = TRUE, rm_dup = FALSE) {
 
   exclude
 }
+
+
+fit_anova <- function(x, dat, alpha) {
+  rs_info <- attr(x, "rset_info")$att
+  if (rs_info$class == "vfold_cv") {
+    if (rs_info$repeats > 1) {
+      f <- .estimate ~ .config + (1 | id)
+    } else {
+      f <- .estimate ~ .config + (1 | id2/id)
+    }
+  } else {
+    f <- .estimate ~ .config + (1 | id)
+  }
+
+  mod <- try(lme4::lmer(.estimate ~ .config + (1|id), data = dat), silent = TRUE)
+  if (!inherits(mod, "try-error")) {
+    mod <- lm(.estimate ~ .config, data = dat)
+  }
+  point_est <-
+    coef(summary(mod)) %>%
+    mod2tibble() %>%
+    dplyr::select(.config, estimate = Estimate)
+  interval_est <-
+    confint(mod, method = "Wald", level = 1 - alpha, quiet = TRUE) %>%
+    mod2tibble() %>%
+    setNames(c(".config", "lower", "upper"))
+  dplyr::inner_join(point_est, interval_est, by = ".config")
+}
+
