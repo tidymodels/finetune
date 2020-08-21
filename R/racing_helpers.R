@@ -304,6 +304,7 @@ score_season <- function(x, dat, maximize = FALSE) {
 restore_rset <- function(x, index) {
   att <- attributes(x)
   x <- x %>% dplyr::slice(index)
+  att$row.names  <- att$row.names[index]
   attributes(x) <- att
   x
 }
