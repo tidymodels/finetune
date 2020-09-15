@@ -195,7 +195,7 @@ is_new_best <- function(x, iter, mset) {
   iter == x$.iter[which.max(x$mean)]
 }
 
-log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter, maximize = TRUE, digits = 7) {
+log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter, maximize = TRUE, digits = 5) {
   if (!control$verbose) {
     return(invisible(NULL))
   }
@@ -221,10 +221,11 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
     msg <- paste0(" ", metric, ": ", sprintf(dig, signif(new_res, digits = digits)))
     msg <- paste0(msg,  "\t")  # "\t(", pct_diff, "%)  "
     symb <- dplyr::case_when(
-      new_event == "improvement" ~ crayon::green(cli::symbol$heart),
-      new_event == "discard"     ~ crayon::red(cli::symbol$circle_cross),
-      new_event == "accept"      ~ crayon::silver("+"),
-      new_event == "restart"     ~ crayon::silver(cli::symbol$radio_on),
+      new_event == "improvement" &  is_best ~ crayon::green(cli::symbol$heart),
+      new_event == "improvement" & !is_best ~ crayon::green("+"),
+      new_event == "discard"     ~ crayon::red(cli::symbol$line),
+      new_event == "accept"      ~ crayon::silver(cli::symbol$circle),
+      new_event == "restart"     ~ crayon::red(cli::symbol$cross),
       TRUE                       ~ crayon::black(cli::symbol$info)        # accept
     )
     if (is_best) {
