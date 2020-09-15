@@ -66,6 +66,13 @@
 #'
 #' The `cooling_coef` of [control_sim_anneal()] can be used for this purpose.
 #'
+#' ## Termination criterion
+#'
+#' The restart counter is reset when a new global best results is found.
+#'
+#' The termination counter resets when a new global best is located or when a
+#' suboptimal result is improved.
+#'
 #' ## Parallelism
 #'
 #' The `tune` and `finetune` packages currently parallelize over resamples.
@@ -321,28 +328,29 @@ tune_sim_anneal_workflow <-
 
       m <- nrow(result_history)
 
-      if (result_history$results[m] == "improvement") {
+      if (result_history$results[m] == "new best") {
+        global_param <- current_param
+        current_param <- new_grid
+        best_param <- new_grid
+        count_restart <- 0
+        count_improve <- 0
+      } else if (result_history$results[m] == "better suboptimal") {
         current_param <- new_grid
         best_param <- new_grid
         count_improve <- 0
-
-        if (result_history$global_best[m]) {
-          global_param <- current_param
-          count_restart <- 0
-        }
+        count_restart <- count_restart + 1
       } else {
         count_improve <- count_improve + 1
         count_restart <- count_restart + 1
-        if (result_history$results[m] == "accept") {
+        if (result_history$results[m] == "accept suboptimal") {
           current_param <- new_grid
         }
       }
 
       ## -----------------------------------------------------------------------------
 
-      iter_info <- iter_since_x(result_history)
       if (count_restart >= control$restart) {
-        result_history$results[m] <- "restart"
+        result_history$results[m] <- "restart from best"
         current_param <- global_param
         count_restart <- 0
       }
@@ -368,7 +376,7 @@ tune_sim_anneal_workflow <-
       if (count_improve >= control$no_improve) {
         rlang::inform(
           cols$message$danger(
-            paste0("Stopping; no improvments in ", no_improve, " iterations.")
+            paste0("Stopping; no best in ", no_improve, " iterations.")
           )
         )
         break()
@@ -381,10 +389,5 @@ tune_sim_anneal_workflow <-
       save(result_history, file = file.path(tempdir(), "sa_history.RData"))
     }
     # Note; this line is probably not executed due to on.exit():
-unsummarized
+    unsummarized
   }
-
-
-
-
-
