@@ -377,6 +377,14 @@ tune_sim_anneal_workflow <-
 
     # TODO re-compute .configs?
 
+    if (check_hidden_arg(control, "sa_history", TRUE)) {
+      save(result_history, file = file.path(tempdir(), "sa_history.RData"))
+    }
     # Note; this line is probably not executed due to on.exit():
-    unsummarized
+unsummarized
   }
+
+
+
+
+
