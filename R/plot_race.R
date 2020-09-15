@@ -7,7 +7,7 @@
 #' @return A ggplot object.
 #' @export
 plot_race <- function(x) {
-  met <- tune::.get_tune_metric_names(grid_anova)[1]
+  met <- tune::.get_tune_metric_names(x)[1]
   x %>%
     tune::collect_metrics() %>%
     dplyr::filter(.metric == met) %>%
