@@ -340,7 +340,7 @@ tune_sim_anneal_workflow <-
       m <- nrow(result_history)
 
       if (result_history$results[m] == "new best") {
-        global_param <- current_param
+        global_param <- new_grid
         current_param <- new_grid
         current_parent <- current_param$.config
         best_param <- new_grid
