@@ -289,9 +289,10 @@ tune_sim_anneal_workflow <-
 
     best_param <-
       tune::select_best(unsummarized, metric = metrics_name) %>%
-      dplyr::select(-.config)
+      dplyr::mutate(.parent = NA_character_)
     grid_history <- best_param
     current_param <- best_param
+    current_parent <- best_param$.config
     global_param <- current_param
 
     existing_iter <- max(result_history$.iter)
@@ -305,18 +306,23 @@ tune_sim_anneal_workflow <-
     # TODO iterations when initializing with a previous tune object start from 1 :-O
 
     for (i in (existing_iter + 1):(existing_iter + iter)) {
+
       new_grid <-
         new_in_neighborhood(current_param,
                             param_info,
                             radius = control$radius,
-                            flip = control$flip)
+                            flip = control$flip) %>%
+        dplyr::mutate(
+          .config = paste0("iter", i),
+          .parent = current_parent
+        )
       grid_history <- dplyr::bind_rows(grid_history, new_grid)
 
       res <-
         object %>%
         tune::tune_grid(
           resamples = resamples,
-          grid = new_grid,
+          grid = new_grid %>% dplyr::select(-.config, -.parent),
           metrics = metrics
         ) %>%
         dplyr::mutate(.iter = i)
@@ -324,27 +330,36 @@ tune_sim_anneal_workflow <-
       result_history <-
         result_history %>%
         update_history(res, i) %>%
-        sa_decide(metric = metrics_name, maximize = maximize, coef = control$cooling_coef)
+        sa_decide(
+          parent = new_grid$.parent,
+          metric = metrics_name,
+          maximize = maximize,
+          coef = control$cooling_coef
+        )
 
       m <- nrow(result_history)
 
       if (result_history$results[m] == "new best") {
         global_param <- current_param
         current_param <- new_grid
+        current_parent <- current_param$.config
         best_param <- new_grid
         count_restart <- 0
         count_improve <- 0
       } else if (result_history$results[m] == "better suboptimal") {
         current_param <- new_grid
+        current_parent <- current_param$.config
         best_param <- new_grid
         count_improve <- 0
         count_restart <- count_restart + 1
-      } else {
+      } else if (result_history$results[m] == "accept suboptimal") {
+        current_param <- new_grid
+        current_parent <- current_param$.config
         count_improve <- count_improve + 1
         count_restart <- count_restart + 1
-        if (result_history$results[m] == "accept suboptimal") {
-          current_param <- new_grid
-        }
+      } else { # discard
+        count_improve <- count_improve + 1
+        count_restart <- count_restart + 1
       }
 
       ## -----------------------------------------------------------------------------
@@ -352,6 +367,7 @@ tune_sim_anneal_workflow <-
       if (count_restart >= control$restart) {
         result_history$results[m] <- "restart from best"
         current_param <- global_param
+        current_parent <- current_param$.config
         count_restart <- 0
       }
 
@@ -383,9 +399,11 @@ tune_sim_anneal_workflow <-
       }
     }
 
-    # TODO re-compute .configs?
-
     if (check_hidden_arg(control, "sa_history", TRUE)) {
+      result_history <-
+        result_history %>%
+        dplyr::full_join(grid_history %>% dplyr::select(.config, .parent), by = ".config") %>%
+        dplyr::arrange(.iter, .config)
       save(result_history, file = file.path(tempdir(), "sa_history.RData"))
     }
     # Note; this line is probably not executed due to on.exit():

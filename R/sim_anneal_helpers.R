@@ -7,6 +7,7 @@ maximize_metric <- function(x, metric) {
 
 
 new_in_neighborhood <- function(current, pset, radius = 0.025, flip = 0.1) {
+  current <- dplyr::select(current, !!!pset$id)
   is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
   if (any(is_quant)) {
     quant_nms <- pset$id[is_quant]
@@ -73,8 +74,9 @@ update_history <- function(history, x, iter) {
   analysis_metric <- tune::.get_tune_metric_names(x)[1]
   res <-
     tune::show_best(x, metric = analysis_metric) %>%
-    dplyr::select(.metric, mean, n, std_err) %>%
+    # dplyr::select(.metric, mean, n, std_err) %>%
     dplyr::mutate(
+      .config = paste0("iter", iter),
       .iter = iter,
       random = runif(1),
       accept = NA_real_,
@@ -87,16 +89,14 @@ update_history <- function(history, x, iter) {
   }
 
   if (maximize_metric(x, analysis_metric)) {
-    best_res <- history$.iter[which.max(history$mean)]
+    best_res <- which.max(history$mean)
   } else {
-    best_res <- history$.iter[which.min(history$mean)]
+    best_res <- which.min(history$mean)
   }
 
-  history <-
-    history %>%
-    dplyr::mutate(global_best = .iter == best_res)
-  history %>%
-    dplyr::select(.iter, .metric, mean, n, std_err, random, accept, results, global_best)
+  history$global_best <- FALSE
+  history$global_best[best_res] <- TRUE
+  history
 }
 
 get_sa_param <- function(x) {
@@ -106,23 +106,20 @@ get_sa_param <- function(x) {
 
 }
 
-sa_decide <- function(x, metric, maximize, coef) {
-  latest_iter <- max(x$.iter)
-  prev_iter <- latest_iter - 1
-  prev_metric   <- x$mean[x$.metric == metric & x$.iter == prev_iter]
-  latest_metric <- x$mean[x$.metric == metric & x$.iter == latest_iter]
+sa_decide <- function(x, parent, metric, maximize, coef) {
+  res <- dplyr::filter(x, .metric == metric)
+  latest_ind <- which.max(res$.iter)
+  prev_ind <- which(res$.config == parent)
+  prev_metric   <- res$mean[prev_ind]
+  latest_metric <- res$mean[latest_ind]
+  all_prev <- res$mean[1:prev_ind]
 
   if (maximize) {
-    prev_metric   <- max(prev_metric, na.rm = TRUE)
-    latest_metric <- max(latest_metric, na.rm = TRUE)
-    better_result <- isTRUE(latest_metric > prev_metric)
-    is_best <- latest_metric > max(x$mean[x$.metric == metric & x$.iter < latest_iter], na.rm = TRUE)
-
+    is_best <- latest_metric > max(all_prev, na.rm = TRUE)
+    is_better <- isTRUE(latest_metric > prev_metric)
   } else {
-    prev_metric   <- min(prev_metric, na.rm = TRUE)
-    latest_metric <- min(latest_metric, na.rm = TRUE)
-    better_result <- isTRUE(latest_metric < prev_metric)
-    is_best <- latest_metric < min(x$mean[x$.metric == metric & x$.iter < latest_iter], na.rm = TRUE)
+    is_best <- latest_metric < min(all_prev, na.rm = TRUE)
+    is_better <- isTRUE(latest_metric < prev_metric)
   }
 
   m <- nrow(x)
@@ -131,7 +128,7 @@ sa_decide <- function(x, metric, maximize, coef) {
     acceptance_prob(
       current = prev_metric,
       new = latest_metric,
-      iter = latest_iter,
+      iter = max(x$.iter),
       maximize = maximize,
       coef = coef
     )
@@ -139,7 +136,7 @@ sa_decide <- function(x, metric, maximize, coef) {
   if (is_best) {
     x$results[m] <- "new best"
     x$random[m] <- x$accept[m] <- NA_real_
-  } else if (better_result) {
+  } else if (is_better) {
     x$results[m] <- "better suboptimal"
     x$random[m] <- x$accept[m] <- NA_real_
   } else {
