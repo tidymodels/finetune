@@ -18,7 +18,6 @@
 #' @param cooling_coef A real, positive number to influence the cooling
 #' schedule. Larger values decrease the probability of accepting a sub-optimal
 #' parameter setting.
-#' @param seed An integer for controlling the random number stream.
 #' @param time_limit A number for the minimum number of _minutes_ (elapsed) that
 #'   the function should execute. The elapsed time is evaluated at internal
 #'   checkpoints and, if over time, the results at that time are returned (with
@@ -41,7 +40,6 @@ control_sim_anneal <-
            radius = 0.1,
            flip = 0.2,
            cooling_coef = 0.02,
-           seed = sample.int(10^5, 1),
            extract = NULL,
            save_pred = FALSE,
            time_limit = NA,
@@ -56,18 +54,23 @@ control_sim_anneal <-
     tune::val_class_and_single(radius, "numeric", "control_sim_anneal()")
     tune::val_class_and_single(flip, "numeric", "control_sim_anneal()")
     tune::val_class_and_single(cooling_coef, "numeric", "control_sim_anneal()")
-    tune::val_class_and_single(seed, c("numeric", "integer"), "control_sim_anneal()")
     tune::val_class_or_null(extract, "function", "control_sim_anneal()")
     tune::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
     tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
     tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
 
-    radius[radius <= 0] <- 0.0001
-    radius[radius >= 1] <- 0.9999
+    radius[radius <= 0] <- 0.001
+    radius[radius >= 1] <- 0.999
     flip[flip < 0] <- 0
     flip[flip > 1] <- 1
     cooling_coef[cooling_coef <= 0] <- 0.0001
 
+    if (no_improve < 2) {
+      rlang::abort("'no_improve' should be > 1")
+    }
+    if (restart < 2) {
+      rlang::abort("'restart' should be > 1")
+    }
     if (!is.infinite(restart) && restart > no_improve) {
       cli::cli_alert_warning(
         "Parameter restart is scheduled after {restart} poor iterations but the search will stop after {no_improve}."
@@ -82,7 +85,6 @@ control_sim_anneal <-
         radius = radius,
         flip = flip,
         cooling_coef = cooling_coef,
-        seed = seed,
         extract = extract,
         save_pred = save_pred,
         time_limit = time_limit,

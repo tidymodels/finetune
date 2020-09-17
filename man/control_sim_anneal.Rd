@@ -11,7 +11,6 @@ control_sim_anneal(
   radius = 0.1,
   flip = 0.2,
   cooling_coef = 0.02,
-  seed = sample.int(10^5, 1),
   extract = NULL,
   save_pred = FALSE,
   time_limit = NA,
@@ -43,8 +42,6 @@ any non-numeric parameter values at each iteration.}
 \item{cooling_coef}{A real, positive number to influence the cooling
 schedule. Larger values decrease the probability of accepting a sub-optimal
 parameter setting.}
-
-\item{seed}{An integer for controlling the random number stream.}
 
 \item{extract}{An optional function with at least one argument (or \code{NULL})
 that can be used to retain arbitrary objects from the model fit object,

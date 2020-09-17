@@ -24,6 +24,7 @@ Suggests:
     BradleyTerry2,
     lme4,
     rsample,
+    recipes,
     modeldata,
     rpart,
     parsnip,

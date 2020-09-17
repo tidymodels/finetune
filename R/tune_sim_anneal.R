@@ -417,3 +417,11 @@ tune_sim_anneal_workflow <-
     # Note; this line is probably not executed due to on.exit():
     unsummarized
   }
+
+
+# TODO
+# - save_workflows and other attributes
+# - expand time limits
+# - fix sim_anneal as input
+# - printing similar to tune_bayes
+# - make control$sa_history a real option
