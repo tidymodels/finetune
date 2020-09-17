@@ -470,3 +470,12 @@ fit_anova <- function(x, dat, alpha) {
   dplyr::inner_join(point_est, interval_est, by = ".config")
 }
 
+## -----------------------------------------------------------------------------
+
+check_hidden_arg <- function(x, name, value) {
+  if (!any(names(x) == name)) {
+    return(FALSE)
+  }
+  identical(x[[name]], value)
+}
+

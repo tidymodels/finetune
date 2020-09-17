@@ -7,6 +7,7 @@ maximize_metric <- function(x, metric) {
 
 
 new_in_neighborhood <- function(current, pset, radius = 0.025, flip = 0.1) {
+  current <- dplyr::select(current, !!!pset$id)
   is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
   if (any(is_quant)) {
     quant_nms <- pset$id[is_quant]
@@ -73,8 +74,9 @@ update_history <- function(history, x, iter) {
   analysis_metric <- tune::.get_tune_metric_names(x)[1]
   res <-
     tune::show_best(x, metric = analysis_metric) %>%
-    dplyr::select(.metric, mean, n, std_err) %>%
+    # dplyr::select(.metric, mean, n, std_err) %>%
     dplyr::mutate(
+      .config = paste0("iter", iter),
       .iter = iter,
       random = runif(1),
       accept = NA_real_,
@@ -87,16 +89,14 @@ update_history <- function(history, x, iter) {
   }
 
   if (maximize_metric(x, analysis_metric)) {
-    best_res <- history$.iter[which.max(history$mean)]
+    best_res <- which.max(history$mean)
   } else {
-    best_res <- history$.iter[which.min(history$mean)]
+    best_res <- which.min(history$mean)
   }
 
-  history <-
-    history %>%
-    dplyr::mutate(global_best = .iter == best_res)
-  history %>%
-    dplyr::select(.iter, .metric, mean, n, std_err, random, accept, results, global_best)
+  history$global_best <- FALSE
+  history$global_best[best_res] <- TRUE
+  history
 }
 
 get_sa_param <- function(x) {
@@ -106,20 +106,20 @@ get_sa_param <- function(x) {
 
 }
 
-sa_decide <- function(x, metric, maximize, coef) {
-  latest_iter <- max(x$.iter)
-  prev_iter <- latest_iter - 1
-  prev_metric   <- x$mean[x$.metric == metric & x$.iter == prev_iter]
-  latest_metric <- x$mean[x$.metric == metric & x$.iter == latest_iter]
+sa_decide <- function(x, parent, metric, maximize, coef) {
+  res <- dplyr::filter(x, .metric == metric)
+  latest_ind <- which.max(res$.iter)
+  prev_ind <- which(res$.config == parent)
+  prev_metric   <- res$mean[prev_ind]
+  latest_metric <- res$mean[latest_ind]
+  all_prev <- res$mean[1:prev_ind]
 
   if (maximize) {
-    prev_metric   <- max(prev_metric, na.rm = TRUE)
-    latest_metric <- max(latest_metric, na.rm = TRUE)
-    better_result <- isTRUE(latest_metric > prev_metric)
+    is_best <- latest_metric > max(all_prev, na.rm = TRUE)
+    is_better <- isTRUE(latest_metric > prev_metric)
   } else {
-    prev_metric   <- min(prev_metric, na.rm = TRUE)
-    latest_metric <- min(latest_metric, na.rm = TRUE)
-    better_result <- isTRUE(latest_metric < prev_metric)
+    is_best <- latest_metric < min(all_prev, na.rm = TRUE)
+    is_better <- isTRUE(latest_metric < prev_metric)
   }
 
   m <- nrow(x)
@@ -128,19 +128,22 @@ sa_decide <- function(x, metric, maximize, coef) {
     acceptance_prob(
       current = prev_metric,
       new = latest_metric,
-      iter = latest_iter,
+      iter = max(x$.iter),
       maximize = maximize,
       coef = coef
     )
 
-  if (better_result) {
-    x$results[m] <- "improvement"
+  if (is_best) {
+    x$results[m] <- "new best"
+    x$random[m] <- x$accept[m] <- NA_real_
+  } else if (is_better) {
+    x$results[m] <- "better suboptimal"
     x$random[m] <- x$accept[m] <- NA_real_
   } else {
     if (x$random[m] <= x$accept[m]) {
-      x$results[m] <- "accept"
+      x$results[m] <- "accept suboptimal"
     } else {
-      x$results[m] <- "discard"
+      x$results[m] <- "discard suboptimal"
     }
   }
   x
@@ -178,24 +181,7 @@ acceptance_prob <- function(current, new, iter, maximize = TRUE, coef = 2/100) {
   exp(pct_diff * coef * iter)
 }
 
-
-iter_since_x <- function(x, mset) {
-  max_iter <- max(x$.iter)
-  best_iter <- x$.iter[x$global_best]
-  if (any(x$results == "improvement")) {
-    last_imp <- max(x$.iter[x$results == "improvement"], na.rm = TRUE)
-  } else {
-    last_imp <- Inf
-  }
-  list(improve = max_iter - last_imp, best = max_iter - best_iter)
-}
-
-
-is_new_best <- function(x, iter, mset) {
-  iter == x$.iter[which.max(x$mean)]
-}
-
-log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter, maximize = TRUE, digits = 7) {
+log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter, maximize = TRUE, digits = 5) {
   if (!control$verbose) {
     return(invisible(NULL))
   }
@@ -221,15 +207,13 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
     msg <- paste0(" ", metric, ": ", sprintf(dig, signif(new_res, digits = digits)))
     msg <- paste0(msg,  "\t")  # "\t(", pct_diff, "%)  "
     symb <- dplyr::case_when(
-      new_event == "improvement" ~ crayon::green(cli::symbol$heart),
-      new_event == "discard"     ~ crayon::red(cli::symbol$circle_cross),
-      new_event == "accept"      ~ crayon::silver("+"),
-      new_event == "restart"     ~ crayon::silver(cli::symbol$radio_on),
-      TRUE                       ~ crayon::black(cli::symbol$info)        # accept
+      new_event == "new best"           ~ crayon::green(cli::symbol$heart),
+      new_event == "better suboptimal"  ~ crayon::green("+"),
+      new_event == "discard suboptimal" ~ crayon::red(cli::symbol$line),
+      new_event == "accept suboptimal"  ~ crayon::silver(cli::symbol$circle),
+      new_event == "restart from best"  ~ crayon::red(cli::symbol$cross),
+      TRUE                              ~ crayon::black(cli::symbol$info)
     )
-    if (is_best) {
-      new_event <- paste(new_event, "(new best)")
-    }
     msg <- paste0(chr_iter, " ", symb, "\t", msg, " ", new_event)
   } else {
     initial_res <- max(x$mean[x$.iter == 0], na.rm = TRUE)
