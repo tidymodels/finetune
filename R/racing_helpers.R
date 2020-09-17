@@ -217,16 +217,16 @@ score_season <- function(x, dat, maximize = FALSE) {
   player_1 <-
     dplyr::left_join(
       x %>%
-        dplyr::mutate(pair = row_number()) %>%
+        dplyr::mutate(pair = dplyr::row_number()) %>%
         dplyr::select(.config = p1, pair),
       dat,
       by = ".config") %>%
     dplyr::select(player_1 = .config, metric_1 = .estimate, pair, dplyr::starts_with("id"))
 
   player_2 <-
-    left_join(
+    dplyr::left_join(
       x %>%
-        dplyr::mutate(pair = row_number()) %>%
+        dplyr::mutate(pair = dplyr::row_number()) %>%
         dplyr::select(.config = p2, pair),
       dat,
       by = ".config") %>%

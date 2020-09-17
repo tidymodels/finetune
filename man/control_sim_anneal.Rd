@@ -61,6 +61,9 @@ minimum time limit.}
 
 \item{pkgs}{An optional character string of R package names that should be
 loaded (by namespace) during parallel processing.}
+
+\item{save_workflow}{A logical for whether the workflow should be appended
+to the output as an attribute.}
 }
 \description{
 Control aspects of the simulated annealing search process

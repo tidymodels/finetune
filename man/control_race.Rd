@@ -55,13 +55,8 @@ parameter combination.}
 \item{pkgs}{An optional character string of R package names that should be
 loaded (by namespace) during parallel processing.}
 
-\item{seed}{An integer for controlling the random number stream.}
-
-\item{time_limit}{A number for the minimum number of \emph{minutes} (elapsed) that
-the function should execute. The elapsed time is evaluated at internal
-checkpoints and, if over time, the results at that time are returned (with
-a warning). This means that the \code{time_limit} is not an exact limit, but a
-minimum time limit.}
+\item{save_workflow}{A logical for whether the workflow should be appended
+to the output as an attribute.}
 }
 \description{
 Control aspects of the grid search racing process

@@ -57,7 +57,7 @@ random_neighbor <- function(current, pset, retain = 1, tries = 500, r = .025) {
   colnames(rnd) <- colnames(current)
   rnd <- tibble::as_tibble(rnd)
   rnd <- encode_set_backwards(rnd, pset)
-  selected <- rnd %>% sample_n(retain)
+  selected <- rnd %>% dplyr::sample_n(retain)
   selected
 }
 

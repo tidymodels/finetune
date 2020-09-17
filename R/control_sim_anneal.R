@@ -31,6 +31,8 @@
 #'   be saved for each model _evaluated_.
 #' @param pkgs An optional character string of R package names that should be
 #'   loaded (by namespace) during parallel processing.
+#' @param save_workflow A logical for whether the workflow should be appended
+#' to the output as an attribute.
 #' @export
 control_sim_anneal <-
   function(verbose = FALSE,

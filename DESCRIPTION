@@ -26,7 +26,8 @@ Suggests:
     rsample,
     modeldata,
     rpart,
-    parsnip
+    parsnip,
+    testthat
 Language: en-US
 Depends: 
     tune

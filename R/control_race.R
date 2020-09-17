@@ -17,12 +17,6 @@
 #' @param alpha The alpha level for a one-sided confidence interval for each
 #'  parameter combination.
 #' @param randomize Should the resamples be evaluated in a random order?
-#' @param seed An integer for controlling the random number stream.
-#' @param time_limit A number for the minimum number of _minutes_ (elapsed) that
-#'   the function should execute. The elapsed time is evaluated at internal
-#'   checkpoints and, if over time, the results at that time are returned (with
-#'   a warning). This means that the `time_limit` is not an exact limit, but a
-#'   minimum time limit.
 #' @param extract An optional function with at least one argument (or `NULL`)
 #'   that can be used to retain arbitrary objects from the model fit object,
 #'   recipe, or other elements of the workflow.
@@ -32,6 +26,8 @@
 #'   loaded (by namespace) during parallel processing.
 #' @param allow_par A logical to allow parallel processing (if a parallel
 #'   backend is registered).
+#' @param save_workflow A logical for whether the workflow should be appended
+#' to the output as an attribute.
 #'
 #' @export
 control_race <-
