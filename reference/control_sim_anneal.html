@@ -132,7 +132,6 @@
   radius = <span class='fl'>0.1</span>,
   flip = <span class='fl'>0.2</span>,
   cooling_coef = <span class='fl'>0.02</span>,
-  seed = <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></span>(<span class='fl'>10</span><span class='op'>^</span><span class='fl'>5</span>, <span class='fl'>1</span>),
   extract = <span class='kw'>NULL</span>,
   save_pred = <span class='fl'>FALSE</span>,
   time_limit = <span class='fl'>NA</span>,
@@ -178,10 +177,6 @@ any non-numeric parameter values at each iteration.</p></td>
       <td><p>A real, positive number to influence the cooling
 schedule. Larger values decrease the probability of accepting a sub-optimal
 parameter setting.</p></td>
-    </tr>
-    <tr>
-      <th>seed</th>
-      <td><p>An integer for controlling the random number stream.</p></td>
     </tr>
     <tr>
       <th>extract</th>
