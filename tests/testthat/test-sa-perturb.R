@@ -7,7 +7,6 @@ library(dplyr)
 num_prm <- parameters(mixture(), threshold())
 cat_prm <- parameters(activation(), weight_func())
 
-
 ## -----------------------------------------------------------------------------
 
 test_that('numerical neighborhood', {

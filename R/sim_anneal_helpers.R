@@ -99,13 +99,6 @@ update_history <- function(history, x, iter) {
   history
 }
 
-get_sa_param <- function(x) {
-  nms <- tune::.get_tune_parameter_names(x)
-  x$.metrics[[1]] %>%
-    dplyr::distinct(!!!rlang::syms(nms))
-
-}
-
 sa_decide <- function(x, parent, metric, maximize, coef) {
   res <- dplyr::filter(x, .metric == metric)
   latest_ind <- which.max(res$.iter)
