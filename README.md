@@ -5,6 +5,10 @@
 
 <!-- badges: start -->
 
+[![Codecov test
+coverage](https://codecov.io/gh/tidymodels/finetune/branch/master/graph/badge.svg)](https://codecov.io/gh/tidymodels/finetune?branch=master)
+[![R build
+status](https://github.com/tidymodels/finetune/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/finetune/actions)
 <!-- badges: end -->
 
 `finetune` contains some extra functions for model tuning that extend
@@ -18,16 +22,16 @@ search tool for finding good values:
 
 ``` r
 library(tidymodels)
-#> ── Attaching packages ──────────────────────────────────────────────────────────────────────── tidymodels 0.1.1 ──
-#> ✓ broom     0.7.0      ✓ recipes   0.1.13
-#> ✓ dials     0.0.8      ✓ rsample   0.0.7 
-#> ✓ dplyr     1.0.0      ✓ tibble    3.0.3 
-#> ✓ ggplot2   3.3.2      ✓ tidyr     1.1.0 
-#> ✓ infer     0.5.2      ✓ tune      0.1.1 
-#> ✓ modeldata 0.0.2      ✓ workflows 0.1.2 
-#> ✓ parsnip   0.1.2      ✓ yardstick 0.0.7 
+#> ── Attaching packages ─────────────────────────────────────── tidymodels 0.1.1 ──
+#> ✓ broom     0.7.0          ✓ recipes   0.1.13    
+#> ✓ dials     0.0.8.9001     ✓ rsample   0.0.7.9000
+#> ✓ dplyr     1.0.2          ✓ tibble    3.0.3     
+#> ✓ ggplot2   3.3.2          ✓ tidyr     1.1.2     
+#> ✓ infer     0.5.2          ✓ tune      0.1.1.9000
+#> ✓ modeldata 0.0.2          ✓ workflows 0.1.3.9000
+#> ✓ parsnip   0.1.3          ✓ yardstick 0.0.7     
 #> ✓ purrr     0.3.4
-#> ── Conflicts ─────────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
+#> ── Conflicts ────────────────────────────────────────── tidymodels_conflicts() ──
 #> x purrr::discard() masks scales::discard()
 #> x dplyr::filter()  masks stats::filter()
 #> x dplyr::lag()     masks stats::lag()
@@ -41,47 +45,57 @@ library(finetune)
 data(two_class_dat, package = "modeldata")
 
 set.seed(6376)
-rs <- bootstraps(two_class_dat, times = 20)
+rs <- bootstraps(two_class_dat, times = 10) # more resamples usually needed
 
-# optimize an xgboost model
-
-xgb <-
-  boost_tree(
-    trees = tune(),
-    min_n = tune(),
-    tree_depth = tune(),
-    learn_rate = tune(),
-    loss_reduction = tune(),
-    sample_size = tune()
-    ) %>%
-  set_engine("xgboost") %>%
-  set_mode("classification")
+# optimize an regularized discriminant analysis model
+library(discrim)
+#> 
+#> Attaching package: 'discrim'
+#> The following object is masked from 'package:dials':
+#> 
+#>     smoothness
+rda_spec <-
+  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
+  set_engine("klaR")
 
 ## -----------------------------------------------------------------------------
 
 set.seed(8300)
-sa_res <- xgb %>% tune_sim_anneal(Class ~ ., resamples = rs, iter = 20)
-#> Initial best: 0.8706370
-#>  1 ♥  roc_auc: 0.8721229  improvement (new best)
-#>  2 ♥  roc_auc: 0.8735684  improvement (new best)
-#>  3 ♥  roc_auc: 0.8760699  improvement (new best)
-#>  4 ♥  roc_auc: 0.8768542  improvement (new best)
-#>  5 ♥  roc_auc: 0.8776209  improvement (new best)
-#>  6 ♥  roc_auc: 0.8781190  improvement (new best)
-#>  7 +  roc_auc: 0.8776486  accept
-#>  8 ♥  roc_auc: 0.8777705  improvement
-#>  9 ♥  roc_auc: 0.8779312  improvement
-#> 10 +  roc_auc: 0.8774184  accept
-#> 11 ♥  roc_auc: 0.8781017  improvement
-#> 12 +  roc_auc: 0.8767606  accept
-#> 13 ♥  roc_auc: 0.8780978  improvement
-#> 14 +  roc_auc: 0.8779688  accept
-#> 15 +  roc_auc: 0.8773394  accept
-#> 16 +  roc_auc: 0.8761216  accept
-#> 17 ♥  roc_auc: 0.8779585  improvement
-#> 18 +  roc_auc: 0.8766236  accept
-#> 19 ♥  roc_auc: 0.8774352  improvement
-#> 20 +  roc_auc: 0.8765054  accept
+sa_res <- rda_spec %>% tune_sim_anneal(Class ~ ., resamples = rs, iter = 20)
+#> Loading required package: MASS
+#> 
+#> Attaching package: 'MASS'
+#> The following object is masked from 'package:dplyr':
+#> 
+#>     select
+#> Initial best: 0.85545
+#>  1 ♥  roc_auc: 0.86490    new best
+#>  2 ◯  roc_auc: 0.85687    accept suboptimal
+#>  3 ◯  roc_auc: 0.85310    accept suboptimal
+#>  4 +  roc_auc: 0.86269    better suboptimal
+#>  5 ◯  roc_auc: 0.85284    accept suboptimal
+#>  6 ◯  roc_auc: 0.84860    accept suboptimal
+#>  7 +  roc_auc: 0.85752    better suboptimal
+#>  8 ◯  roc_auc: 0.84824    accept suboptimal
+#>  9 x  roc_auc: 0.84314    restart from best
+#> 10 ♥  roc_auc: 0.87509    new best
+#> 11 ♥  roc_auc: 0.87587    new best
+#> 12 ♥  roc_auc: 0.88370    new best
+#> 13 ◯  roc_auc: 0.88092    accept suboptimal
+#> 14 ♥  roc_auc: 0.88706    new best
+#> 15 ◯  roc_auc: 0.88445    accept suboptimal
+#> 16 ♥  roc_auc: 0.88735    new best
+#> 17 ◯  roc_auc: 0.88048    accept suboptimal
+#> 18 ◯  roc_auc: 0.87469    accept suboptimal
+#> 19 +  roc_auc: 0.87631    better suboptimal
+#> 20 ◯  roc_auc: 0.86665    accept suboptimal
+show_best(sa_res, metric = "roc_auc", n = 2)
+#> # A tibble: 2 x 9
+#>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config
+#>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>  
+#> 1           0.235        0.0134 roc_auc binary     0.887    10 0.00514 Model1 
+#> 2           0.232        0.0186 roc_auc binary     0.887    10 0.00514 Model1 
+#> # … with 1 more variable: .iter <int>
 ```
 
 The second set of methods are for “racing”. We start off by doing a
@@ -96,29 +110,27 @@ combinations:
 ``` r
 set.seed(511)
 grid <-
-  xgb %>%
+  rda_spec %>%
   parameters() %>%
   grid_max_entropy(size = 20)
 
 set.seed(11)
-grid_anova <- xgb %>% tune_race_anova(Class ~ ., resamples = rs, grid = grid)
-#> ℹ Bootstrap05: 8 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap07: 5 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap10: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap19: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap11: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap01: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap08: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap18: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap12: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap20: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap17: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap03: 4 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap16: 3 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap15: 3 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap14: 3 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap09: 3 of 20 candidate sub-models remain (filtered using roc_auc).
-#> ℹ Bootstrap13: 2 of 20 candidate sub-models remain (filtered using roc_auc).
+grid_anova <- rda_spec %>% tune_race_anova(Class ~ ., resamples = rs, grid = grid)
+#> ℹ Racing will maximize the roc_auc metric.
+#> ℹ Resamples are analyzed in a random order.
+#> ℹ Bootstrap05: 4 of 20 candidate sub-models remain.
+#> ℹ Bootstrap07: 4 of 20 candidate sub-models remain.
+#> ℹ Bootstrap10: 4 of 20 candidate sub-models remain.
+#> ℹ Bootstrap01: 4 of 20 candidate sub-models remain.
+#> ℹ Bootstrap08: 4 of 20 candidate sub-models remain.
+#> ℹ Bootstrap03: 4 of 20 candidate sub-models remain.
+#> ℹ Bootstrap09: 4 of 20 candidate sub-models remain.
+show_best(grid_anova, metric = "roc_auc", n = 2)
+#> # A tibble: 2 x 8
+#>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config
+#>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>  
+#> 1          0.0164        0.0618 roc_auc binary     0.884    10 0.00511 Model10
+#> 2          0.327         0.0662 roc_auc binary     0.884    10 0.00503 Model16
 ```
 
 `tune_race_win_loss()` can also be used.

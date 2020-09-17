@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 # finetune
 
 <!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/tidymodels/finetune/branch/master/graph/badge.svg)](https://codecov.io/gh/tidymodels/finetune?branch=master)
+[![R build status](https://github.com/tidymodels/finetune/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/finetune/actions)
 <!-- badges: end -->
 
 `finetune` contains some extra functions for model tuning that extend what is currently in the `tune` package. 
@@ -35,26 +37,19 @@ library(finetune)
 data(two_class_dat, package = "modeldata")
 
 set.seed(6376)
-rs <- bootstraps(two_class_dat, times = 20)
+rs <- bootstraps(two_class_dat, times = 10) # more resamples usually needed
 
-# optimize an xgboost model
-
-xgb <-
-  boost_tree(
-    trees = tune(),
-    min_n = tune(),
-    tree_depth = tune(),
-    learn_rate = tune(),
-    loss_reduction = tune(),
-    sample_size = tune()
-    ) %>%
-  set_engine("xgboost") %>%
-  set_mode("classification")
+# optimize an regularized discriminant analysis model
+library(discrim)
+rda_spec <-
+  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
+  set_engine("klaR")
 
 ## -----------------------------------------------------------------------------
 
 set.seed(8300)
-sa_res <- xgb %>% tune_sim_anneal(Class ~ ., resamples = rs, iter = 20)
+sa_res <- rda_spec %>% tune_sim_anneal(Class ~ ., resamples = rs, iter = 20)
+show_best(sa_res, metric = "roc_auc", n = 2)
 ```
 
 The second set of methods are for "racing". We start off by doing a small set of resamples for all of the grid points, then statistically testing to see which ones should be dropped or investigated more. The two methods here are based on those should in [Kuhn (2014)](https://arxiv.org/abs/1405.6974). 
@@ -64,12 +59,13 @@ For example, using an ANOVA-type analysis to filter out parameter combinations:
 ```{r race}
 set.seed(511)
 grid <-
-  xgb %>%
+  rda_spec %>%
   parameters() %>%
   grid_max_entropy(size = 20)
 
 set.seed(11)
-grid_anova <- xgb %>% tune_race_anova(Class ~ ., resamples = rs, grid = grid)
+grid_anova <- rda_spec %>% tune_race_anova(Class ~ ., resamples = rs, grid = grid)
+show_best(grid_anova, metric = "roc_auc", n = 2)
 ```
 
 `tune_race_win_loss()` can also be used. 

@@ -1,0 +1,57 @@
+library(dials)
+library(purrr)
+library(dplyr)
+
+## -----------------------------------------------------------------------------
+
+num_prm <- parameters(mixture(), threshold())
+cat_prm <- parameters(activation(), weight_func())
+
+## -----------------------------------------------------------------------------
+
+test_that('numerical neighborhood', {
+  vals <- tibble::tibble(mixture = 0.5, threshold = 0.5)
+  set.seed(1)
+  new_vals <-
+    finetune:::random_neighbor(vals, num_prm, retain = 100, r = 0.12)
+
+  correct_r <-
+    purrr::map2_dbl(new_vals$mixture, new_vals$threshold,
+                    ~ sqrt((.x - .5) ^ 2 + (.y - .5) ^ 2)) %>%
+    map_lgl( ~ isTRUE(all.equal(.x, 0.12, tolerance = 0.001)))
+  expect_true(all(correct_r))
+})
+
+test_that('numerical neighborhood boundary filters', {
+  vals <- tibble::tibble(mixture = 0.05, threshold = 0.05)
+  set.seed(1)
+  new_vals <-
+    finetune:::random_neighbor(vals, num_prm, retain = 100, tries = 100, r = 0.12)
+  expect_true(nrow(new_vals) < 100)
+})
+
+## -----------------------------------------------------------------------------
+
+test_that('categorical value switching', {
+  vals <- tibble::tibble(activation ="relu", weight_func ="biweight")
+  set.seed(1)
+  new_vals <- purrr::map_dfr(1:1000, ~ finetune:::random_flip(vals, cat_prm, prob = 1/4))
+  relu_same <- mean(new_vals$activation == "relu")
+  biweight_same <- mean(new_vals$weight_func == "biweight")
+
+  expect_true(relu_same > .7 & relu_same < .8)
+  expect_true(biweight_same > .7 & biweight_same < .8)
+})
+
+## -----------------------------------------------------------------------------
+
+test_that('reverse-unit encoding', {
+  prm <-
+    parameters(batch_size(), Laplace(), activation()) %>%
+    update(Laplace = Laplace(c(2, 4)), batch_size = batch_size(c(10, 20)))
+  unit_vals <- tibble::tibble(batch_size = .1, Laplace = .4, activation = .7)
+  vals <- finetune:::encode_set_backwards(unit_vals, prm)
+  expect_true(vals$batch_size > 1)
+  expect_true(vals$Laplace > 1)
+  expect_true(is.character(vals$activation))
+})

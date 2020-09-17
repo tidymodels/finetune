@@ -4,6 +4,13 @@
 #'  combinations based on previous results. It uses the generalized simulated
 #'  annealing method of Bohachevsky, Johnson, and Stein (1986).
 #'
+#' @param object A `parsnip` model specification or a [workflows::workflow()].
+#' @param preprocessor A traditional model formula or a recipe created using
+#'   [recipes::recipe()].
+#' @param resamples An `rset()` object.
+#' @param param_info A [dials::parameters()] object or `NULL`. If none is given,
+#' a parameters set is derived from other arguments. Passing this argument can
+#' be useful when parameter ranges need to be customized.
 #' @param metrics A [yardstick::metric_set()] object containing information on how
 #' models will be evaluated for performance. The first metric in `metrics` is the
 #' one that will be optimized.
@@ -87,6 +94,7 @@
 #' Bohachevsky, Johnson, and Stein (1986) "Generalized Simulated Annealing for
 #' Function Optimization", _Technometrics_, 28:3, 209-217
 #' @examples
+#' \donttest{
 #' library(finetune)
 #' library(rpart)
 #' library(dplyr)
@@ -129,7 +137,7 @@
 #' more_search <-
 #'   cart_mod %>%
 #'   tune_sim_anneal(Class ~ ., resamples = bt, iter = 10, initial = sa_search)
-#'
+#' }
 #' @seealso [tune::tune_grid()], [control_sim_anneal()], [yardstick::metric_set()]
 #' @export
 tune_sim_anneal <- function(object, ...) {
@@ -200,7 +208,7 @@ tune_sim_anneal.model_spec <- function(object,
 
   tune::empty_ellipses(...)
 
-  wflow <- workflows::add_model(workflow(), object)
+  wflow <- workflows::add_model(workflows::workflow(), object)
 
   if (tune::is_recipe(preprocessor)) {
     wflow <- workflows::add_recipe(wflow, preprocessor)

@@ -68,7 +68,7 @@ tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
 
   tune::empty_ellipses(...)
 
-  wflow <- workflows::add_model(workflow(), object)
+  wflow <- workflows::add_model(workflows::workflow(), object)
 
   if (tune::is_recipe(preprocessor)) {
     wflow <- workflows::add_recipe(wflow, preprocessor)

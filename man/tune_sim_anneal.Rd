@@ -32,9 +32,20 @@ tune_sim_anneal(object, ...)
 )
 }
 \arguments{
+\item{object}{A \code{parsnip} model specification or a \code{\link[workflows:workflow]{workflows::workflow()}}.}
+
 \item{...}{Not currently used.}
 
+\item{preprocessor}{A traditional model formula or a recipe created using
+\code{\link[recipes:recipe]{recipes::recipe()}}.}
+
+\item{resamples}{An \code{rset()} object.}
+
 \item{iter}{The maximum number of search iterations.}
+
+\item{param_info}{A \code{\link[dials:parameters]{dials::parameters()}} object or \code{NULL}. If none is given,
+a parameters set is derived from other arguments. Passing this argument can
+be useful when parameter ranges need to be customized.}
 
 \item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} object containing information on how
 models will be evaluated for performance. The first metric in \code{metrics} is the
@@ -110,6 +121,14 @@ constant that can be used to increase or decrease the probabilities.
 The \code{cooling_coef} of \code{\link[=control_sim_anneal]{control_sim_anneal()}} can be used for this purpose.
 }
 
+\subsection{Termination criterion}{
+
+The restart counter is reset when a new global best results is found.
+
+The termination counter resets when a new global best is located or when a
+suboptimal result is improved.
+}
+
 \subsection{Parallelism}{
 
 The \code{tune} and \code{finetune} packages currently parallelize over resamples.
@@ -119,6 +138,7 @@ parallel as long as there are 2 or more resamples.
 }
 }
 \examples{
+\donttest{
 library(finetune)
 library(rpart)
 library(dplyr)
@@ -161,7 +181,7 @@ set.seed(1970)
 more_search <-
   cart_mod \%>\%
   tune_sim_anneal(Class ~ ., resamples = bt, iter = 10, initial = sa_search)
-
+}
 }
 \references{
 Bohachevsky, Johnson, and Stein (1986) "Generalized Simulated Annealing for

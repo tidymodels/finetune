@@ -1,2 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^CODE_OF_CONDUCT\.md$
+^LICENSE\.md$
+^README\.Rmd$
+^_pkgdown\.yml$
+^cran-comments\.md$
+^codecov\.yml$
+^\.github$
