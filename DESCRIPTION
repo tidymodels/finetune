@@ -27,7 +27,9 @@ Suggests:
     modeldata,
     rpart,
     parsnip,
-    testthat
+    testthat,
+    covr,
+    discrim
 Language: en-US
 Depends: 
     tune

@@ -5,3 +5,5 @@
 ^README\.Rmd$
 ^_pkgdown\.yml$
 ^cran-comments\.md$
+^codecov\.yml$
+^\.github$
