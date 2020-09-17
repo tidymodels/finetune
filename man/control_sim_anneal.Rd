@@ -7,9 +7,9 @@
 control_sim_anneal(
   verbose = FALSE,
   no_improve = Inf,
-  restart = 10L,
-  radius = 0.025,
-  flip = 0.1,
+  restart = 8L,
+  radius = 0.1,
+  flip = 0.2,
   cooling_coef = 0.02,
   seed = sample.int(10^5, 1),
   extract = NULL,

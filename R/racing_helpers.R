@@ -149,7 +149,7 @@ test_parameters_bt <- function(x, param_names, metric, maximize, alpha =  0.05) 
       pass = ifelse(upper > 0 & std_err < 500, TRUE, FALSE)
     ) %>%
     dplyr::bind_rows(
-      tibble(
+      tibble::tibble(
         .config = best_team,
         value = 0,
         std_err = 0,
@@ -310,8 +310,8 @@ restore_rset <- function(x, index) {
 }
 
 get_configs <- function(x) {
-  collect_metrics(x) %>%
-    distinct(!!!rlang::syms(tune::.get_tune_parameter_names(x)), .config)
+  tune::collect_metrics(x) %>%
+    dplyr::distinct(!!!rlang::syms(tune::.get_tune_parameter_names(x)), .config)
 }
 merge_indiv_configs <- function(x, key) {
   orig_names <- names(x)

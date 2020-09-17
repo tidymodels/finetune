@@ -1,5 +1,5 @@
 maximize_metric <- function(x, metric) {
-  metrics <- .get_tune_metrics(x)
+  metrics <- tune::.get_tune_metrics(x)
   metrics_data <- tune::metrics_info(metrics)
   x <- metrics_data$.metric[1]
   metrics_data$direction[metrics_data$.metric == metric] == "maximize"
@@ -55,7 +55,7 @@ random_neighbor <- function(current, pset, retain = 1, tries = 500, r = .025) {
   rnd <- rnd[!outside,,drop = FALSE]
   retain <- min(retain, nrow(rnd))
   colnames(rnd) <- colnames(current)
-  rnd <- as_tibble(rnd)
+  rnd <- tibble::as_tibble(rnd)
   rnd <- encode_set_backwards(rnd, pset)
   selected <- rnd %>% sample_n(retain)
   selected
@@ -100,9 +100,9 @@ update_history <- function(history, x, iter) {
 }
 
 get_sa_param <- function(x) {
-  nms <- .get_tune_parameter_names(x)
+  nms <- tune::.get_tune_parameter_names(x)
   x$.metrics[[1]] %>%
-    dplyr::distinct(!!!syms(nms))
+    dplyr::distinct(!!!rlang::syms(nms))
 
 }
 

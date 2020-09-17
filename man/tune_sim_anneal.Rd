@@ -110,6 +110,14 @@ constant that can be used to increase or decrease the probabilities.
 The \code{cooling_coef} of \code{\link[=control_sim_anneal]{control_sim_anneal()}} can be used for this purpose.
 }
 
+\subsection{Termination criterion}{
+
+The restart counter is reset when a new global best results is found.
+
+The termination counter resets when a new global best is located or when a
+suboptimal result is improved.
+}
+
 \subsection{Parallelism}{
 
 The \code{tune} and \code{finetune} packages currently parallelize over resamples.
