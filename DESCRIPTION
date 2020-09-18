@@ -30,7 +30,8 @@ Suggests:
     parsnip,
     testthat,
     covr,
-    discrim
+    discrim,
+    klaR
 Language: en-US
 Depends: 
     tune
