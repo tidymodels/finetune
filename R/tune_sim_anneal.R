@@ -309,7 +309,13 @@ tune_sim_anneal_workflow <-
 
     count_improve <- count_restart <- 0
 
-    log_sa_progress(x = result_history, max_iter = iter, maximize = maximize, metric = metrics_name)
+    log_sa_progress(
+      control,
+      x = result_history,
+      max_iter = iter,
+      maximize = maximize,
+      metric = metrics_name
+    )
 
     # TODO iterations when initializing with a previous tune object start from 1 :-O
 
@@ -394,8 +400,13 @@ tune_sim_anneal_workflow <-
 
       ## -----------------------------------------------------------------------------
 
-      log_sa_progress(x = result_history, max_iter = iter, maximize = maximize,
-                      metric = metrics_name)
+      log_sa_progress(
+        control,
+        x = result_history,
+        max_iter = iter,
+        maximize = maximize,
+        metric = metrics_name
+      )
 
       if (count_improve >= control$no_improve) {
         rlang::inform(
@@ -423,5 +434,4 @@ tune_sim_anneal_workflow <-
 # - save_workflows and other attributes
 # - expand time limits
 # - fix sim_anneal as input
-# - printing similar to tune_bayes
 # - make control$sa_history a real option

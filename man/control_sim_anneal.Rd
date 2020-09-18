@@ -5,7 +5,7 @@
 \title{Control aspects of the simulated annealing search process}
 \usage{
 control_sim_anneal(
-  verbose = FALSE,
+  verbose = TRUE,
   no_improve = Inf,
   restart = 8L,
   radius = 0.1,

@@ -180,6 +180,7 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
   }
   m <- nrow(x)
   new_res <- x$mean[m]
+  new_std <- x$std_err[m]
   new_event <- x$results[m]
   iter <- max(x$.iter)
   if (iter > 0) {
@@ -197,17 +198,11 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
 
   cols <- tune::get_tune_colors()
   if (iter > 0) {
-    msg <- paste0(" ", metric, ": ", sprintf(dig, signif(new_res, digits = digits)))
-    msg <- paste0(msg,  "\t")  # "\t(", pct_diff, "%)  "
-    symb <- dplyr::case_when(
-      new_event == "new best"           ~ crayon::green(cli::symbol$heart),
-      new_event == "better suboptimal"  ~ crayon::green("+"),
-      new_event == "discard suboptimal" ~ crayon::red(cli::symbol$line),
-      new_event == "accept suboptimal"  ~ crayon::silver(cli::symbol$circle),
-      new_event == "restart from best"  ~ crayon::red(cli::symbol$cross),
-      TRUE                              ~ crayon::black(cli::symbol$info)
-    )
-    msg <- paste0(chr_iter, " ", symb, "\t", msg, " ", new_event)
+    msg <- paste0(metric, "=", signif(new_res, digits = digits))
+    if (!is.na(new_std) && new_std > 0) {
+      msg <- paste0(msg,  "\t(+/-", signif(new_std, digits = digits - 1), ")")
+    }
+    msg <- paste(chr_iter, format_event(new_event), msg)
   } else {
     initial_res <- max(x$mean[x$.iter == 0], na.rm = TRUE)
     msg <- paste0("Initial best: ", sprintf(dig, signif(initial_res, digits = digits)))
@@ -215,4 +210,33 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
 
   rlang::inform(cols$message$info(msg))
 }
+
+format_event <- function(x) {
+  result_key <- tibble::tribble(
+    ~ orig,               ~ symb,
+    "new best",           cli::symbol$heart,
+    "better suboptimal",  "+",
+    "discard suboptimal", cli::symbol$line,
+    "accept suboptimal",  cli::symbol$circle,
+    "restart from best",  cli::symbol$cross
+  ) %>%
+    dplyr::mutate(
+      new = format(orig, justify = "left"),
+      result = paste(symb, new)
+    )
+  color_event(result_key$result[result_key$orig == x])
+}
+
+color_event <- function(x) {
+  cols <- tune::get_tune_colors()
+  dplyr::case_when(
+    grepl("new", x)      ~ cols$symbol$success(x),
+    grepl("better", x)   ~ cols$symbol$success(x),
+    grepl("discard", x)  ~ cols$message$danger(x),
+    grepl("accept", x)   ~ cols$message$warning(x),
+    grepl("restart", x)  ~ cols$message$danger(x),
+    TRUE                 ~ cols$message$info(x)
+  )
+}
+
 

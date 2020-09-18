@@ -34,7 +34,7 @@
 #' to the output as an attribute.
 #' @export
 control_sim_anneal <-
-  function(verbose = FALSE,
+  function(verbose = TRUE,
            no_improve = Inf,
            restart = 8L,
            radius = 0.1,
@@ -45,7 +45,6 @@ control_sim_anneal <-
            time_limit = NA,
            pkgs = NULL,
            save_workflow = FALSE) {
-    # add options for seeds per resample
 
     tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
