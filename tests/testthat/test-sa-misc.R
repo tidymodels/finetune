@@ -1,3 +1,5 @@
+context("sa general tests")
+
 library(finetune)
 library(tune)
 library(dplyr)
@@ -59,7 +61,6 @@ test_that('tune_sim_anneal formula', {
 
 })
 
-
 ## -----------------------------------------------------------------------------
 
 test_that('tune_sim_anneal recipe', {
@@ -104,3 +105,12 @@ test_that('tune_sim_anneal workflow', {
   expect_equal(sum(names(collect_metrics(f_wflow_1)) == "frac_identity"), 1)
 
 })
+
+## -----------------------------------------------------------------------------
+
+test_that('tune_sim_anneal with wrong type', {
+  expect_error(tune_sim_anneal(1),
+  "should be either a model or workflow"
+  )
+})
+

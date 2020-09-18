@@ -20,6 +20,11 @@ test_that('numerical neighborhood', {
                     ~ sqrt((.x - .5) ^ 2 + (.y - .5) ^ 2)) %>%
     map_lgl( ~ isTRUE(all.equal(.x, 0.12, tolerance = 0.001)))
   expect_true(all(correct_r))
+
+  set.seed(2)
+  more_vals <- finetune:::new_in_neighborhood(vals, num_prm, radius = 0.12)
+  rad <- sqrt((more_vals$mixture - .5) ^ 2 + (more_vals$threshold - .5) ^ 2)
+  expect_equal(rad, 0.12, tolerance = 0.001)
 })
 
 test_that('numerical neighborhood boundary filters', {
@@ -41,6 +46,17 @@ test_that('categorical value switching', {
 
   expect_true(relu_same > .7 & relu_same < .8)
   expect_true(biweight_same > .7 & biweight_same < .8)
+
+  set.seed(2)
+  must_change <- finetune:::new_in_neighborhood(vals, cat_prm, flip = 1)
+  expect_true(must_change$activation != "relu")
+  expect_true(must_change$weight_func != "biweight")
+
+  set.seed(3)
+  dont_change <- finetune:::new_in_neighborhood(vals, cat_prm, flip = 0)
+  expect_true(dont_change$activation == "relu")
+  expect_true(dont_change$weight_func == "biweight")
+
 })
 
 ## -----------------------------------------------------------------------------
