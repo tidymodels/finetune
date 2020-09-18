@@ -1,24 +1,36 @@
 #' Plot racing results
 #'
-#' Plot difference parameter combinations versus the number of times that each
-#' was evaluated. The plot colors the results by the performance metric that was
-#' being optimized/tested.
+#' Plot the model results over stages of the racing results. A line is given
+#' for each submodel that was tested.
 #' @param x A object with class `tune_results`
 #' @return A ggplot object.
 #' @export
 plot_race <- function(x) {
-  met <- tune::.get_tune_metric_names(x)[1]
-  x %>%
-    tune::collect_metrics() %>%
-    dplyr::filter(.metric == met) %>%
-    dplyr::mutate(
-      .config = reorder(.config, n),
-      .lower = mean - 1.96 * std_err,
-      .upper = mean + 1.96 * std_err
-      ) %>%
-    ggplot2::ggplot(ggplot2::aes(x = n, y = .config)) +
-    ggplot2::geom_point(ggplot2::aes(size = mean)) +
-    ggplot2::geom_linerange(ggplot2::aes(xmin = 0, xmax = n), alpha = .25) +
-    ggplot2::labs(x = "Number of Resamples", y = NULL)
+  metric <- tune::.get_tune_metric_names(x)[1]
+  rs <-
+    x %>%
+    dplyr::select(id, .order, .metrics) %>%
+    tidyr::unnest(cols = .metrics) %>%
+    dplyr::filter(.metric == metric)
+  .order <- sort(unique(rs$.order))
+  purrr::map_dfr(.order, ~ stage_results(.x, rs)) %>%
+    ggplot2::ggplot(ggplot2::aes(x = stage, y = mean, group = .config, col = .config)) +
+    ggplot2::geom_step(alpha = .5, show.legend = FALSE) +
+    ggplot2::xlab("Analysis Stage") +
+    ggplot2::ylab(metric)
+}
+
+stage_results <- function(ind, x) {
+  res <-
+    x %>%
+    dplyr::filter(.order <= ind) %>%
+    dplyr::group_by(.config) %>%
+    dplyr::summarize(
+      mean = mean(.estimate, na.rm = TRUE),
+      n = sum(!is.na(.estimate)),
+      .groups = "drop") %>%
+    dplyr::mutate(stage = ind) %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(n == ind)
 }
 

@@ -13,7 +13,6 @@ plot_race(x)
 A ggplot object.
 }
 \description{
-Plot difference parameter combinations versus the number of times that each
-was evaluated. The plot colors the results by the performance metric that was
-being optimized/tested.
+Plot the model results over stages of the racing results. A line is given
+for each submodel that was tested.
 }

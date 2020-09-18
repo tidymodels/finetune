@@ -110,8 +110,10 @@ tune_race_win_loss_workflow <-
 
     B <- nrow(resamples)
     if (control$randomize) {
-      resamples <- resamples %>% dplyr::arrange(runif(B))
+      resamples <-
+        resamples %>% dplyr::arrange(runif(B))
     }
+    resamples <- dplyr::mutate(resamples, .order = dplyr::row_number())
 
     min_rs <- control$burn_in
     tmp_resamples <- restore_rset(resamples, 1:min_rs)
