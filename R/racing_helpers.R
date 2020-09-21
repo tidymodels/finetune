@@ -11,7 +11,11 @@ mod2tibble <- function(x) {
     dplyr::mutate(.config = gsub("^\\.config", "", .config))
 }
 
-test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05) {
+test_parameters_gls <- function(x, alpha =  0.05) {
+  param_names <- tune::.get_tune_parameter_names(x)
+  metric_data <- metric_tibble(x)
+  metric <- metric_data$metric[1]
+  maximize <- metric_data$direction[1] == "maximize"
 
   res <-
     tune::collect_metrics(x, summarize = FALSE) %>%
@@ -98,7 +102,12 @@ test_parameters_gls <- function(x, param_names, metric, maximize, alpha =  0.05)
 ## -----------------------------------------------------------------------------
 # Racing via discrete competitions
 
-test_parameters_bt <- function(x, param_names, metric, maximize, alpha =  0.05) {
+test_parameters_bt <- function(x, alpha =  0.05) {
+  param_names <- tune::.get_tune_parameter_names(x)
+  metric_data <- metric_tibble(x)
+  metric <- metric_data$metric[1]
+  maximize <- metric_data$direction[1] == "maximize"
+
   res <-
     tune::collect_metrics(x, summarize = FALSE) %>%
     dplyr::filter(.metric == metric)
@@ -188,7 +197,6 @@ make_config_pairs <- function(x) {
   colnames(id_combin) <- c("p1", "p2")
   id_combin <- tibble::as_tibble(id_combin)
 }
-
 
 score_match <- function(x, y, maximize) {
   if (maximize) {
@@ -360,6 +368,8 @@ log_racing <- function(control, x, splits, grid_size, metric) {
     return(invisible(NULL))
   }
 
+  chr_seq <- format(0:grid_size)
+
   if (!is.null(splits)) {
     splits <- splits[[length(splits)]]
     labs <- labels(splits)
@@ -369,10 +379,15 @@ log_racing <- function(control, x, splits, grid_size, metric) {
   }
 
   remaining <- sum(x$pass, na.rm = TRUE)
+  num_elim <- sum(!x$pass, na.rm = TRUE)
   if (remaining > 1) {
-    msg <- paste(remaining, "of",  grid_size, "candidate sub-models remain.")
+    msg <- paste(
+      chr_seq[num_elim + 1],
+      "eliminated;",
+      chr_seq[remaining + 1],
+      "candidates remain.")
   } else {
-    msg <- paste(remaining, "of",  grid_size, "candidate sub-model remains.")
+    msg <- paste("All but one parameter combination were eliminated.")
   }
 
   tune_cols <- tune::get_tune_colors()
@@ -447,16 +462,16 @@ fit_anova <- function(x, dat, alpha) {
   rs_info <- attr(x, "rset_info")$att
   if (rs_info$class == "vfold_cv") {
     if (rs_info$repeats > 1) {
-      f <- .estimate ~ .config + (1 | id)
-    } else {
       f <- .estimate ~ .config + (1 | id2/id)
+    } else {
+      f <- .estimate ~ .config + (1 | id)
     }
   } else {
     f <- .estimate ~ .config + (1 | id)
   }
 
   mod <- try(lme4::lmer(.estimate ~ .config + (1|id), data = dat), silent = TRUE)
-  if (!inherits(mod, "try-error")) {
+  if (inherits(mod, "try-error")) {
     mod <- lm(.estimate ~ .config, data = dat)
   }
   point_est <-
@@ -472,6 +487,15 @@ fit_anova <- function(x, dat, alpha) {
 
 ## -----------------------------------------------------------------------------
 
+metric_tibble <- function (x, ...)  {
+  metrics <- attributes(x)$metrics
+  metrics <- attributes(metrics)$metrics
+  directions <- purrr::map_chr(metrics, ~ attr(.x, "direction"))
+  tibble::tibble(metric = names(metrics), direction = directions)
+}
+
+## -----------------------------------------------------------------------------
+
 check_hidden_arg <- function(x, name, value) {
   if (!any(names(x) == name)) {
     return(FALSE)
@@ -479,3 +503,8 @@ check_hidden_arg <- function(x, name, value) {
   identical(x[[name]], value)
 }
 
+# TODO
+# - fix show_best. collect_metrics, etc with racing objects
+# - better autoplot
+# - flatten grids
+# - way more testing
