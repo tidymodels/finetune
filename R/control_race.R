@@ -16,7 +16,9 @@
 #'  retained.
 #' @param alpha The alpha level for a one-sided confidence interval for each
 #'  parameter combination.
-#' @param randomize Should the resamples be evaluated in a random order?
+#' @param randomize Should the resamples be evaluated in a random order?  By
+#' default, the resamples are evaluated in a random order so the random number
+#' seed should be control prior to calling this method (to be reproducible).
 #' @param extract An optional function with at least one argument (or `NULL`)
 #'   that can be used to retain arbitrary objects from the model fit object,
 #'   recipe, or other elements of the workflow.
