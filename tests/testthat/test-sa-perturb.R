@@ -13,7 +13,7 @@ test_that('numerical neighborhood', {
   vals <- tibble::tibble(mixture = 0.5, threshold = 0.5)
   set.seed(1)
   new_vals <-
-    finetune:::random_neighbor(vals, num_prm, retain = 100, r = 0.12)
+    finetune:::random_real_neighbor(vals, num_prm, retain = 100, r = 0.12)
 
   correct_r <-
     purrr::map2_dbl(new_vals$mixture, new_vals$threshold,
@@ -31,7 +31,7 @@ test_that('numerical neighborhood boundary filters', {
   vals <- tibble::tibble(mixture = 0.05, threshold = 0.05)
   set.seed(1)
   new_vals <-
-    finetune:::random_neighbor(vals, num_prm, retain = 100, tries = 100, r = 0.12)
+    finetune:::random_real_neighbor(vals, num_prm, retain = 100, tries = 100, r = 0.12)
   expect_true(nrow(new_vals) < 100)
 })
 
@@ -40,7 +40,11 @@ test_that('numerical neighborhood boundary filters', {
 test_that('categorical value switching', {
   vals <- tibble::tibble(activation ="relu", weight_func ="biweight")
   set.seed(1)
-  new_vals <- purrr::map_dfr(1:1000, ~ finetune:::random_flip(vals, cat_prm, prob = 1/4))
+  new_vals <-
+    purrr::map_dfr(
+      1:1000,
+      ~ finetune:::random_discrete_neighbor(vals, cat_prm, prob = 1 / 4, change = FALSE)
+    )
   relu_same <- mean(new_vals$activation == "relu")
   biweight_same <- mean(new_vals$weight_func == "biweight")
 
@@ -51,12 +55,6 @@ test_that('categorical value switching', {
   must_change <- finetune:::new_in_neighborhood(vals, cat_prm, flip = 1)
   expect_true(must_change$activation != "relu")
   expect_true(must_change$weight_func != "biweight")
-
-  set.seed(3)
-  dont_change <- finetune:::new_in_neighborhood(vals, cat_prm, flip = 0)
-  expect_true(dont_change$activation == "relu")
-  expect_true(dont_change$weight_func == "biweight")
-
 })
 
 ## -----------------------------------------------------------------------------
