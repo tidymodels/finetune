@@ -5,29 +5,59 @@ maximize_metric <- function(x, metric) {
   metrics_data$direction[metrics_data$.metric == metric] == "maximize"
 }
 
+# Might not use this function
+treat_as_integer <- function(x, num_unique = 10) {
+  param_type <- purrr::map_chr(x$object, ~ .x$type)
+  is_int <- param_type == "integer"
+  x_vals <- purrr::map(x$object, ~ value_seq(.x, n = 200))
+  x_vals <- purrr::map_int(x_vals, ~ length(unique(.x)))
+  x_vals < num_unique  & is_int
+}
 
 new_in_neighborhood <- function(current, pset, radius = 0.025, flip = 0.1) {
   current <- dplyr::select(current, !!!pset$id)
-  is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
-  if (any(is_quant)) {
-    quant_nms <- pset$id[is_quant]
-    new_quant <- random_neighbor(current, pset, r = radius)
-    current[, quant_nms] <- new_quant
+  param_type <- purrr::map_chr(pset$object, ~ .x$type)
+  if (any(param_type == "double")) {
+    dbl_nms <- pset$id[param_type == "double"]
+    new_dbl <-
+      random_real_neighbor(current %>% dplyr::select(dbl_nms),
+                           pset %>% dplyr::filter(id %in% dbl_nms),
+                           r = radius)
+    current[, dbl_nms] <- new_dbl
   }
-  if (any(!is_quant)) {
-    qual_nms <- pset$id[!is_quant]
-    new_qual <- random_flip(current, pset, prob = flip)
-    current[, qual_nms] <- new_qual
+
+  if (any(param_type == "integer")) {
+    int_nms <- pset$id[param_type == "integer"]
+    flip_one <- all(param_type == "integer")
+    new_int <-
+      random_integer_neighbor(current %>% dplyr::select(int_nms),
+                              pset %>% dplyr::filter(id %in% int_nms),
+                              prob = flip,
+                              change = flip_one)
+    current[, int_nms] <- new_int
+  }
+
+  if (any(param_type == "character")) {
+    chr_nms <- pset$id[param_type == "character"]
+    flip_one <- all(param_type == "character")
+    new_chr <-
+      random_discrete_neighbor(current %>% dplyr::select(chr_nms),
+                               pset %>% dplyr::filter(id %in% chr_nms),
+                               prob = flip,
+                               change = flip_one)
+    current[, chr_nms] <- new_chr
   }
   current
 }
 
-random_flip <- function(current, pset, prob) {
-  is_qual <- purrr::map_lgl(pset$object, inherits, "qual_param")
-  qual_nms <- pset$id[is_qual]
-  new_val <- runif(length(qual_nms)) <= prob
-  if (any(new_val)) {
-    new_vals <- qual_nms[new_val]
+random_discrete_neighbor <- function(current, pset, prob, change) {
+  pnames <- pset$id
+  change_val <- runif(length(pnames)) <= prob
+  if (change & !any(change_val)) {
+    change_val[sample(seq_along(change_val), 1)] <- TRUE
+  }
+  if (any(change_val)) {
+    new_vals <- pnames[change_val]
     for (i in new_vals) {
       current_val <- current[[i]]
       parm_obj <- pset$object[[which(pset$id == i)]]
@@ -35,26 +65,58 @@ random_flip <- function(current, pset, prob) {
       current[[i]] <- dials::value_sample(parm_obj, 1)
     }
   }
-  current[, is_qual]
+  current
 }
 
+random_integer_neighbor <- function(current, pset, prob, change) {
+  change_val <- runif(nrow(pset)) <= prob
+  if (change & !any(change_val)) {
+    change_val[sample(seq_along(change_val), 1)] <- TRUE
+  }
+  if (any(change_val)) {
+    param_change <- pset$id[change_val]
+    for(i in param_change) {
+      prm <- pset$object[[which(pset$id == i)]]
+      prm_rng <- prm$range$upper - prm$range$lower
+      tries <- min(prm_rng + 1, 500)
+      pool <- value_seq(prm, n = tries)
+      smol_range <- floor(prm_rng/10) + 1
+      val_diff <- abs(current[[i]] - pool)
+      pool <- pool[val_diff <= smol_range  & val_diff > 0]
+      if(length(pool) > 0) {
+        current[[i]] <- sample(pool, 1)
+      }
+    }
+  }
+  current
+}
 
-random_neighbor <- function(current, pset, retain = 1, tries = 500, r = .025) {
+random_real_neighbor <- function(current, pset, retain = 1, tries = 500, r = .025) {
   is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
   current <- current[, is_quant]
   pset <- pset[is_quant, ]
   encoded <- tune::encode_set(current, pset, as_matrix = TRUE)
 
   num_param <- ncol(encoded)
-  rnd <- rnorm(num_param * tries)
-  rnd <- matrix(rnd, ncol = num_param)
-  rnd <- t(apply(rnd, 1, function(x) x/sqrt(sum(x^2))))
-  rnd <- rnd * r
-  rnd <- sweep(rnd, 2, as.vector(encoded), "+")
-  outside <- apply(rnd, 1, function(x) any(x > 1 | x < 0))
-  rnd <- rnd[!outside,,drop = FALSE]
+  if(num_param > 1) {
+    rnd <- rnorm(num_param * tries)
+    rnd <- matrix(rnd, ncol = num_param)
+    rnd <- t(apply(rnd, 1, function(x) x/sqrt(sum(x^2))))
+    rnd <- rnd * r
+    rnd <- sweep(rnd, 2, as.vector(encoded), "+")
+    outside <- apply(rnd, 1, function(x) any(x > 1 | x < 0))
+    rnd <- rnd[!outside,,drop = FALSE]
+  } else {
+    rnd <- runif(tries, min = -r, max = r) + encoded[[1]]
+    rnd <- ifelse(rnd > 1, 1, rnd)
+    rnd <- ifelse(rnd < 0, 0, rnd)
+    rnd <- matrix(rnd, ncol = 1)
+    rnd <- rnd[!duplicated(rnd),, drop = FALSE]
+
+  }
+  colnames(rnd) <- names(current)
   retain <- min(retain, nrow(rnd))
-  colnames(rnd) <- colnames(current)
+
   rnd <- tibble::as_tibble(rnd)
   rnd <- encode_set_backwards(rnd, pset)
   selected <- rnd %>% dplyr::sample_n(retain)
@@ -204,7 +266,11 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
     }
     msg <- paste(chr_iter, format_event(new_event), msg)
   } else {
-    initial_res <- max(x$mean[x$.iter == 0], na.rm = TRUE)
+    if (maximize) {
+      initial_res <- max(x$mean[x$.iter == 0], na.rm = TRUE)
+    } else {
+      initial_res <- min(x$mean[x$.iter == 0], na.rm = TRUE)
+    }
     msg <- paste0("Initial best: ", sprintf(dig, signif(initial_res, digits = digits)))
   }
 
