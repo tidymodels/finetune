@@ -59,9 +59,16 @@
 #'  settings. The argument `radius` of [control_sim_anneal()] controls the
 #'  neighborhood size.
 #'
-#' For categorical parameters, each is changes with a pre-defined probability.
-#'  The `flip` argument of [control_sim_anneal()] can be used to specify this
-#'  probability.
+#' For categorical and integer parameters, each is changes with a pre-defined
+#'  probability. The `flip` argument of [control_sim_anneal()] can be used to
+#'  specify this probability. For integer parameters, a nearby integer value is
+#'  used.
+#'
+#' Simulated annealing search may not be the preferred method when many of the
+#'  parameters are non-numeric or integers with few unique values. In these
+#'  cases, it is likely that the same candidate set may be treated more than
+#'  once.
+#'
 #'
 #' ## Cooling schedule
 #'
@@ -435,3 +442,4 @@ tune_sim_anneal_workflow <-
 # - expand time limits
 # - fix sim_anneal as input
 # - make control$sa_history a real option
+# - update code to work with add_variables()
