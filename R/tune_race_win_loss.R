@@ -145,8 +145,7 @@ tune_race_win_loss_workflow <-
       }
     }
 
-    filters_results <-
-      test_parameters_bt(res, param_names, analysis_metric, analysis_max, control$alpha)
+    filters_results <- test_parameters_bt(res, control$alpha)
     n_grid <- nrow(filters_results)
 
     log_final <- TRUE
@@ -183,8 +182,7 @@ tune_race_win_loss_workflow <-
       res <- restore_tune(res, tmp_res)
 
       if (nrow(new_grid) > 1) {
-        filters_results <-
-          test_parameters_bt(res, param_names, analysis_metric, analysis_max, control$alpha)
+        filters_results <- test_parameters_bt(res, control$alpha)
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
           filters_results <- tie_breaker(res, control)
         }

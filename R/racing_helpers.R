@@ -460,6 +460,8 @@ check_results <- function(dat, rm_zv = TRUE, rm_dup = FALSE) {
 
 fit_anova <- function(x, dat, alpha) {
   rs_info <- attr(x, "rset_info")$att
+  # TODO this should check to see if a nested structure has been observed yet
+  # due to random shuffling of the resamples
   if (rs_info$class == "vfold_cv") {
     if (rs_info$repeats > 1) {
       f <- .estimate ~ .config + (1 | id2/id)

@@ -147,8 +147,7 @@ tune_race_anova_workflow <-
       }
     }
 
-    filters_results <-
-      test_parameters_gls(res, param_names, analysis_metric, analysis_max, control$alpha)
+    filters_results <- test_parameters_gls(res, control$alpha)
     n_grid <- nrow(filters_results)
 
     log_final <- TRUE
@@ -186,8 +185,7 @@ tune_race_anova_workflow <-
 
 
       if (nrow(new_grid) > 1) {
-        filters_results <-
-          test_parameters_gls(res, param_names, analysis_metric, analysis_max, control$alpha)
+        filters_results <- test_parameters_gls(res, control$alpha)
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
           filters_results <- tie_breaker(res, control)
         }
