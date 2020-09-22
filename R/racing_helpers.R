@@ -461,21 +461,31 @@ check_results <- function(dat, rm_zv = TRUE, rm_dup = FALSE) {
 }
 
 
-fit_anova <- function(x, dat, alpha) {
-  rs_info <- attr(x, "rset_info")$att
-  # TODO this should check to see if a nested structure has been observed yet
-  # due to random shuffling of the resamples
-  if (rs_info$class == "vfold_cv") {
-    if (rs_info$repeats > 1) {
+lmer_formula <- function(x, info) {
+  f <- .estimate ~ .config + (1 | id)
+  if (any(info$class == "vfold_cv") && info$repeats > 1) {
+    ids <- x %>% dplyr::select(id2, id)
+    unique_res <- dplyr::count(ids, id)
+    if (nrow(unique_res) > 1 && all(unique_res$n > 1)) {
       f <- .estimate ~ .config + (1 | id2/id)
     } else {
-      f <- .estimate ~ .config + (1 | id)
+      f <- .estimate ~ .config + (1 | .all_id)
     }
-  } else {
-    f <- .estimate ~ .config + (1 | id)
+  }
+  attr(f, ".Environment") <- rlang::base_env()
+  f
+}
+
+fit_anova <- function(x, dat, alpha) {
+  rs_info <- attr(x, "rset_info")$att
+  if (any(rs_info$class == "vfold_cv") && rs_info$repeats > 1) {
+   dat <- dplyr::mutate(dat, .all_id = paste(id2, id))
   }
 
+  f <- lmer_formula(x, rs_info)
+
   mod <- try(lme4::lmer(f, data = dat), silent = TRUE)
+
   if (inherits(mod, "try-error")) {
     mod <- lm(.estimate ~ .config, data = dat)
   }

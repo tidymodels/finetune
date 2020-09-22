@@ -12,6 +12,7 @@ library(yardstick)
 
 set.seed(2332)
 folds <- vfold_cv(mtcars, v = 5, repeats = 2)
+fold_att <- attributes(folds)
 spec <- decision_tree(cost_complexity = tune(), min_n = tune()) %>%
   set_engine("rpart") %>%
   set_mode("regression")
@@ -67,6 +68,30 @@ test_that('anova filtering and logging', {
 })
 
 ## -----------------------------------------------------------------------------
+
+
+test_that('anova formula', {
+  for (i in 2:nrow(folds)) {
+    f <- finetune:::lmer_formula(folds %>% slice(1:i), fold_att)
+    if (i <  7) {
+      expect_equal(f, .estimate ~ .config + (1 | .all_id))
+    } else {
+      expect_equal(f, .estimate ~ .config + (1 | id2/id))
+    }
+  }
+  # This one takes a while to run:
+  # expect_equal(environment(f), rlang::base_env())
+
+  car_bt <- bootstraps(mtcars, times = 5)
+  car_att <- attributes(car_bt)
+
+  for (i in 2:nrow(car_bt)) {
+    f <- finetune:::lmer_formula(car_bt %>% slice(1:i), car_att)
+    expect_equal(f, .estimate ~ .config + (1 | id))
+  }
+  # expect_equal(environment(f), rlang::base_env())
+})
+
 
 test_that('anova refactoring', {
   res <- finetune:::refactor_by_mean(rmse_vals, maximize = FALSE)
