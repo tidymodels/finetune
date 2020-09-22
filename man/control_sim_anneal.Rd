@@ -9,7 +9,7 @@ control_sim_anneal(
   no_improve = Inf,
   restart = 8L,
   radius = 0.1,
-  flip = 0.2,
+  flip = 3/4,
   cooling_coef = 0.02,
   extract = NULL,
   save_pred = FALSE,

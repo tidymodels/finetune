@@ -38,17 +38,25 @@ control_race <-
            burn_in = 3, num_ties = 10, alpha = 0.05, randomize = TRUE,
            pkgs = NULL, save_workflow = FALSE) {
 
-    tune::val_class_and_single(verbose,       "logical",   "control_grid()")
-    tune::val_class_and_single(verbose_elim,  "logical",   "control_grid()")
-    tune::val_class_and_single(allow_par,     "logical",   "control_grid()")
-    tune::val_class_and_single(alpha,         "numeric",   "control_grid()")
-    tune::val_class_and_single(burn_in,       "numeric",   "control_grid()")
-    tune::val_class_and_single(randomize,     "logical",   "control_grid()")
-    tune::val_class_and_single(num_ties,      "numeric",   "control_grid()")
-    tune::val_class_and_single(save_pred,     "logical",   "control_grid()")
-    tune::val_class_or_null(pkgs,             "character", "control_grid()")
-    tune::val_class_or_null(extract,          "function",  "control_grid()")
-    tune::val_class_and_single(save_workflow, "logical",   "control_grid()")
+    tune::val_class_and_single(verbose,       "logical",   "control_race()")
+    tune::val_class_and_single(verbose_elim,  "logical",   "control_race()")
+    tune::val_class_and_single(allow_par,     "logical",   "control_race()")
+    tune::val_class_and_single(alpha,         "numeric",   "control_race()")
+    tune::val_class_and_single(burn_in,       "numeric",   "control_race()")
+    tune::val_class_and_single(randomize,     "logical",   "control_race()")
+    tune::val_class_and_single(num_ties,      "numeric",   "control_race()")
+    tune::val_class_and_single(save_pred,     "logical",   "control_race()")
+    tune::val_class_or_null(pkgs,             "character", "control_race()")
+    tune::val_class_or_null(extract,          "function",  "control_race()")
+    tune::val_class_and_single(save_workflow, "logical",   "control_race()")
+
+    if (alpha <= 0 | alpha >= 1) {
+      rlang::abort("'alpha' should be on (0, 1)")
+    }
+
+    if (burn_in < 2) {
+      rlang::abort("'burn_in' should be at least two.")
+    }
 
     res <- list(
       verbose = verbose,

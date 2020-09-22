@@ -9,7 +9,7 @@ maximize_metric <- function(x, metric) {
 treat_as_integer <- function(x, num_unique = 10) {
   param_type <- purrr::map_chr(x$object, ~ .x$type)
   is_int <- param_type == "integer"
-  x_vals <- purrr::map(x$object, ~ value_seq(.x, n = 200))
+  x_vals <- purrr::map(x$object, ~ dials::value_seq(.x, n = 200))
   x_vals <- purrr::map_int(x_vals, ~ length(unique(.x)))
   x_vals < num_unique  & is_int
 }
@@ -79,7 +79,7 @@ random_integer_neighbor <- function(current, pset, prob, change) {
       prm <- pset$object[[which(pset$id == i)]]
       prm_rng <- prm$range$upper - prm$range$lower
       tries <- min(prm_rng + 1, 500)
-      pool <- value_seq(prm, n = tries)
+      pool <- dials::value_seq(prm, n = tries)
       smol_range <- floor(prm_rng/10) + 1
       val_diff <- abs(current[[i]] - pool)
       pool <- pool[val_diff <= smol_range  & val_diff > 0]

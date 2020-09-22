@@ -11,26 +11,10 @@ mod2tibble <- function(x) {
     dplyr::mutate(.config = gsub("^\\.config", "", .config))
 }
 
-test_parameters_gls <- function(x, alpha =  0.05) {
-  param_names <- tune::.get_tune_parameter_names(x)
-  metric_data <- metric_tibble(x)
-  metric <- metric_data$metric[1]
-  maximize <- metric_data$direction[1] == "maximize"
-
-  res <-
-    tune::collect_metrics(x, summarize = FALSE) %>%
-    dplyr::filter(.metric == metric)
-
-  key <-
-    res %>%
-    dplyr::select(!!!param_names, .config) %>%
-    dplyr::distinct()
-
+refactor_by_mean <- function(res, maximize = TRUE) {
   configs <-
     res %>%
     dplyr::select(dplyr::starts_with("id"), .estimate, .config)
-
-  ## TODO run check_results to filter some things out
 
   ## ---------------------------------------------------------------------------
   # regroup .configs by mean and subset on those being analyzed
@@ -52,6 +36,25 @@ test_parameters_gls <- function(x, alpha =  0.05) {
     config_levels <- best_config$.config[order( best_config$mean)]
   }
   configs$.config <- factor(configs$.config, levels = config_levels)
+  configs
+}
+
+test_parameters_gls <- function(x, alpha =  0.05) {
+  param_names <- tune::.get_tune_parameter_names(x)
+  metric_data <- metric_tibble(x)
+  metric <- metric_data$metric[1]
+  maximize <- metric_data$direction[1] == "maximize"
+
+  res <-
+    tune::collect_metrics(x, summarize = FALSE) %>%
+    dplyr::filter(.metric == metric)
+
+  key <-
+    res %>%
+    dplyr::select(!!!param_names, .config) %>%
+    dplyr::distinct()
+
+  configs <- refactor_by_mean(res, maximize)
 
   ## ---------------------------------------------------------------------------
 
@@ -87,7 +90,7 @@ test_parameters_gls <- function(x, alpha =  0.05) {
 
   best_res <-
     tibble::tibble(
-      .config = config_levels[1],
+      .config = levels(configs$.config)[1],
       lower = 0,
       upper = 0,
       estimate = 0,
@@ -472,7 +475,7 @@ fit_anova <- function(x, dat, alpha) {
     f <- .estimate ~ .config + (1 | id)
   }
 
-  mod <- try(lme4::lmer(.estimate ~ .config + (1|id), data = dat), silent = TRUE)
+  mod <- try(lme4::lmer(f, data = dat), silent = TRUE)
   if (inherits(mod, "try-error")) {
     mod <- lm(.estimate ~ .config, data = dat)
   }

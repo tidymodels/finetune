@@ -50,7 +50,9 @@ retained.}
 \item{alpha}{The alpha level for a one-sided confidence interval for each
 parameter combination.}
 
-\item{randomize}{Should the resamples be evaluated in a random order?}
+\item{randomize}{Should the resamples be evaluated in a random order?  By
+default, the resamples are evaluated in a random order so the random number
+seed should be control prior to calling this method (to be reproducible).}
 
 \item{pkgs}{An optional character string of R package names that should be
 loaded (by namespace) during parallel processing.}

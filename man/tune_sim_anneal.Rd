@@ -105,9 +105,15 @@ is back transformed to the original units and scale and are used as the new
 settings. The argument \code{radius} of \code{\link[=control_sim_anneal]{control_sim_anneal()}} controls the
 neighborhood size.
 
-For categorical parameters, each is changes with a pre-defined probability.
-The \code{flip} argument of \code{\link[=control_sim_anneal]{control_sim_anneal()}} can be used to specify this
-probability.
+For categorical and integer parameters, each is changes with a pre-defined
+probability. The \code{flip} argument of \code{\link[=control_sim_anneal]{control_sim_anneal()}} can be used to
+specify this probability. For integer parameters, a nearby integer value is
+used.
+
+Simulated annealing search may not be the preferred method when many of the
+parameters are non-numeric or integers with few unique values. In these
+cases, it is likely that the same candidate set may be treated more than
+once.
 }
 
 \subsection{Cooling schedule}{
