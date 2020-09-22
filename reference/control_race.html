@@ -94,12 +94,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
         
@@ -191,7 +185,9 @@ parameter combination.</p></td>
     </tr>
     <tr>
       <th>randomize</th>
-      <td><p>Should the resamples be evaluated in a random order?</p></td>
+      <td><p>Should the resamples be evaluated in a random order?  By
+default, the resamples are evaluated in a random order so the random number
+seed should be control prior to calling this method (to be reproducible).</p></td>
     </tr>
     <tr>
       <th>pkgs</th>
