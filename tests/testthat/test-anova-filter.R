@@ -7,6 +7,7 @@ library(rsample)
 library(dplyr)
 library(lme4)
 library(yardstick)
+library(workflows)
 
 ## -----------------------------------------------------------------------------
 
@@ -16,7 +17,11 @@ fold_att <- attributes(folds)
 spec <- decision_tree(cost_complexity = tune(), min_n = tune()) %>%
   set_engine("rpart") %>%
   set_mode("regression")
+wflow <- workflow() %>% add_model(spec) %>% add_formula(mpg ~ .)
 grid <- expand.grid(cost_complexity = c(0.001, 0.01), min_n = c(2:5))
+
+## -----------------------------------------------------------------------------
+
 grid_res <-
   spec %>% tune_grid(mpg ~ ., folds, grid = grid, metrics = metric_set(rmse))
 rmse_means <- collect_metrics(grid_res)
@@ -105,4 +110,39 @@ test_that('anova results', {
   expect_equal(anova_res$lower, unname(rmse_ci[,1]))
   expect_equal(anova_res$upper, unname(rmse_ci[,2]))
   expect_equal(anova_res$.config, configs[-1])
+})
+
+
+## -----------------------------------------------------------------------------
+
+test_that('top-level anova filter interfaces', {
+  expect_message(
+    expect_error({
+      set.seed(129)
+      anova_mod <- spec %>% tune_race_anova(mpg ~ ., folds, grid = grid)
+    },
+    regexp = NA
+    ),
+    "Racing will minimize the rmse metric"
+  )
+  expect_true(inherits(anova_mod, "tune_race"))
+  expect_true(inherits(anova_mod, "tune_results"))
+  expect_true(tibble::is_tibble((anova_mod)))
+
+  expect_silent(
+    expect_error({
+      set.seed(129)
+      anova_wlfow <-
+        wflow %>%
+        tune_race_anova(folds, grid = grid,
+                        control = control_race(verbose_elim = FALSE, save_pred = TRUE))
+    },
+    regexp = NA
+    )
+  )
+  expect_true(inherits(anova_wlfow, "tune_race"))
+  expect_true(inherits(anova_wlfow, "tune_results"))
+  expect_true(tibble::is_tibble((anova_wlfow)))
+  expect_true(sum(names(anova_wlfow) == ".predictions") == 1)
+
 })
