@@ -123,30 +123,30 @@ for a pre-defined set of tuning parameters that correspond to a model or
 recipe across one or more resamples of the data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tune_race_anova</span>(<span class='kw'>object</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>tune_race_anova</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for model_spec</span>
-<span class='fu'>tune_race_anova</span>(
-  <span class='kw'>object</span>,
-  <span class='kw'>preprocessor</span>,
-  <span class='kw'>resamples</span>,
-  <span class='kw'>...</span>,
-  param_info = <span class='kw'>NULL</span>,
-  grid = <span class='fl'>10</span>,
-  metrics = <span class='kw'>NULL</span>,
-  control = <span class='fu'><a href='control_race.html'>control_race</a></span>()
-)
+<span class='fu'>tune_race_anova</span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  <span class='va'>preprocessor</span>,
+  <span class='va'>resamples</span>,
+  <span class='va'>...</span>,
+  param_info <span class='op'>=</span> <span class='cn'>NULL</span>,
+  grid <span class='op'>=</span> <span class='fl'>10</span>,
+  metrics <span class='op'>=</span> <span class='cn'>NULL</span>,
+  control <span class='op'>=</span> <span class='fu'><a href='control_race.html'>control_race</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for workflow</span>
-<span class='fu'>tune_race_anova</span>(
-  <span class='kw'>object</span>,
-  <span class='kw'>resamples</span>,
-  <span class='kw'>...</span>,
-  param_info = <span class='kw'>NULL</span>,
-  grid = <span class='fl'>10</span>,
-  metrics = <span class='kw'>NULL</span>,
-  control = <span class='fu'><a href='control_race.html'>control_race</a></span>()
-)</pre>
+<span class='fu'>tune_race_anova</span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  <span class='va'>resamples</span>,
+  <span class='va'>...</span>,
+  param_info <span class='op'>=</span> <span class='cn'>NULL</span>,
+  grid <span class='op'>=</span> <span class='fl'>10</span>,
+  metrics <span class='op'>=</span> <span class='cn'>NULL</span>,
+  control <span class='op'>=</span> <span class='fu'><a href='control_race.html'>control_race</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -183,7 +183,7 @@ parameter sets to be created automatically.</p></td>
     </tr>
     <tr>
       <th>metrics</th>
-      <td><p>A <code><a href='https://rdrr.io/pkg/yardstick/man/metric_set.html'>yardstick::metric_set()</a></code> or <code>NULL</code>.</p></td>
+      <td><p>A <code><a href='https://yardstick.tidymodels.org/reference/metric_set.html'>yardstick::metric_set()</a></code> or <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>control</th>
