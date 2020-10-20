@@ -30,13 +30,17 @@
 #'   backend is registered).
 #' @param save_workflow A logical for whether the workflow should be appended
 #' to the output as an attribute.
+#' @param event_level A single string containing either "first" or "second".
+#' This argument is passed on to `yardstick` metric functions when any type of
+#' class prediction is made, and specifies which level of the outcome is
+#' considered the "event".
 #'
 #' @export
 control_race <-
   function(verbose = FALSE, verbose_elim = TRUE, allow_par = TRUE,
            extract = NULL, save_pred = FALSE,
            burn_in = 3, num_ties = 10, alpha = 0.05, randomize = TRUE,
-           pkgs = NULL, save_workflow = FALSE) {
+           pkgs = NULL, save_workflow = FALSE, event_level = "first") {
 
     tune::val_class_and_single(verbose,       "logical",   "control_race()")
     tune::val_class_and_single(verbose_elim,  "logical",   "control_race()")
@@ -47,6 +51,7 @@ control_race <-
     tune::val_class_and_single(num_ties,      "numeric",   "control_race()")
     tune::val_class_and_single(save_pred,     "logical",   "control_race()")
     tune::val_class_or_null(pkgs,             "character", "control_race()")
+    tune::val_class_and_single(event_level,   "character", "control_race()")
     tune::val_class_or_null(extract,          "function",  "control_race()")
     tune::val_class_and_single(save_workflow, "logical",   "control_race()")
 
@@ -69,7 +74,9 @@ control_race <-
       num_ties = num_ties,
       randomize = randomize,
       pkgs = pkgs,
-      save_workflow = save_workflow
+      save_workflow = save_workflow,
+      parallel_method = "flat",
+      event_level = event_level
     )
 
     class(res) <- c("control_race")
