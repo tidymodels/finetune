@@ -89,7 +89,7 @@ dataset and model.
 To demonstrate, we use a SVM model with the \code{kernlab} package.\if{html}{\out{<div class="r">}}\preformatted{library(kernlab)
 library(tidymodels)
 library(finetune)
-library(doMC)
+library(doParallel)
 
 ## -----------------------------------------------------------------------------
 
@@ -135,7 +135,7 @@ system.time(\{
   svm_wflow \%>\% tune_grid(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
-## 752.559  20.979 773.619
+## 792.239  21.934 814.532
 }\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
 ## With racing
 
@@ -144,16 +144,17 @@ system.time(\{
   svm_wflow \%>\% tune_race_anova(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
-## 383.148   9.764 392.931
+## 382.121   9.401 391.558
 }
 
-Speed-up of 1.97-fold for racing.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+Speed-up of 2.08-fold for racing.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Parallel processing setup
 
-cores <- parallel::detectCores(logical = TRUE)
+cores <- parallel::detectCores(logical = FALSE)
 cores
-}\if{html}{\out{</div>}}\preformatted{## [1] 20
-}\if{html}{\out{<div class="r">}}\preformatted{registerDoMC(cores = cores)
+}\if{html}{\out{</div>}}\preformatted{## [1] 10
+}\if{html}{\out{<div class="r">}}\preformatted{cl <- makePSOCKcluster(cores)
+registerDoParallel(cl)
 }\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Parallel grid search
 
@@ -161,11 +162,11 @@ system.time(\{
   set.seed(2)
   svm_wflow \%>\% tune_grid(resamples = rs, grid = svm_grid)
 \})
-}\if{html}{\out{</div>}}\preformatted{##     user   system  elapsed 
-## 1324.321   29.923  105.402
+}\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
+##   1.219   0.200 132.704
 }
 
-Parallel processing with grid search was 7.34-fold faster than
+Parallel processing with grid search was 6.138-fold faster than
 sequential grid search.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Parallel racing
 
@@ -174,10 +175,10 @@ system.time(\{
   svm_wflow \%>\% tune_race_anova(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
-## 727.499 190.218  78.423
+##  17.161   2.549  85.953
 }
 
-Parallel processing with racing was 9.86-fold faster than sequential
+Parallel processing with racing was 9.476-fold faster than sequential
 grid search.
 
 There is a compounding effect of racing and parallel processing but its

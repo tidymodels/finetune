@@ -1,4 +1,4 @@
-#' Model tuning via grid search
+#' Efficient grid search via racing with ANOVA models
 #'
 #' [tune_race_anova()] computes a set of performance metrics (e.g. accuracy or RMSE)
 #'  for a pre-defined set of tuning parameters that correspond to a model or

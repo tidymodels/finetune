@@ -6,7 +6,7 @@ To demonstrate, we use a SVM model with the `kernlab` package.
 library(kernlab)
 library(tidymodels)
 library(finetune)
-library(doMC)
+library(doParallel)
 
 ## -----------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-## 752.559  20.979 773.619
+## 792.239  21.934 814.532
 ```
 
 
@@ -76,26 +76,27 @@ system.time({
 
 ```
 ##    user  system elapsed 
-## 383.148   9.764 392.931
+## 382.121   9.401 391.558
 ```
 
-Speed-up of 1.97-fold for racing. 
+Speed-up of 2.08-fold for racing. 
 
 
 ```r
 ## -----------------------------------------------------------------------------
 ## Parallel processing setup
 
-cores <- parallel::detectCores(logical = TRUE)
+cores <- parallel::detectCores(logical = FALSE)
 cores
 ```
 
 ```
-## [1] 20
+## [1] 10
 ```
 
 ```r
-registerDoMC(cores = cores)
+cl <- makePSOCKcluster(cores)
+registerDoParallel(cl)
 ```
 
 
@@ -110,11 +111,11 @@ system.time({
 ```
 
 ```
-##     user   system  elapsed 
-## 1324.321   29.923  105.402
+##    user  system elapsed 
+##   1.219   0.200 132.704
 ```
 
-Parallel processing with grid search was 7.34-fold faster than sequential grid search.
+Parallel processing with grid search was 6.138-fold faster than sequential grid search.
 
 
 ```r
@@ -129,10 +130,10 @@ system.time({
 
 ```
 ##    user  system elapsed 
-## 727.499 190.218  78.423
+##  17.161   2.549  85.953
 ```
 
-Parallel processing with racing was 9.86-fold faster than sequential grid search.
+Parallel processing with racing was 9.476-fold faster than sequential grid search.
 
 There is a compounding effect of racing and parallel processing but its magnitude depends on the type of model, number of resamples, number of tuning parameters, and so on. 
 
