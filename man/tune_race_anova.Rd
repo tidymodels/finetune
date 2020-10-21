@@ -57,3 +57,164 @@ parameter sets to be created automatically.}
 for a pre-defined set of tuning parameters that correspond to a model or
 recipe across one or more resamples of the data.
 }
+\details{
+The technical details of this method are described in Kuhn (2014).
+
+Racing methods are efficient approaches to grid search. Initially, the
+function evaluates all tuning parameters on a small initial set of
+resamples. The \code{burn_in} argument of \code{control_race()} sets the number of
+initial resamples.
+
+The performance statistics from these resamples are analyzed to determine
+which tuning parameters are \emph{not} statistically different from the current
+best setting. If a parameter is statistically different, it is excluded from
+further resampling.
+
+The next resample is used with the remaining parameter combinations and the
+statistical analysis is updated. More candidate parameters may be excluded
+with each new resample that is processed.
+
+This function determines statistical significance using a simple ANOVA
+model where the performance statistic (e.g., RMSE, accuracy, etc.) is the
+outcome data. The \code{control_race()} function contains are parameter for the
+significance cutoff applied to the ANOVA results as well as other relevant
+arguments.
+
+There is benefit to using racing methods in conjunction with parallel
+processing. The following section shows a benchmark of results for one
+dataset and model.
+
+\subsection{Benchmarking results}{
+
+To demonstrate, we use a SVM model with the \code{kernlab} package.\if{html}{\out{<div class="r">}}\preformatted{library(kernlab)
+library(tidymodels)
+library(finetune)
+library(doMC)
+
+## -----------------------------------------------------------------------------
+
+data(cells, package = "modeldata")
+cells <- cells \%>\% select(-case)
+
+## -----------------------------------------------------------------------------
+
+set.seed(6376)
+rs <- bootstraps(cells, times = 25)
+}\if{html}{\out{</div>}}
+
+We’ll only tune the model parameters (i.e., not recipe tuning):\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+
+svm_spec <-
+  svm_rbf(cost = tune(), rbf_sigma = tune()) \%>\%
+  set_engine("kernlab") \%>\%
+  set_mode("classification")
+
+svm_rec <-
+  recipe(class ~ ., data = cells) \%>\%
+  step_YeoJohnson(all_predictors()) \%>\%
+  step_normalize(all_predictors())
+
+svm_wflow <-
+  workflow() \%>\%
+  add_model(svm_spec) \%>\%
+  add_recipe(svm_rec)
+
+set.seed(1)
+svm_grid <-
+  svm_spec \%>\%
+  parameters() \%>\%
+  grid_latin_hypercube(size = 25)
+}\if{html}{\out{</div>}}
+
+We’ll get the times for grid search and ANOVA racing with and without
+parallel processing:\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+## Regular grid search
+
+system.time(\{
+  set.seed(2)
+  svm_wflow \%>\% tune_grid(resamples = rs, grid = svm_grid)
+\})
+}\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
+## 752.559  20.979 773.619
+}\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+## With racing
+
+system.time(\{
+  set.seed(2)
+  svm_wflow \%>\% tune_race_anova(resamples = rs, grid = svm_grid)
+\})
+}\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
+## 383.148   9.764 392.931
+}
+
+Speed-up of 1.97-fold for racing.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+## Parallel processing setup
+
+cores <- parallel::detectCores(logical = TRUE)
+cores
+}\if{html}{\out{</div>}}\preformatted{## [1] 20
+}\if{html}{\out{<div class="r">}}\preformatted{registerDoMC(cores = cores)
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+## Parallel grid search
+
+system.time(\{
+  set.seed(2)
+  svm_wflow \%>\% tune_grid(resamples = rs, grid = svm_grid)
+\})
+}\if{html}{\out{</div>}}\preformatted{##     user   system  elapsed 
+## 1324.321   29.923  105.402
+}
+
+Parallel processing with grid search was 7.34-fold faster than
+sequential grid search.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+## Parallel racing
+
+system.time(\{
+  set.seed(2)
+  svm_wflow \%>\% tune_race_anova(resamples = rs, grid = svm_grid)
+\})
+}\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
+## 727.499 190.218  78.423
+}
+
+Parallel processing with racing was 9.86-fold faster than sequential
+grid search.
+
+There is a compounding effect of racing and parallel processing but its
+magnitude depends on the type of model, number of resamples, number of
+tuning parameters, and so on.
+}
+}
+\examples{
+\donttest{
+library(parsnip)
+library(rsample)
+library(discrim)
+library(dials)
+
+## -----------------------------------------------------------------------------
+
+data(two_class_dat, package = "modeldata")
+
+set.seed(6376)
+rs <- bootstraps(two_class_dat, times = 10)
+
+## -----------------------------------------------------------------------------
+
+# optimize an regularized discriminant analysis model
+rda_spec <-
+  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) \%>\%
+  set_engine("klaR")
+
+## -----------------------------------------------------------------------------
+
+set.seed(11)
+grid_anova <- rda_spec \%>\% tune_race_anova(Class ~ ., resamples = rs, grid = 10)
+
+show_best(grid_anova, metric = "roc_auc", n = 2)
+}
+}
+\references{
+Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
+Models." \url{http://arxiv.org/abs/1405.6974.}
+}

@@ -40,6 +40,9 @@ refactor_by_mean <- function(res, maximize = TRUE) {
 }
 
 test_parameters_gls <- function(x, alpha =  0.05) {
+  if (all(purrr::map_lgl(x$.metrics, is.null))) {
+    rlang::abort("There were no valid metrics for the ANOVA model.")
+  }
   param_names <- tune::.get_tune_parameter_names(x)
   metric_data <- metric_tibble(x)
   metric <- metric_data$metric[1]

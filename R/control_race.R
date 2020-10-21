@@ -34,13 +34,31 @@
 #' This argument is passed on to `yardstick` metric functions when any type of
 #' class prediction is made, and specifies which level of the outcome is
 #' considered the "event".
+#' @param parallel_over A single string containing either `"resamples"` or
+#'   `"everything"` describing how to use parallel processing.
+#'
+#'   If `"resamples"`, then tuning will be performed in parallel over resamples
+#'   alone. Within each resample, the preprocessor (i.e. recipe or formula) is
+#'   processed once, and is then reused across all models that need to be fit.
+#'
+#'   If `"everything"`, then tuning will be performed in parallel at two levels.
+#'   An outer parallel loop will iterate over resamples. Additionally, an
+#'   inner parallel loop will iterate over all unique combinations of
+#'   preprocessor and model tuning parameters for that specific resample. This
+#'   will result in the preprocessor being re-processed multiple times, but
+#'   can be faster if that processing is extremely fast.
+#'
+#'   Note that this parameter has a different default (`"everything"`) than its
+#'   counterpart in [tune::control_grid()]. This is the most advantageous value
+#'   for racing.
 #'
 #' @export
 control_race <-
-  function(verbose = FALSE, verbose_elim = TRUE, allow_par = TRUE,
+  function(verbose = FALSE, verbose_elim = FALSE, allow_par = TRUE,
            extract = NULL, save_pred = FALSE,
            burn_in = 3, num_ties = 10, alpha = 0.05, randomize = TRUE,
-           pkgs = NULL, save_workflow = FALSE, event_level = "first") {
+           pkgs = NULL, save_workflow = FALSE, event_level = "first",
+           parallel_over = "everything") {
 
     tune::val_class_and_single(verbose,       "logical",   "control_race()")
     tune::val_class_and_single(verbose_elim,  "logical",   "control_race()")
@@ -54,6 +72,7 @@ control_race <-
     tune::val_class_and_single(event_level,   "character", "control_race()")
     tune::val_class_or_null(extract,          "function",  "control_race()")
     tune::val_class_and_single(save_workflow, "logical",   "control_race()")
+    val_parallel_over(parallel_over, "control_bayes()")
 
     if (alpha <= 0 | alpha >= 1) {
       rlang::abort("'alpha' should be on (0, 1)")
@@ -75,7 +94,7 @@ control_race <-
       randomize = randomize,
       pkgs = pkgs,
       save_workflow = save_workflow,
-      parallel_method = "flat",
+      parallel_over = parallel_over,
       event_level = event_level
     )
 

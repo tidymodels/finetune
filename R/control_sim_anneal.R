@@ -32,6 +32,23 @@
 #'   loaded (by namespace) during parallel processing.
 #' @param save_workflow A logical for whether the workflow should be appended
 #' to the output as an attribute.
+#' @param event_level A single string containing either "first" or "second".
+#' This argument is passed on to `yardstick` metric functions when any type of
+#' class prediction is made, and specifies which level of the outcome is
+#' considered the "event".
+#' @param parallel_over A single string containing either `"resamples"` or
+#'   `"everything"` describing how to use parallel processing.
+#'
+#'   If `"resamples"`, then tuning will be performed in parallel over resamples
+#'   alone. Within each resample, the preprocessor (i.e. recipe or formula) is
+#'   processed once, and is then reused across all models that need to be fit.
+#'
+#'   If `"everything"`, then tuning will be performed in parallel at two levels.
+#'   An outer parallel loop will iterate over resamples. Additionally, an
+#'   inner parallel loop will iterate over all unique combinations of
+#'   preprocessor and model tuning parameters for that specific resample. This
+#'   will result in the preprocessor being re-processed multiple times, but
+#'   can be faster if that processing is extremely fast.
 #' @export
 control_sim_anneal <-
   function(verbose = TRUE,
@@ -44,7 +61,9 @@ control_sim_anneal <-
            save_pred = FALSE,
            time_limit = NA,
            pkgs = NULL,
-           save_workflow = FALSE) {
+           save_workflow = FALSE,
+           event_level = "first",
+           parallel_over = "resamples") {
 
     tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
@@ -57,6 +76,7 @@ control_sim_anneal <-
     tune::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
     tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
     tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
+    val_parallel_over(parallel_over, "control_bayes()")
 
     radius[radius <= 0] <- 0.001
     radius[radius >= 1] <- 0.999
@@ -88,7 +108,10 @@ control_sim_anneal <-
         save_pred = save_pred,
         time_limit = time_limit,
         pkgs = pkgs,
-        save_workflow = save_workflow
+        save_workflow = save_workflow,
+        event_level = event_level,
+        parallel_over = parallel_over
+
       )
 
     class(res) <- "control_sim_anneal"
@@ -99,4 +122,11 @@ control_sim_anneal <-
 print.control_sim_anneal <- function(x, ...) {
   cat("Simulated annealing control object\n")
   invisible(x)
+}
+
+
+val_parallel_over <- function(parallel_over, where) {
+  val_class_and_single(parallel_over, "character", where)
+  rlang::arg_match0(parallel_over, c("resamples", "everything"), "parallel_over")
+  invisible(NULL)
 }

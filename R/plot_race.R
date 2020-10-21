@@ -15,7 +15,7 @@ plot_race <- function(x) {
   .order <- sort(unique(rs$.order))
   purrr::map_dfr(.order, ~ stage_results(.x, rs)) %>%
     ggplot2::ggplot(ggplot2::aes(x = stage, y = mean, group = .config, col = .config)) +
-    ggplot2::geom_step(alpha = .5, show.legend = FALSE) +
+    ggplot2::geom_line(alpha = .5, show.legend = FALSE) +
     ggplot2::xlab("Analysis Stage") +
     ggplot2::ylab(metric)
 }

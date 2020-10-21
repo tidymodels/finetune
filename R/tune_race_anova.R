@@ -18,6 +18,65 @@
 #' @param metrics A [yardstick::metric_set()] or `NULL`.
 #' @param control An object used to modify the tuning process.
 #' @param ... Not currently used.
+#' @references
+#' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
+#' Models." \url{http://arxiv.org/abs/1405.6974.}
+#' @details
+#' The technical details of this method are described in Kuhn (2014).
+#'
+#'   Racing methods are efficient approaches to grid search. Initially, the
+#'  function evaluates all tuning parameters on a small initial set of
+#'  resamples. The `burn_in` argument of `control_race()` sets the number of
+#'  initial resamples.
+#'
+#'   The performance statistics from these resamples are analyzed to determine
+#'  which tuning parameters are _not_ statistically different from the current
+#'  best setting. If a parameter is statistically different, it is excluded from
+#'  further resampling.
+#'
+#'   The next resample is used with the remaining parameter combinations and the
+#'  statistical analysis is updated. More candidate parameters may be excluded
+#'  with each new resample that is processed.
+#'
+#'   This function determines statistical significance using a simple ANOVA
+#'  model where the performance statistic (e.g., RMSE, accuracy, etc.) is the
+#'  outcome data. The `control_race()` function contains are parameter for the
+#'  significance cutoff applied to the ANOVA results as well as other relevant
+#'  arguments.
+#'
+#'   There is benefit to using racing methods in conjunction with parallel
+#'  processing. The following section shows a benchmark of results for one
+#'  dataset and model.
+#'
+#' @includeRmd  man/rmd/anova-benchmark.md details
+#' @examples
+#' \donttest{
+#' library(parsnip)
+#' library(rsample)
+#' library(discrim)
+#' library(dials)
+#'
+#' ## -----------------------------------------------------------------------------
+#'
+#' data(two_class_dat, package = "modeldata")
+#'
+#' set.seed(6376)
+#' rs <- bootstraps(two_class_dat, times = 10)
+#'
+#' ## -----------------------------------------------------------------------------
+#'
+#' # optimize an regularized discriminant analysis model
+#' rda_spec <-
+#'   discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
+#'   set_engine("klaR")
+#'
+#' ## -----------------------------------------------------------------------------
+#'
+#' set.seed(11)
+#' grid_anova <- rda_spec %>% tune_race_anova(Class ~ ., resamples = rs, grid = 10)
+#'
+#' show_best(grid_anova, metric = "roc_auc", n = 2)
+#' }
 #' @export
 tune_race_anova <- function(object, ...) {
   UseMethod("tune_race_anova")
@@ -119,6 +178,8 @@ tune_race_anova_workflow <-
 
     min_rs <- control$burn_in
     tmp_resamples <- restore_rset(resamples, 1:min_rs)
+
+    control$pkgs <- c(tune::required_pkgs(object), "workflows", "tidyr", "rlang")
 
     res <-
       object %>%

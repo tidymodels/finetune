@@ -16,9 +16,8 @@
 #' one that will be optimized.
 #' @param iter The maximum number of search iterations.
 #' @param initial An initial set of results in a tidy format (as would result
-#' from [tune_grid()]) or a positive integer. It is suggested that the number of
-#' initial results be greater than the number of parameters being optimized.
-#' @param control A control object created by [control_sim_anneal()]
+#' from [tune_grid()]) or a positive integer.
+#' @param control The results of `control_sim_anneal()`.
 #' @param ... Not currently used.
 #' @details
 #' Simulated annealing is a global optimization method. For model tuning, it
@@ -270,7 +269,8 @@ tune_sim_anneal_workflow <-
     tune::check_workflow(object, check_dials = is.null(param_info), pset = param_info)
 
     unsummarized <-
-      tune::check_initial(initial, param_info, object, resamples, metrics, control) %>%
+      tune::check_initial(initial, param_info, object, resamples, metrics,
+                          control, is_race = TRUE) %>%
       tune::new_iteration_results(
         parameters = param_info,
         metrics = metrics,
