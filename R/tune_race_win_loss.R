@@ -186,6 +186,13 @@ tune_race_win_loss_workflow <-
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
           filters_results <- tie_breaker(res, control)
         }
+      } else {
+        # Depending on the value of control$parallel_over we don't need to do
+        # the remaining loop to get the rs counter to B
+        max_B <- max(tune::collect_metrics(res)$n)
+        if (max_B == B) {
+          break()
+        }
       }
     }
 

@@ -242,13 +242,20 @@ tune_race_anova_workflow <-
           metrics = metrics,
           control = control
         )
-      res <- restore_tune(res, tmp_res)
 
+      res <- restore_tune(res, tmp_res)
 
       if (nrow(new_grid) > 1) {
         filters_results <- test_parameters_gls(res, control$alpha)
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
           filters_results <- tie_breaker(res, control)
+        }
+      } else {
+        # Depending on the value of control$parallel_over we don't need to do
+        # the remaining loop to get the rs counter to B
+        max_B <- max(tune::collect_metrics(res)$n)
+        if (max_B == B) {
+          break()
         }
       }
     }
