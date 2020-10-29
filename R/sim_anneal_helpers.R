@@ -150,29 +150,14 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
     min_dist <- apply(all_values, 2, min)
     min_dist <- min_dist/max(min_dist)
     prob_wt <- min_dist^2
+    if (diff(range(prob_wt)) < 0.0001) {
+      prob_wt <- 1/nrow(candidates)
+    }
   } else {
     prob_wt <- 1/nrow(candidates)
   }
 
   candidates <- tibble::as_tibble(candidates)
-
-  if (all(sort(names(candidates)) == c("neighbors", "num_comp")))  {
-  library(patchwork)
-
-  existing<- tibble::as_tibble(existing)
-  tmp <- candidates
-  tmp$prob_wt <- prob_wt
-  p <- ggplot(tmp, aes(x = neighbors, y = num_comp))  +
-    geom_point(data = existing, col = "blue") +
-    geom_point(aes(col = prob_wt), alpha = .3, size = .5) +
-    xlim(0:1) +
-    ylim(0:1) +
-    scale_colour_gradient(low = "white", high = "red")
-  q <- ggplot(tmp, aes(x = prob_wt)) +
-    geom_histogram()
-  print(p + q)
-  }
-
   candidates <- encode_set_backwards(candidates, pset)
 
   selected <- sample(seq_along(min_dist), size = retain, prob = min_dist)
