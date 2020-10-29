@@ -151,16 +151,17 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
     min_dist <- min_dist/max(min_dist)
     prob_wt <- min_dist^2
     if (diff(range(prob_wt)) < 0.0001) {
-      prob_wt <- 1/nrow(candidates)
+      prob_wt <- rep(1/nrow(candidates), nrow(candidates))
     }
   } else {
-    prob_wt <- 1/nrow(candidates)
+    prob_wt <- rep(1/nrow(candidates), nrow(candidates))
   }
+  retain <- min(retain, nrow(candidates))
 
   candidates <- tibble::as_tibble(candidates)
   candidates <- encode_set_backwards(candidates, pset)
 
-  selected <- sample(seq_along(min_dist), size = retain, prob = min_dist)
+  selected <- sample(seq_along(prob_wt), size = retain, prob = prob_wt)
   candidates[selected,]
 }
 
