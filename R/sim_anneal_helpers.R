@@ -155,22 +155,6 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
   }
 
   candidates <- tibble::as_tibble(candidates)
-
-  library(patchwork)
-
-  existing<- tibble::as_tibble(existing)
-  tmp <- candidates
-  tmp$prob_wt <- prob_wt
-  p <- ggplot(tmp, aes(x = cost, y = rbf_sigma))  +
-    geom_point(data = existing, col = "blue") +
-    geom_point(aes(col = prob_wt), alpha = .3, size = .5) +
-    xlim(0:1) +
-    ylim(0:1) +
-    scale_colour_gradient(low = "white", high = "red")
-  q <- ggplot(tmp, aes(x = prob_wt)) +
-    geom_histogram()
-  print(p + q)
-
   candidates <- encode_set_backwards(candidates, pset)
 
   selected <- sample(seq_along(min_dist), size = retain, prob = min_dist)
