@@ -144,7 +144,7 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
     existing <- tune::encode_set(existing, pset, as_matrix = TRUE)
     hist_index <- 1:nrow(existing)
     all_values <- rbind(existing, candidates)
-    all_values <- dist(all_values)
+    all_values <- stats::dist(all_values)
     all_values <- as.matrix(all_values)
     all_values <- all_values[hist_index, -hist_index, drop = FALSE]
     min_dist <- apply(all_values, 2, min)

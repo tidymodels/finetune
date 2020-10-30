@@ -26,6 +26,13 @@ Very rough version of the package right now but it works fairly well. There are 
 
 Tuning via _simulated annealing_ optimization is another iterative search tool for finding good values: 
 
+```{r load, include=FALSE}
+library(tidymodels)
+library(finetune)
+library(discrim)
+library(rlang)
+library(vctrs)
+```
 ```{r sa}
 library(tidymodels)
 library(finetune)
@@ -47,10 +54,13 @@ rda_spec <-
 
 ## -----------------------------------------------------------------------------
 
+ctrl <- control_race(verbose_elim = TRUE)
+
 set.seed(8300)
 sa_res <- 
   rda_spec %>% 
-  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4)
+  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4,
+                  control = ctrl)
 show_best(sa_res, metric = "roc_auc", n = 2)
 ```
 

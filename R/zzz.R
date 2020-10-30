@@ -1,4 +1,4 @@
-#' @importFrom stats qt runif coef confint lm reorder rnorm setNames
+#' @importFrom stats qt runif coef confint lm reorder rnorm setNames dist
 #' @importFrom utils globalVariables
 #' @importFrom rlang syms
 #' @importFrom tibble tibble
