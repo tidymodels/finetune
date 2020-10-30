@@ -48,7 +48,7 @@ data(two_class_dat, package = "modeldata")
 set.seed(1)
 rs <- bootstraps(two_class_dat, times = 10) # more resamples usually needed
 
-# optimize an regularized discriminant analysis model
+# Optimize a regularized discriminant analysis model
 library(discrim)
 rda_spec <-
   discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
@@ -86,7 +86,17 @@ grid_anova <-
 show_best(grid_anova, metric = "roc_auc", n = 2)
 ```
 
-`tune_race_win_loss()` can also be used. 
+`tune_race_win_loss()` can also be used. It treats the tuning parameters as sports teams in a tournament and computed win/loss statistics. 
+
+
+```{r race-wl}
+set.seed(4)
+grid_win_loss<- 
+  rda_spec %>% 
+  tune_race_win_loss(Class ~ ., resamples = rs, grid = grid, control = ctrl)
+
+show_best(grid_win_loss, metric = "roc_auc", n = 2)
+```
 
 
 ## Code of Conduct

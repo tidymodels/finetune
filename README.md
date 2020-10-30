@@ -34,7 +34,7 @@ data(two_class_dat, package = "modeldata")
 set.seed(1)
 rs <- bootstraps(two_class_dat, times = 10) # more resamples usually needed
 
-# optimize an regularized discriminant analysis model
+# Optimize a regularized discriminant analysis model
 library(discrim)
 rda_spec <-
   discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
@@ -118,7 +118,31 @@ show_best(grid_anova, metric = "roc_auc", n = 2)
 #> 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…
 ```
 
-`tune_race_win_loss()` can also be used.
+`tune_race_win_loss()` can also be used. It treats the tuning parameters
+as sports teams in a tournament and computed win/loss statistics.
+
+``` r
+set.seed(4)
+grid_win_loss<- 
+  rda_spec %>% 
+  tune_race_win_loss(Class ~ ., resamples = rs, grid = grid, control = ctrl)
+#> ℹ Racing will maximize the roc_auc metric.
+#> ℹ Resamples are analyzed in a random order.
+#> ℹ Bootstrap10:  3 eliminated; 17 candidates remain.
+#> ℹ Bootstrap04:  2 eliminated; 15 candidates remain.
+#> ℹ Bootstrap03:  2 eliminated; 13 candidates remain.
+#> ℹ Bootstrap01:  1 eliminated; 12 candidates remain.
+#> ℹ Bootstrap07:  1 eliminated; 11 candidates remain.
+#> ℹ Bootstrap05:  1 eliminated; 10 candidates remain.
+#> ℹ Bootstrap08:  1 eliminated;  9 candidates remain.
+
+show_best(grid_win_loss, metric = "roc_auc", n = 2)
+#> # A tibble: 2 x 8
+#>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
+#>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>    
+#> 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…
+#> 2           0.119        0.0470 roc_auc binary     0.879    10 0.00387 Preproce…
+```
 
 ## Code of Conduct
 
