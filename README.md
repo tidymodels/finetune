@@ -30,7 +30,7 @@ library(finetune)
 
 data(two_class_dat, package = "modeldata")
 
-set.seed(6376)
+set.seed(1)
 rs <- bootstraps(two_class_dat, times = 10) # more resamples usually needed
 
 # optimize an regularized discriminant analysis model
@@ -41,48 +41,45 @@ rda_spec <-
 
 ## -----------------------------------------------------------------------------
 
-set.seed(8300)
+ctrl <- control_sim_anneal(verbose = TRUE)
+
+set.seed(2)
 sa_res <- 
   rda_spec %>% 
-  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4)
+  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4,
+                  control = ctrl)
 #> 
 #> >  Generating a set of 4 initial parameter results
-#> Loading required package: MASS
-#> 
-#> Attaching package: 'MASS'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     select
 #> ✓ Initialization complete
 #> 
 #> Optimizing roc_auc
-#> Initial best: 0.88802
-#>  1 ◯ accept suboptimal  roc_auc=0.8833   (+/-0.005067)
-#>  2 ◯ accept suboptimal  roc_auc=0.88092  (+/-0.005024)
-#>  3 + better suboptimal  roc_auc=0.88755  (+/-0.00513)
-#>  4 ◯ accept suboptimal  roc_auc=0.88317  (+/-0.005064)
-#>  5 ◯ accept suboptimal  roc_auc=0.87502  (+/-0.005022)
-#>  6 ◯ accept suboptimal  roc_auc=0.86507  (+/-0.005064)
-#>  7 + better suboptimal  roc_auc=0.87192  (+/-0.005008)
-#>  8 x restart from best  roc_auc=0.88028  (+/-0.005088)
-#>  9 ◯ accept suboptimal  roc_auc=0.88738  (+/-0.005146)
-#> 10 ◯ accept suboptimal  roc_auc=0.88141  (+/-0.005035)
-#> 11 ─ discard suboptimal roc_auc=0.87528  (+/-0.004934)
-#> 12 ◯ accept suboptimal  roc_auc=0.878    (+/-0.00495)
-#> 13 ◯ accept suboptimal  roc_auc=0.86893  (+/-0.005054)
-#> 14 + better suboptimal  roc_auc=0.87481  (+/-0.004947)
-#> 15 ─ discard suboptimal roc_auc=0.86514  (+/-0.005068)
-#> 16 x restart from best  roc_auc=0.86691  (+/-0.005042)
-#> 17 ◯ accept suboptimal  roc_auc=0.88099  (+/-0.005)
-#> 18 + better suboptimal  roc_auc=0.88763  (+/-0.005165)
-#> 19 ◯ accept suboptimal  roc_auc=0.8815   (+/-0.005016)
-#> 20 + better suboptimal  roc_auc=0.8849   (+/-0.005134)
+#> Initial best: 0.86480
+#>  1 ◯ accept suboptimal  roc_auc=0.85625  (+/-0.006354)
+#>  2 + better suboptimal  roc_auc=0.85896  (+/-0.006098)
+#>  3 ♥ new best           roc_auc=0.86716  (+/-0.005235)
+#>  4 ♥ new best           roc_auc=0.8739   (+/-0.004409)
+#>  5 ♥ new best           roc_auc=0.88295  (+/-0.00353)
+#>  6 ◯ accept suboptimal  roc_auc=0.87583  (+/-0.00413)
+#>  7 ◯ accept suboptimal  roc_auc=0.86858  (+/-0.005111)
+#>  8 + better suboptimal  roc_auc=0.86988  (+/-0.005051)
+#>  9 + better suboptimal  roc_auc=0.87918  (+/-0.003877)
+#> 10 ◯ accept suboptimal  roc_auc=0.87349  (+/-0.004475)
+#> 11 ◯ accept suboptimal  roc_auc=0.86836  (+/-0.005163)
+#> 12 ◯ accept suboptimal  roc_auc=0.85878  (+/-0.006142)
+#> 13 x restart from best  roc_auc=0.86732  (+/-0.005274)
+#> 14 ◯ accept suboptimal  roc_auc=0.88057  (+/-0.003712)
+#> 15 ◯ accept suboptimal  roc_auc=0.87135  (+/-0.004772)
+#> 16 ◯ accept suboptimal  roc_auc=0.86193  (+/-0.005737)
+#> 17 ◯ accept suboptimal  roc_auc=0.85101  (+/-0.006655)
+#> 18 ◯ accept suboptimal  roc_auc=0.84378  (+/-0.007069)
+#> 19 + better suboptimal  roc_auc=0.85134  (+/-0.006625)
+#> 20 ◯ accept suboptimal  roc_auc=0.84704  (+/-0.006863)
 show_best(sa_res, metric = "roc_auc", n = 2)
 #> # A tibble: 2 x 9
 #>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config
 #>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>  
-#> 1          0.0345      0.000182 roc_auc binary     0.888    10 0.00516 Prepro…
-#> 2          0.0697      0.00761  roc_auc binary     0.888    10 0.00516 Prepro…
+#> 1          0.132       0.000739 roc_auc binary     0.883    10 0.00353 Prepro…
+#> 2          0.0356      0.0286   roc_auc binary     0.881    10 0.00371 Prepro…
 #> # … with 1 more variable: .iter <int>
 ```
 
@@ -96,20 +93,30 @@ For example, using an ANOVA-type analysis to filter out parameter
 combinations:
 
 ``` r
-set.seed(511)
+set.seed(3)
 grid <-
   rda_spec %>%
   parameters() %>%
   grid_max_entropy(size = 20)
 
-set.seed(11)
-grid_anova <- rda_spec %>% tune_race_anova(Class ~ ., resamples = rs, grid = grid)
+ctrl <- control_race(verbose_elim = TRUE)
+
+set.seed(4)
+grid_anova <- 
+  rda_spec %>% 
+  tune_race_anova(Class ~ ., resamples = rs, grid = grid,
+                  control = ctrl)
+#> ℹ Racing will maximize the roc_auc metric.
+#> ℹ Resamples are analyzed in a random order.
+#> ℹ Bootstrap10: 14 eliminated;  6 candidates remain.
+#> ℹ Bootstrap04:  2 eliminated;  4 candidates remain.
+#> ℹ Bootstrap03: All but one parameter combination were eliminated.
+
 show_best(grid_anova, metric = "roc_auc", n = 2)
-#> # A tibble: 2 x 8
+#> # A tibble: 1 x 8
 #>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
 #>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>    
-#> 1          0.0164        0.0618 roc_auc binary     0.884    10 0.00511 Preproce…
-#> 2          0.327         0.0662 roc_auc binary     0.884    10 0.00503 Preproce…
+#> 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…
 ```
 
 `tune_race_win_loss()` can also be used.

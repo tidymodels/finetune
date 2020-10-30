@@ -32,6 +32,7 @@ library(finetune)
 library(discrim)
 library(rlang)
 library(vctrs)
+library(MASS)
 ```
 ```{r sa}
 library(tidymodels)
@@ -43,7 +44,7 @@ library(finetune)
 
 data(two_class_dat, package = "modeldata")
 
-set.seed(6376)
+set.seed(1)
 rs <- bootstraps(two_class_dat, times = 10) # more resamples usually needed
 
 # optimize an regularized discriminant analysis model
@@ -54,9 +55,9 @@ rda_spec <-
 
 ## -----------------------------------------------------------------------------
 
-ctrl <- control_race(verbose_elim = TRUE)
+ctrl <- control_sim_anneal(verbose = TRUE)
 
-set.seed(8300)
+set.seed(2)
 sa_res <- 
   rda_spec %>% 
   tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4,
@@ -69,14 +70,20 @@ The second set of methods are for "racing". We start off by doing a small set of
 For example, using an ANOVA-type analysis to filter out parameter combinations:
 
 ```{r race}
-set.seed(511)
+set.seed(3)
 grid <-
   rda_spec %>%
   parameters() %>%
   grid_max_entropy(size = 20)
 
-set.seed(11)
-grid_anova <- rda_spec %>% tune_race_anova(Class ~ ., resamples = rs, grid = grid)
+ctrl <- control_race(verbose_elim = TRUE)
+
+set.seed(4)
+grid_anova <- 
+  rda_spec %>% 
+  tune_race_anova(Class ~ ., resamples = rs, grid = grid,
+                  control = ctrl)
+
 show_best(grid_anova, metric = "roc_auc", n = 2)
 ```
 
