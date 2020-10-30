@@ -42,7 +42,6 @@ Imports:
     workflows,
     purrr,
     cli,
-    crayon,
     dials,
     dplyr,
     utils,
