@@ -59,15 +59,18 @@ test_that('anova filtering and logging', {
   )
 
   expect_message(
-    finetune:::log_racing(control_race(), anova_res, ames_grid_search$splits, 10, "rmse"),
+    finetune:::log_racing(control_race(verbose_elim = TRUE), anova_res,
+                          ames_grid_search$splits, 10, "rmse"),
     "Fold10"
   )
   expect_message(
-    finetune:::log_racing(control_race(), anova_res, ames_grid_search$splits, 10, "rmse"),
+    finetune:::log_racing(control_race(verbose_elim = TRUE), anova_res,
+                          ames_grid_search$splits, 10, "rmse"),
     "7 eliminated"
   )
   expect_message(
-    finetune:::log_racing(control_race(), anova_res, ames_grid_search$splits, 10, "rmse"),
+    finetune:::log_racing(control_race(verbose_elim = TRUE), anova_res,
+                          ames_grid_search$splits, 10, "rmse"),
     "3 candidates remain"
   )
 })
@@ -105,6 +108,8 @@ test_that('anova refactoring', {
 
 
 test_that('anova results', {
+  # Skip for < 4.0 due to random number differences
+  skip_if(getRversion() < "4.0.0")
   anova_res <- finetune:::fit_anova(grid_res, rmse_configs, alpha  = 0.0381)
   expect_equal(anova_res$estimate, rmse_res$Estimate[-1])
   expect_equal(anova_res$lower, unname(rmse_ci[,1]))
@@ -116,14 +121,12 @@ test_that('anova results', {
 ## -----------------------------------------------------------------------------
 
 test_that('top-level anova filter interfaces', {
-  expect_message(
-    expect_error({
-      set.seed(129)
-      anova_mod <- spec %>% tune_race_anova(mpg ~ ., folds, grid = grid)
-    },
-    regexp = NA
-    ),
-    "Racing will minimize the rmse metric"
+
+  expect_error({
+    set.seed(129)
+    anova_mod <- spec %>% tune_race_anova(mpg ~ ., folds, grid = grid)
+  },
+  regexp = NA
   )
   expect_true(inherits(anova_mod, "tune_race"))
   expect_true(inherits(anova_mod, "tune_results"))

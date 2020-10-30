@@ -269,8 +269,7 @@ tune_sim_anneal_workflow <-
     tune::check_workflow(object, check_dials = is.null(param_info), pset = param_info)
 
     unsummarized <-
-      tune::check_initial(initial, param_info, object, resamples, metrics,
-                          control, is_race = TRUE) %>%
+      tune::check_initial(initial, param_info, object, resamples, metrics, control) %>%
       tune::new_iteration_results(
         parameters = param_info,
         metrics = metrics,
@@ -330,6 +329,7 @@ tune_sim_anneal_workflow <-
 
       new_grid <-
         new_in_neighborhood(current_param,
+                            hist_values = grid_history,
                             param_info,
                             radius = control$radius,
                             flip = control$flip) %>%

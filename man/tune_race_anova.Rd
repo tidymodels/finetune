@@ -4,7 +4,7 @@
 \alias{tune_race_anova}
 \alias{tune_race_anova.model_spec}
 \alias{tune_race_anova.workflow}
-\title{Model tuning via grid search}
+\title{Efficient grid search via racing with ANOVA models}
 \usage{
 tune_race_anova(object, ...)
 

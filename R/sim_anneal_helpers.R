@@ -14,13 +14,14 @@ treat_as_integer <- function(x, num_unique = 10) {
   x_vals < num_unique  & is_int
 }
 
-new_in_neighborhood <- function(current, pset, radius = 0.025, flip = 0.1) {
+new_in_neighborhood <- function(current, hist_values, pset, radius = 0.025, flip = 0.1) {
   current <- dplyr::select(current, !!!pset$id)
   param_type <- purrr::map_chr(pset$object, ~ .x$type)
   if (any(param_type == "double")) {
     dbl_nms <- pset$id[param_type == "double"]
     new_dbl <-
       random_real_neighbor(current %>% dplyr::select(dbl_nms),
+                           hist_values = hist_values %>% dplyr::select(dbl_nms),
                            pset %>% dplyr::filter(id %in% dbl_nms),
                            r = radius)
     current[, dbl_nms] <- new_dbl
@@ -31,6 +32,7 @@ new_in_neighborhood <- function(current, pset, radius = 0.025, flip = 0.1) {
     flip_one <- all(param_type == "integer")
     new_int <-
       random_integer_neighbor(current %>% dplyr::select(int_nms),
+                              hist_values = hist_values %>% dplyr::select(int_nms),
                               pset %>% dplyr::filter(id %in% int_nms),
                               prob = flip,
                               change = flip_one)
@@ -68,7 +70,17 @@ random_discrete_neighbor <- function(current, pset, prob, change) {
   current
 }
 
-random_integer_neighbor <- function(current, pset, prob, change) {
+
+random_integer_neighbor <- function(current, hist_values, pset, prob, change, retain = 1, tries = 500) {
+  candidates <-
+    purrr::map_dfr(1:tries,
+                   ~ random_integer_neighbor_calc(current, pset, prob, change))
+
+  rnd <- tune::encode_set(candidates, pset, as_matrix = TRUE)
+  sample_by_distance(rnd, hist_values, retain = retain, pset = pset)
+}
+
+random_integer_neighbor_calc <- function(current, pset, prob, change) {
   change_val <- runif(nrow(pset)) <= prob
   if (change & !any(change_val)) {
     change_val[sample(seq_along(change_val), 1)] <- TRUE
@@ -91,7 +103,7 @@ random_integer_neighbor <- function(current, pset, prob, change) {
   current
 }
 
-random_real_neighbor <- function(current, pset, retain = 1, tries = 500, r = .025) {
+random_real_neighbor <- function(current, hist_values, pset, retain = 1, tries = 500, r = .025) {
   is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
   current <- current[, is_quant]
   pset <- pset[is_quant, ]
@@ -117,10 +129,7 @@ random_real_neighbor <- function(current, pset, retain = 1, tries = 500, r = .02
   colnames(rnd) <- names(current)
   retain <- min(retain, nrow(rnd))
 
-  rnd <- tibble::as_tibble(rnd)
-  rnd <- encode_set_backwards(rnd, pset)
-  selected <- rnd %>% dplyr::sample_n(retain)
-  selected
+  sample_by_distance(rnd, hist_values, retain = retain, pset = pset)
 }
 
 encode_set_backwards <- function(x, pset, ...) {
@@ -128,6 +137,32 @@ encode_set_backwards <- function(x, pset, ...) {
   new_vals <- purrr::map2(pset$object, x, dials::encode_unit, direction = "backward")
   names(new_vals) <- names(x)
   tibble::as_tibble(new_vals)
+}
+
+sample_by_distance <- function(candidates, existing, retain, pset) {
+  if (nrow(existing) > 0) {
+    existing <- tune::encode_set(existing, pset, as_matrix = TRUE)
+    hist_index <- 1:nrow(existing)
+    all_values <- rbind(existing, candidates)
+    all_values <- stats::dist(all_values)
+    all_values <- as.matrix(all_values)
+    all_values <- all_values[hist_index, -hist_index, drop = FALSE]
+    min_dist <- apply(all_values, 2, min)
+    min_dist <- min_dist/max(min_dist)
+    prob_wt <- min_dist^2
+    if (diff(range(prob_wt)) < 0.0001) {
+      prob_wt <- rep(1/nrow(candidates), nrow(candidates))
+    }
+  } else {
+    prob_wt <- rep(1/nrow(candidates), nrow(candidates))
+  }
+  retain <- min(retain, nrow(candidates))
+
+  candidates <- tibble::as_tibble(candidates)
+  candidates <- encode_set_backwards(candidates, pset)
+
+  selected <- sample(seq_along(prob_wt), size = retain, prob = prob_wt)
+  candidates[selected,]
 }
 
 ## -----------------------------------------------------------------------------
