@@ -29,7 +29,7 @@ rec <- recipe(mpg ~ ., data = mtcars) %>%
 test_that('top-level win/loss filter interfaces', {
   skip_on_cran()
   # Skip for < 4.0 due to random number differences
-  skip_if(version$version.string < "4.0.0")
+  skip_if(getRversion() < "4.0.0")
   expect_error(
       expect_warning({
         set.seed(129)
