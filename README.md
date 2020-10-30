@@ -9,6 +9,7 @@
 coverage](https://codecov.io/gh/tidymodels/finetune/branch/master/graph/badge.svg)](https://codecov.io/gh/tidymodels/finetune?branch=master)
 [![R build
 status](https://github.com/tidymodels/finetune/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/finetune/actions)
+[![R-CMD-check](https://github.com/tidymodels/finetune/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/finetune/actions)
 <!-- badges: end -->
 
 `finetune` contains some extra functions for model tuning that extend
@@ -46,8 +47,7 @@ ctrl <- control_sim_anneal(verbose = TRUE)
 set.seed(2)
 sa_res <- 
   rda_spec %>% 
-  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4,
-                  control = ctrl)
+  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4, control = ctrl)
 #> 
 #> >  Generating a set of 4 initial parameter results
 #> ✓ Initialization complete
@@ -104,8 +104,7 @@ ctrl <- control_race(verbose_elim = TRUE)
 set.seed(4)
 grid_anova <- 
   rda_spec %>% 
-  tune_race_anova(Class ~ ., resamples = rs, grid = grid,
-                  control = ctrl)
+  tune_race_anova(Class ~ ., resamples = rs, grid = grid, control = ctrl)
 #> ℹ Racing will maximize the roc_auc metric.
 #> ℹ Resamples are analyzed in a random order.
 #> ℹ Bootstrap10: 14 eliminated;  6 candidates remain.
