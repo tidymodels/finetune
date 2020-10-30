@@ -87,7 +87,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">two_class_dat</span>, package <span class="op">=</span> <span class="st">"modeldata"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">6376</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu">bootstraps</span><span class="op">(</span><span class="va">two_class_dat</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># more resamples usually needed</span>
 
 <span class="co"># optimize an regularized discriminant analysis model</span>
@@ -98,66 +98,73 @@
 
 <span class="co">## -----------------------------------------------------------------------------</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">8300</span><span class="op">)</span>
+<span class="va">ctrl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/control_sim_anneal.html">control_sim_anneal</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
 <span class="va">sa_res</span> <span class="op">&lt;-</span> 
   <span class="va">rda_spec</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/tune_sim_anneal.html">tune_sim_anneal</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, iter <span class="op">=</span> <span class="fl">20</span>, initial <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+  <span class="fu"><a href="reference/tune_sim_anneal.html">tune_sim_anneal</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, iter <span class="op">=</span> <span class="fl">20</span>, initial <span class="op">=</span> <span class="fl">4</span>,
+                  control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; &gt;  Generating a set of 4 initial parameter results</span>
-<span class="co">#&gt; Loading required package: MASS</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'MASS'</span>
-<span class="co">#&gt; The following object is masked from 'package:dplyr':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     select</span>
 <span class="co">#&gt; ✓ Initialization complete</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Optimizing roc_auc</span>
-<span class="co">#&gt; Initial best: 0.88802</span>
-<span class="co">#&gt;  1 ◯ accept suboptimal  roc_auc=0.8833   (+/-0.005067)</span>
-<span class="co">#&gt;  2 ◯ accept suboptimal  roc_auc=0.88092  (+/-0.005024)</span>
-<span class="co">#&gt;  3 + better suboptimal  roc_auc=0.88755  (+/-0.00513)</span>
-<span class="co">#&gt;  4 ◯ accept suboptimal  roc_auc=0.88317  (+/-0.005064)</span>
-<span class="co">#&gt;  5 ◯ accept suboptimal  roc_auc=0.87502  (+/-0.005022)</span>
-<span class="co">#&gt;  6 ◯ accept suboptimal  roc_auc=0.86507  (+/-0.005064)</span>
-<span class="co">#&gt;  7 + better suboptimal  roc_auc=0.87192  (+/-0.005008)</span>
-<span class="co">#&gt;  8 x restart from best  roc_auc=0.88028  (+/-0.005088)</span>
-<span class="co">#&gt;  9 ◯ accept suboptimal  roc_auc=0.88738  (+/-0.005146)</span>
-<span class="co">#&gt; 10 ◯ accept suboptimal  roc_auc=0.88141  (+/-0.005035)</span>
-<span class="co">#&gt; 11 ─ discard suboptimal roc_auc=0.87528  (+/-0.004934)</span>
-<span class="co">#&gt; 12 ◯ accept suboptimal  roc_auc=0.878    (+/-0.00495)</span>
-<span class="co">#&gt; 13 ◯ accept suboptimal  roc_auc=0.86893  (+/-0.005054)</span>
-<span class="co">#&gt; 14 + better suboptimal  roc_auc=0.87481  (+/-0.004947)</span>
-<span class="co">#&gt; 15 ─ discard suboptimal roc_auc=0.86514  (+/-0.005068)</span>
-<span class="co">#&gt; 16 x restart from best  roc_auc=0.86691  (+/-0.005042)</span>
-<span class="co">#&gt; 17 ◯ accept suboptimal  roc_auc=0.88099  (+/-0.005)</span>
-<span class="co">#&gt; 18 + better suboptimal  roc_auc=0.88763  (+/-0.005165)</span>
-<span class="co">#&gt; 19 ◯ accept suboptimal  roc_auc=0.8815   (+/-0.005016)</span>
-<span class="co">#&gt; 20 + better suboptimal  roc_auc=0.8849   (+/-0.005134)</span>
+<span class="co">#&gt; Initial best: 0.86480</span>
+<span class="co">#&gt;  1 ◯ accept suboptimal  roc_auc=0.85625  (+/-0.006354)</span>
+<span class="co">#&gt;  2 + better suboptimal  roc_auc=0.85896  (+/-0.006098)</span>
+<span class="co">#&gt;  3 ♥ new best           roc_auc=0.86716  (+/-0.005235)</span>
+<span class="co">#&gt;  4 ♥ new best           roc_auc=0.8739   (+/-0.004409)</span>
+<span class="co">#&gt;  5 ♥ new best           roc_auc=0.88295  (+/-0.00353)</span>
+<span class="co">#&gt;  6 ◯ accept suboptimal  roc_auc=0.87583  (+/-0.00413)</span>
+<span class="co">#&gt;  7 ◯ accept suboptimal  roc_auc=0.86858  (+/-0.005111)</span>
+<span class="co">#&gt;  8 + better suboptimal  roc_auc=0.86988  (+/-0.005051)</span>
+<span class="co">#&gt;  9 + better suboptimal  roc_auc=0.87918  (+/-0.003877)</span>
+<span class="co">#&gt; 10 ◯ accept suboptimal  roc_auc=0.87349  (+/-0.004475)</span>
+<span class="co">#&gt; 11 ◯ accept suboptimal  roc_auc=0.86836  (+/-0.005163)</span>
+<span class="co">#&gt; 12 ◯ accept suboptimal  roc_auc=0.85878  (+/-0.006142)</span>
+<span class="co">#&gt; 13 x restart from best  roc_auc=0.86732  (+/-0.005274)</span>
+<span class="co">#&gt; 14 ◯ accept suboptimal  roc_auc=0.88057  (+/-0.003712)</span>
+<span class="co">#&gt; 15 ◯ accept suboptimal  roc_auc=0.87135  (+/-0.004772)</span>
+<span class="co">#&gt; 16 ◯ accept suboptimal  roc_auc=0.86193  (+/-0.005737)</span>
+<span class="co">#&gt; 17 ◯ accept suboptimal  roc_auc=0.85101  (+/-0.006655)</span>
+<span class="co">#&gt; 18 ◯ accept suboptimal  roc_auc=0.84378  (+/-0.007069)</span>
+<span class="co">#&gt; 19 + better suboptimal  roc_auc=0.85134  (+/-0.006625)</span>
+<span class="co">#&gt; 20 ◯ accept suboptimal  roc_auc=0.84704  (+/-0.006863)</span>
 <span class="fu">show_best</span><span class="op">(</span><span class="va">sa_res</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 2 x 9</span>
 <span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config</span>
 <span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; 1          0.0345      0.000182 roc_auc binary     0.888    10 0.00516 Prepro…</span>
-<span class="co">#&gt; 2          0.0697      0.00761  roc_auc binary     0.888    10 0.00516 Prepro…</span>
+<span class="co">#&gt; 1          0.132       0.000739 roc_auc binary     0.883    10 0.00353 Prepro…</span>
+<span class="co">#&gt; 2          0.0356      0.0286   roc_auc binary     0.881    10 0.00371 Prepro…</span>
 <span class="co">#&gt; # … with 1 more variable: .iter &lt;int&gt;</span></pre></div>
 <p>The second set of methods are for “racing”. We start off by doing a small set of resamples for all of the grid points, then statistically testing to see which ones should be dropped or investigated more. The two methods here are based on those should in <a href="https://arxiv.org/abs/1405.6974">Kuhn (2014)</a>.</p>
 <p>For example, using an ANOVA-type analysis to filter out parameter combinations:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">511</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
 <span class="va">grid</span> <span class="op">&lt;-</span>
   <span class="va">rda_spec</span> <span class="op">%&gt;%</span>
   <span class="fu">parameters</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">grid_max_entropy</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span>
-<span class="va">grid_anova</span> <span class="op">&lt;-</span> <span class="va">rda_spec</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span><span class="op">)</span>
+<span class="va">ctrl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/control_race.html">control_race</a></span><span class="op">(</span>verbose_elim <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>
+<span class="va">grid_anova</span> <span class="op">&lt;-</span> 
+  <span class="va">rda_spec</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>,
+                  control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
+<span class="co">#&gt; ℹ Racing will maximize the roc_auc metric.</span>
+<span class="co">#&gt; ℹ Resamples are analyzed in a random order.</span>
+<span class="co">#&gt; ℹ Bootstrap10: 14 eliminated;  6 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap04:  2 eliminated;  4 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap03: All but one parameter combination were eliminated.</span>
+
 <span class="fu">show_best</span><span class="op">(</span><span class="va">grid_anova</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 2 x 8</span>
+<span class="co">#&gt; # A tibble: 1 x 8</span>
 <span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
 <span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span>
-<span class="co">#&gt; 1          0.0164        0.0618 roc_auc binary     0.884    10 0.00511 Preproce…</span>
-<span class="co">#&gt; 2          0.327         0.0662 roc_auc binary     0.884    10 0.00503 Preproce…</span></pre></div>
+<span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span></pre></div>
 <p><code><a href="reference/tune_race_win_loss.html">tune_race_win_loss()</a></code> can also be used.</p>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
