@@ -103,8 +103,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
 <span class="va">sa_res</span> <span class="op">&lt;-</span> 
   <span class="va">rda_spec</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/tune_sim_anneal.html">tune_sim_anneal</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, iter <span class="op">=</span> <span class="fl">20</span>, initial <span class="op">=</span> <span class="fl">4</span>,
-                  control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
+  <span class="fu"><a href="reference/tune_sim_anneal.html">tune_sim_anneal</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, iter <span class="op">=</span> <span class="fl">20</span>, initial <span class="op">=</span> <span class="fl">4</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; &gt;  Generating a set of 4 initial parameter results</span>
 <span class="co">#&gt; ✓ Initialization complete</span>
@@ -152,8 +151,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>
 <span class="va">grid_anova</span> <span class="op">&lt;-</span> 
   <span class="va">rda_spec</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>,
-                  control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
+  <span class="fu"><a href="reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
 <span class="co">#&gt; ℹ Racing will maximize the roc_auc metric.</span>
 <span class="co">#&gt; ℹ Resamples are analyzed in a random order.</span>
 <span class="co">#&gt; ℹ Bootstrap10: 14 eliminated;  6 candidates remain.</span>
@@ -201,6 +199,7 @@
 <ul class="list-unstyled">
 <li><a href="https://codecov.io/gh/tidymodels/finetune?branch=master"><img src="https://codecov.io/gh/tidymodels/finetune/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://github.com/tidymodels/finetune/actions"><img src="https://github.com/tidymodels/finetune/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://github.com/tidymodels/finetune/actions"><img src="https://github.com/tidymodels/finetune/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 </div>
