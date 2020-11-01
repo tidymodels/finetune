@@ -9,10 +9,10 @@
 #'   better results.
 #' @param restart The number of iterations with no improvement before new tuning
 #' parameter candidates are generated from the last, overall best conditions.
-#' @param radius A real number on `(0, 1)` describing what a value "in the
+#' @param radius Two real numbers on `(0, 1)` describing what a value "in the
 #' neighborhood" of the current result should be. If all numeric parameters were
-#' scaled to be on the `[0, 1]` scale, this is the radius of a circle used to
-#' generate new numeric parameter values.
+#' scaled to be on the `[0, 1]` scale, these values set the min. and max.
+#' of a radius of a circle used to generate new numeric parameter values.
 #' @param flip A real number between `[0, 1]` for the probability of changing
 #' any non-numeric parameter values at each iteration.
 #' @param cooling_coef A real, positive number to influence the cooling
@@ -54,7 +54,7 @@ control_sim_anneal <-
   function(verbose = TRUE,
            no_improve = Inf,
            restart = 8L,
-           radius = 0.1,
+           radius = c(0.05, 0.15),
            flip = 3/4,
            cooling_coef = 0.02,
            extract = NULL,
@@ -69,7 +69,6 @@ control_sim_anneal <-
     tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
     tune::val_class_and_single(no_improve, c("numeric", "integer"), "control_sim_anneal()")
     tune::val_class_and_single(restart, c("numeric", "integer"), "control_sim_anneal()")
-    tune::val_class_and_single(radius, "numeric", "control_sim_anneal()")
     tune::val_class_and_single(flip, "numeric", "control_sim_anneal()")
     tune::val_class_and_single(cooling_coef, "numeric", "control_sim_anneal()")
     tune::val_class_or_null(extract, "function", "control_sim_anneal()")
@@ -78,8 +77,13 @@ control_sim_anneal <-
     tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
     val_parallel_over(parallel_over, "control_bayes()")
 
+    if (!is.numeric(radius) | !length(radius) == 2) {
+      rlang::abort("Argument 'radius' should be two numeric values.")
+    }
+    radius <- sort(radius)
     radius[radius <= 0] <- 0.001
     radius[radius >= 1] <- 0.999
+
     flip[flip < 0] <- 0
     flip[flip > 1] <- 1
     cooling_coef[cooling_coef <= 0] <- 0.0001

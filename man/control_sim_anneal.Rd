@@ -8,7 +8,7 @@ control_sim_anneal(
   verbose = TRUE,
   no_improve = Inf,
   restart = 8L,
-  radius = 0.1,
+  radius = c(0.05, 0.15),
   flip = 3/4,
   cooling_coef = 0.02,
   extract = NULL,
@@ -33,10 +33,10 @@ better results.}
 \item{restart}{The number of iterations with no improvement before new tuning
 parameter candidates are generated from the last, overall best conditions.}
 
-\item{radius}{A real number on \verb{(0, 1)} describing what a value "in the
+\item{radius}{Two real numbers on \verb{(0, 1)} describing what a value "in the
 neighborhood" of the current result should be. If all numeric parameters were
-scaled to be on the \verb{[0, 1]} scale, this is the radius of a circle used to
-generate new numeric parameter values.}
+scaled to be on the \verb{[0, 1]} scale, these values set the min. and max.
+of a radius of a circle used to generate new numeric parameter values.}
 
 \item{flip}{A real number between \verb{[0, 1]} for the probability of changing
 any non-numeric parameter values at each iteration.}
