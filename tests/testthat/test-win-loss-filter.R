@@ -1,7 +1,3 @@
-context("win/loss racing")
-
-## -----------------------------------------------------------------------------
-
 library(parsnip)
 library(rsample)
 library(dplyr)
