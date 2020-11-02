@@ -1,5 +1,3 @@
-context("sa general tests")
-
 library(finetune)
 library(tune)
 library(dplyr)

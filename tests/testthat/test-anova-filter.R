@@ -1,7 +1,3 @@
-context("anova racing")
-
-## -----------------------------------------------------------------------------
-
 library(parsnip)
 library(rsample)
 library(dplyr)
@@ -82,9 +78,9 @@ test_that('anova formula', {
   for (i in 2:nrow(folds)) {
     f <- finetune:::lmer_formula(folds %>% slice(1:i), fold_att)
     if (i <  7) {
-      expect_equal(f, .estimate ~ .config + (1 | .all_id))
+      expect_equal(f, .estimate ~ .config + (1 | .all_id), ignore_attr = TRUE)
     } else {
-      expect_equal(f, .estimate ~ .config + (1 | id2/id))
+      expect_equal(f, .estimate ~ .config + (1 | id2/id), ignore_attr = TRUE)
     }
   }
   # This one takes a while to run:
@@ -95,7 +91,7 @@ test_that('anova formula', {
 
   for (i in 2:nrow(car_bt)) {
     f <- finetune:::lmer_formula(car_bt %>% slice(1:i), car_att)
-    expect_equal(f, .estimate ~ .config + (1 | id))
+    expect_equal(f, .estimate ~ .config + (1 | id), ignore_attr = TRUE)
   }
   # expect_equal(environment(f), rlang::base_env())
 })

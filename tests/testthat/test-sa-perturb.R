@@ -13,12 +13,14 @@ test_that('numerical neighborhood', {
   vals <- tibble::tibble(mixture = 0.5, threshold = 0.5)
   set.seed(1)
   new_vals <-
-    finetune:::random_real_neighbor(vals, vals[0,], num_prm, retain = 100, r = 0.12)
+    finetune:::random_real_neighbor(vals, vals[0,], num_prm, retain = 100)
+
+  rad <- control_sim_anneal()$radius
 
   correct_r <-
     purrr::map2_dbl(new_vals$mixture, new_vals$threshold,
                     ~ sqrt((.x - .5) ^ 2 + (.y - .5) ^ 2)) %>%
-    map_lgl( ~ isTRUE(all.equal(.x, 0.12, tolerance = 0.001)))
+    map_lgl( ~ .x >= rad[1] & .x <= rad[2])
   expect_true(all(correct_r))
 
   set.seed(1)
@@ -26,9 +28,9 @@ test_that('numerical neighborhood', {
 
 
   set.seed(2)
-  more_vals <- finetune:::new_in_neighborhood(vals, prev, num_prm, radius = 0.12)
-  rad <- sqrt((more_vals$mixture - .5) ^ 2 + (more_vals$threshold - .5) ^ 2)
-  expect_equal(rad, 0.12, tolerance = 0.001)
+  more_vals <- finetune:::new_in_neighborhood(vals, prev, num_prm, radius = rep(0.12, 2))
+  rad_vals <- sqrt((more_vals$mixture - .5) ^ 2 + (more_vals$threshold - .5) ^ 2)
+  expect_equal(rad_vals, 0.12, tolerance = 0.001)
 })
 
 test_that('numerical neighborhood boundary filters', {

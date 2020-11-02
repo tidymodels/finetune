@@ -14,7 +14,7 @@ treat_as_integer <- function(x, num_unique = 10) {
   x_vals < num_unique  & is_int
 }
 
-new_in_neighborhood <- function(current, hist_values, pset, radius = 0.025, flip = 0.1) {
+new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.15), flip = 0.1) {
   current <- dplyr::select(current, !!!pset$id)
   param_type <- purrr::map_chr(pset$object, ~ .x$type)
   if (any(param_type == "double")) {
@@ -43,7 +43,7 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = 0.025, flip
     chr_nms <- pset$id[param_type == "character"]
     flip_one <- all(param_type == "character")
     new_chr <-
-      random_discrete_neighbor(current %>% dplyr::select(chr_nms),
+      random_discrete_neighbor(current %>% dplyr::select(!!!chr_nms),
                                pset %>% dplyr::filter(id %in% chr_nms),
                                prob = flip,
                                change = flip_one)
@@ -103,7 +103,8 @@ random_integer_neighbor_calc <- function(current, pset, prob, change) {
   current
 }
 
-random_real_neighbor <- function(current, hist_values, pset, retain = 1, tries = 500, r = .025) {
+random_real_neighbor <- function(current, hist_values, pset, retain = 1,
+                                 tries = 500, r = c(0.05, 0.15)) {
   is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
   current <- current[, is_quant]
   pset <- pset[is_quant, ]
@@ -114,12 +115,12 @@ random_real_neighbor <- function(current, hist_values, pset, retain = 1, tries =
     rnd <- rnorm(num_param * tries)
     rnd <- matrix(rnd, ncol = num_param)
     rnd <- t(apply(rnd, 1, function(x) x/sqrt(sum(x^2))))
-    rnd <- rnd * r
+    rnd <- rnd * runif(tries, min = min(r), max = max(r))
     rnd <- sweep(rnd, 2, as.vector(encoded), "+")
     outside <- apply(rnd, 1, function(x) any(x > 1 | x < 0))
     rnd <- rnd[!outside,,drop = FALSE]
   } else {
-    rnd <- runif(tries, min = -r, max = r) + encoded[[1]]
+    rnd <- runif(tries, min = -max(r), max = max(r)) + encoded[[1]]
     rnd <- ifelse(rnd > 1, 1, rnd)
     rnd <- ifelse(rnd < 0, 0, rnd)
     rnd <- matrix(rnd, ncol = 1)
