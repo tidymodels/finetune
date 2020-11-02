@@ -123,7 +123,7 @@
   verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
   no_improve <span class='op'>=</span> <span class='cn'>Inf</span>,
   restart <span class='op'>=</span> <span class='fl'>8L</span>,
-  radius <span class='op'>=</span> <span class='fl'>0.1</span>,
+  radius <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.05</span>, <span class='fl'>0.15</span><span class='op'>)</span>,
   flip <span class='op'>=</span> <span class='fl'>3</span><span class='op'>/</span><span class='fl'>4</span>,
   cooling_coef <span class='op'>=</span> <span class='fl'>0.02</span>,
   extract <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -158,10 +158,10 @@ parameter candidates are generated from the last, overall best conditions.</p></
     </tr>
     <tr>
       <th>radius</th>
-      <td><p>A real number on <code>(0, 1)</code> describing what a value "in the
+      <td><p>Two real numbers on <code>(0, 1)</code> describing what a value "in the
 neighborhood" of the current result should be. If all numeric parameters were
-scaled to be on the <code>[0, 1]</code> scale, this is the radius of a circle used to
-generate new numeric parameter values.</p></td>
+scaled to be on the <code>[0, 1]</code> scale, these values set the min. and max.
+of a radius of a circle used to generate new numeric parameter values.</p></td>
     </tr>
     <tr>
       <th>flip</th>
