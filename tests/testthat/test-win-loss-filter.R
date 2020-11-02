@@ -5,6 +5,7 @@ library(lme4)
 library(yardstick)
 library(workflows)
 library(recipes)
+library(dials)
 
 ## -----------------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ wflow <- workflow() %>% add_model(spec) %>% add_formula(mpg ~ .)
 grid <- expand.grid(cost_complexity = c(0.001, 0.01), min_n = c(2:5))
 rec <- recipe(mpg ~ ., data = mtcars) %>%
   step_normalize(all_predictors())
-
+prm <- parameters(wflow) %>% update(min_n = min_n(c(2, 20)))
 
 ## -----------------------------------------------------------------------------
 
@@ -26,54 +27,41 @@ test_that('top-level win/loss filter interfaces', {
   skip_on_cran()
   # Skip for < 4.0 due to random number differences
   skip_if(getRversion() < "4.0.0")
-  expect_error(
-      expect_warning({
-        set.seed(129)
-        wl_mod <- spec %>% tune_race_win_loss(mpg ~ ., folds, grid = grid)
-      },
-      "non-integer counts in a binomial glm"
-      ),
-    regexp = NA
-  )
+
+  set.seed(129)
+  suppressWarnings(wl_mod <- spec %>% tune_race_win_loss(mpg ~ ., folds, grid = grid))
+
   expect_true(inherits(wl_mod, "tune_race"))
   expect_true(inherits(wl_mod, "tune_results"))
   expect_true(tibble::is_tibble((wl_mod)))
 
-  expect_silent(
-    expect_error(
-      expect_warning({
-        set.seed(129)
-        wl_wlfow <-
-          wflow %>%
-          tune_race_win_loss(folds, grid = grid,
-                             control = control_race(verbose_elim = FALSE, save_pred = TRUE))
-      },
-      "non-integer counts in a binomial glm"
-      ),
-      regexp = NA
+  expect_silent({
+    set.seed(129)
+    suppressWarnings(
+      wl_wlfow <-
+        wflow %>%
+        tune_race_win_loss(folds, grid = grid, param_info = prm,
+                           control = control_race(verbose_elim = FALSE, save_pred = TRUE))
     )
-  )
+  })
+
   expect_true(inherits(wl_wlfow, "tune_race"))
   expect_true(inherits(wl_wlfow, "tune_results"))
   expect_true(tibble::is_tibble((wl_wlfow)))
   expect_true(sum(names(wl_wlfow) == ".predictions") == 1)
 
   get_mod <- function(x) pull_workflow_fit(x)
-  expect_message(
-    expect_error(
-      expect_warning({
-        set.seed(129)
-        wl_rec <-
-          spec %>%
-          tune_race_win_loss(rec, folds, grid = 5,
-                             control = control_race(verbose_elim = FALSE, extract = get_mod))
-      },
-      "non-integer counts in a binomial glm"
-      ),
-      regexp = NA
-    ),
-    "correlation computation is required"
-  )
+  expect_silent({
+    set.seed(129)
+    suppressWarnings(
+      wl_rec <-
+        spec %>%
+        tune_race_win_loss(rec, folds, grid = 5,  param_info = prm,
+                           control = control_race(verbose_elim = FALSE,
+                                                  extract = get_mod))
+    )
+  })
+
   expect_true(inherits(wl_rec, "tune_race"))
   expect_true(inherits(wl_rec, "tune_results"))
   expect_true(tibble::is_tibble((wl_rec)))

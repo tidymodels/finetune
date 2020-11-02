@@ -43,7 +43,7 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
     chr_nms <- pset$id[param_type == "character"]
     flip_one <- all(param_type == "character")
     new_chr <-
-      random_discrete_neighbor(current %>% dplyr::select(chr_nms),
+      random_discrete_neighbor(current %>% dplyr::select(!!!chr_nms),
                                pset %>% dplyr::filter(id %in% chr_nms),
                                prob = flip,
                                change = flip_one)
