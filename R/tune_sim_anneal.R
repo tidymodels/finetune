@@ -15,8 +15,8 @@
 #' models will be evaluated for performance. The first metric in `metrics` is the
 #' one that will be optimized.
 #' @param iter The maximum number of search iterations.
-#' @param initial An initial set of results in a tidy format (as would result
-#' from [tune_grid()]) or a positive integer.
+#' @param initial An initial set of results in a tidy format (as would the result
+#' of [tune_grid()] or [tune_race()]) or a positive integer.
 #' @param control The results of `control_sim_anneal()`.
 #' @param ... Not currently used.
 #' @details
@@ -425,7 +425,7 @@ tune_sim_anneal_workflow <-
       }
     }
 
-    if (check_hidden_arg(control, "sa_history", TRUE)) {
+    if (control$save_history) {
       result_history <-
         result_history %>%
         dplyr::full_join(grid_history %>% dplyr::select(.config, .parent), by = ".config") %>%
@@ -441,5 +441,4 @@ tune_sim_anneal_workflow <-
 # - save_workflows and other attributes
 # - expand time limits
 # - fix sim_anneal as input
-# - make control$sa_history a real option
 # - update code to work with add_variables()
