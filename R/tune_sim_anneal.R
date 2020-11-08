@@ -16,7 +16,8 @@
 #' one that will be optimized.
 #' @param iter The maximum number of search iterations.
 #' @param initial An initial set of results in a tidy format (as would the result
-#' of [tune_grid()] or [tune_race()]) or a positive integer.
+#' of [tune_grid()], [tune_race_win_loss()], or [tune_race_anova()]) or a
+#' positive integer.
 #' @param control The results of `control_sim_anneal()`.
 #' @param ... Not currently used.
 #' @details

@@ -52,7 +52,8 @@ models will be evaluated for performance. The first metric in \code{metrics} is 
 one that will be optimized.}
 
 \item{initial}{An initial set of results in a tidy format (as would the result
-of \code{\link[=tune_grid]{tune_grid()}} or \code{\link[=tune_race]{tune_race()}}) or a positive integer.}
+of \code{\link[=tune_grid]{tune_grid()}}, \code{\link[=tune_race_win_loss]{tune_race_win_loss()}}, or \code{\link[=tune_race_anova]{tune_race_anova()}}) or a
+positive integer.}
 
 \item{control}{The results of \code{control_sim_anneal()}.}
 }
