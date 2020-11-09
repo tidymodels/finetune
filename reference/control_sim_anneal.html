@@ -87,7 +87,7 @@
         <a class="navbar-brand" href="../index.html">finetune</a>
         <div class="info hidden-xs hidden-sm">
           <span class="partof">part of <a href="https://github.com/tidymodels">tidymodels</a></span>
-          <span class="version version-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9003</span>
+          <span class="version version-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9004</span>
         </div>
       </div>
     </div>
@@ -131,6 +131,7 @@
   time_limit <span class='op'>=</span> <span class='cn'>NA</span>,
   pkgs <span class='op'>=</span> <span class='cn'>NULL</span>,
   save_workflow <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  save_history <span class='op'>=</span> <span class='cn'>FALSE</span>,
   event_level <span class='op'>=</span> <span class='st'>"first"</span>,
   parallel_over <span class='op'>=</span> <span class='st'>"resamples"</span>
 <span class='op'>)</span></pre>
@@ -202,6 +203,13 @@ loaded (by namespace) during parallel processing.</p></td>
       <th>save_workflow</th>
       <td><p>A logical for whether the workflow should be appended
 to the output as an attribute.</p></td>
+    </tr>
+    <tr>
+      <th>save_history</th>
+      <td><p>A logical to save the iteration details of the search.
+These are saved to <code><a href='https://rdrr.io/r/base/tempfile.html'>tempdir()</a></code> named <code>sa_history.RData</code>. These results are
+deleted when the R session ends. This option is only useful for teaching
+purposes.</p></td>
     </tr>
     <tr>
       <th>event_level</th>

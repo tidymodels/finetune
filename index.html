@@ -47,7 +47,7 @@
         <a class="navbar-brand" href="index.html">finetune</a>
         <div class="info hidden-xs hidden-sm">
           <span class="partof">part of <a href="https://github.com/tidymodels">tidymodels</a></span>
-          <span class="version version-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9003</span>
+          <span class="version version-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.0.0.9004</span>
         </div>
       </div>
     </div>
@@ -77,8 +77,8 @@
 <p><code>finetune</code> contains some extra functions for model tuning that extend what is currently in the <code>tune</code> package.</p>
 <p>Very rough version of the package right now but it works fairly well. There are two main sets of tools.</p>
 <p>Tuning via <em>simulated annealing</em> optimization is another iterative search tool for finding good values:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">tidymodels</span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">tidymodels</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">finetune</span><span class="op">)</span>
 
 <span class="co"># Syntax very similar to `tune_grid()` or `tune_Bayes()`: </span>
@@ -136,11 +136,11 @@
 <span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  </span>
 <span class="co">#&gt; 1          0.132       0.000739 roc_auc binary     0.883    10 0.00353 Prepro…</span>
 <span class="co">#&gt; 2          0.0356      0.0286   roc_auc binary     0.881    10 0.00371 Prepro…</span>
-<span class="co">#&gt; # … with 1 more variable: .iter &lt;int&gt;</span></pre></div>
+<span class="co">#&gt; # … with 1 more variable: .iter &lt;int&gt;</span></code></pre></div>
 <p>The second set of methods are for “racing”. We start off by doing a small set of resamples for all of the grid points, then statistically testing to see which ones should be dropped or investigated more. The two methods here are based on those should in <a href="https://arxiv.org/abs/1405.6974">Kuhn (2014)</a>.</p>
 <p>For example, using an ANOVA-type analysis to filter out parameter combinations:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
 <span class="va">grid</span> <span class="op">&lt;-</span>
   <span class="va">rda_spec</span> <span class="op">%&gt;%</span>
   <span class="fu">parameters</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -162,10 +162,10 @@
 <span class="co">#&gt; # A tibble: 1 x 8</span>
 <span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
 <span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span>
-<span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span></pre></div>
+<span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span></code></pre></div>
 <p><code><a href="reference/tune_race_win_loss.html">tune_race_win_loss()</a></code> can also be used. It treats the tuning parameters as sports teams in a tournament and computed win/loss statistics.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>
 <span class="va">grid_win_loss</span><span class="op">&lt;-</span> 
   <span class="va">rda_spec</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="reference/tune_race_win_loss.html">tune_race_win_loss</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
@@ -184,7 +184,7 @@
 <span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
 <span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span>
 <span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span>
-<span class="co">#&gt; 2           0.119        0.0470 roc_auc binary     0.879    10 0.00387 Preproce…</span></pre></div>
+<span class="co">#&gt; 2           0.119        0.0470 roc_auc binary     0.879    10 0.00387 Preproce…</span></code></pre></div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-of-conduct" class="anchor"></a>Code of Conduct</h2>
