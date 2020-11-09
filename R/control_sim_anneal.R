@@ -32,6 +32,10 @@
 #'   loaded (by namespace) during parallel processing.
 #' @param save_workflow A logical for whether the workflow should be appended
 #' to the output as an attribute.
+#' @param save_history A logical to save the iteration details of the search.
+#'  These are saved to `tempdir()` named `sa_history.RData`. These results are
+#'  deleted when the R session ends. This option is only useful for teaching
+#'  purposes.
 #' @param event_level A single string containing either "first" or "second".
 #' This argument is passed on to `yardstick` metric functions when any type of
 #' class prediction is made, and specifies which level of the outcome is
@@ -62,6 +66,7 @@ control_sim_anneal <-
            time_limit = NA,
            pkgs = NULL,
            save_workflow = FALSE,
+           save_history = FALSE,
            event_level = "first",
            parallel_over = "resamples") {
 
@@ -75,6 +80,7 @@ control_sim_anneal <-
     tune::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
     tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
     tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
+    tune::val_class_and_single(save_history, "logical", "control_sim_anneal()")
     val_parallel_over(parallel_over, "control_bayes()")
 
     if (!is.numeric(radius) | !length(radius) == 2) {
@@ -113,6 +119,7 @@ control_sim_anneal <-
         time_limit = time_limit,
         pkgs = pkgs,
         save_workflow = save_workflow,
+        save_history = save_history,
         event_level = event_level,
         parallel_over = parallel_over
 

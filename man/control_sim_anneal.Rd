@@ -16,6 +16,7 @@ control_sim_anneal(
   time_limit = NA,
   pkgs = NULL,
   save_workflow = FALSE,
+  save_history = FALSE,
   event_level = "first",
   parallel_over = "resamples"
 )
@@ -63,6 +64,11 @@ loaded (by namespace) during parallel processing.}
 
 \item{save_workflow}{A logical for whether the workflow should be appended
 to the output as an attribute.}
+
+\item{save_history}{A logical to save the iteration details of the search.
+These are saved to \code{tempdir()} named \code{sa_history.RData}. These results are
+deleted when the R session ends. This option is only useful for teaching
+purposes.}
 
 \item{event_level}{A single string containing either "first" or "second".
 This argument is passed on to \code{yardstick} metric functions when any type of

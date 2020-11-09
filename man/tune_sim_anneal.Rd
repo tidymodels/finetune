@@ -51,8 +51,9 @@ be useful when parameter ranges need to be customized.}
 models will be evaluated for performance. The first metric in \code{metrics} is the
 one that will be optimized.}
 
-\item{initial}{An initial set of results in a tidy format (as would result
-from \code{\link[=tune_grid]{tune_grid()}}) or a positive integer.}
+\item{initial}{An initial set of results in a tidy format (as would the result
+of \code{\link[=tune_grid]{tune_grid()}}, \code{\link[=tune_race_win_loss]{tune_race_win_loss()}}, or \code{\link[=tune_race_anova]{tune_race_anova()}}) or a
+positive integer.}
 
 \item{control}{The results of \code{control_sim_anneal()}.}
 }

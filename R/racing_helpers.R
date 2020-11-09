@@ -521,8 +521,4 @@ check_hidden_arg <- function(x, name, value) {
   identical(x[[name]], value)
 }
 
-# TODO
-# - fix show_best. collect_metrics, etc with racing objects
-# - better autoplot
-# - flatten grids
-# - way more testing
+# TODO better autoplot

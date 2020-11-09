@@ -23,8 +23,7 @@ cart_mod <-
 
 ## -----------------------------------------------------------------------------
 
-ctrl <- control_sim_anneal()
-ctrl$sa_history <- TRUE
+ctrl <- control_sim_anneal(save_history = TRUE)
 
 set.seed(2981)
 # For reproducibility, set the seed before running.
