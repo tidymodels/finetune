@@ -257,7 +257,6 @@ tune_sim_anneal_workflow <-
     start_time <- proc.time()[3]
 
     tune::check_rset(resamples)
-    y_names <- outcome_names(object)
     rset_info <- tune::pull_rset_attributes(resamples)
 
     metrics <- tune::check_metrics(metrics, object)
@@ -269,8 +268,15 @@ tune_sim_anneal_workflow <-
     }
     tune::check_workflow(object, check_dials = is.null(param_info), pset = param_info)
 
+    control_init <- control
+    control_init$save_workflow <- TRUE
+    initial <- tune::check_initial(initial, param_info, object, resamples, metrics, control_init)
+
+    y_names <- get_outcome_names(object, resamples)
+    # For the above, make changes to tune to get workflow from initial
+
     unsummarized <-
-      tune::check_initial(initial, param_info, object, resamples, metrics, control) %>%
+      initial %>%
       tune::new_iteration_results(
         parameters = param_info,
         metrics = metrics,
@@ -442,4 +448,3 @@ tune_sim_anneal_workflow <-
 # - save_workflows and other attributes
 # - expand time limits
 # - fix sim_anneal as input
-# - update code to work with add_variables()

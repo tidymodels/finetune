@@ -53,10 +53,12 @@ test_that('top-level win/loss filter interfaces', {
   get_mod <- function(x) pull_workflow_fit(x)
   expect_silent({
     set.seed(129)
-    suppressWarnings(
+    suppressMessages(
       wl_rec <-
         spec %>%
-        tune_race_win_loss(rec, folds, grid = 5,  param_info = prm,
+        tune_race_win_loss(rec, folds,
+                           grid = expand.grid(cost_complexity = c(.0001, .001), min_n = c(3, 5)),
+                           param_info = prm,
                            control = control_race(verbose_elim = FALSE,
                                                   extract = get_mod))
     )

@@ -46,5 +46,6 @@ Imports:
     dplyr,
     utils,
     tidyr,
+    tidyselect,
     ggplot2
 Config/testthat/edition: 3

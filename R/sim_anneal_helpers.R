@@ -20,8 +20,8 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
   if (any(param_type == "double")) {
     dbl_nms <- pset$id[param_type == "double"]
     new_dbl <-
-      random_real_neighbor(current %>% dplyr::select(dbl_nms),
-                           hist_values = hist_values %>% dplyr::select(dbl_nms),
+      random_real_neighbor(current %>% dplyr::select(dplyr::all_of(dbl_nms)),
+                           hist_values = hist_values %>% dplyr::select(dplyr::all_of(dbl_nms)),
                            pset %>% dplyr::filter(id %in% dbl_nms),
                            r = radius)
     current[, dbl_nms] <- new_dbl
@@ -31,8 +31,8 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
     int_nms <- pset$id[param_type == "integer"]
     flip_one <- all(param_type == "integer")
     new_int <-
-      random_integer_neighbor(current %>% dplyr::select(int_nms),
-                              hist_values = hist_values %>% dplyr::select(int_nms),
+      random_integer_neighbor(current %>% dplyr::select(dplyr::all_of(int_nms)),
+                              hist_values = hist_values %>% dplyr::select(dplyr::all_of(int_nms)),
                               pset %>% dplyr::filter(id %in% int_nms),
                               prob = flip,
                               change = flip_one)
@@ -341,4 +341,18 @@ color_event <- function(x) {
   )
 }
 
-
+get_outcome_names <- function(x, rs) {
+  preproc <- workflows::pull_workflow_preprocessor(x)
+  if (inherits(preproc, "list")) {
+    if (any(names(preproc) == "outcomes")) {
+      dat <- rs$splits[[1]]$data
+      res <- tidyselect::eval_select(preproc$outcomes, data = dat)
+      res <- names(res)
+    } else {
+      rlang::abort("Cannot obtain the outcome name(s)")
+    }
+  } else {
+    res <- outcome_names(x)
+  }
+  res
+}

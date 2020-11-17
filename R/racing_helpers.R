@@ -143,10 +143,6 @@ test_parameters_bt <- function(x, alpha =  0.05) {
   season_data <- score_season(season_schedule, analysis_data, maximize)
   best_team <- levels(season_data$scoring$player_1)[1]
 
-  ## TODO this model fails periodically so we should wrap in a try-catch and
-  ## pass everything if it fails. A fit_lr() function would be a good idea to
-  ## compartmentalize the fit and subsequent data manipulations.
-
   suppressWarnings(
     mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
                               data = season_data$scoring, br = TRUE)
@@ -445,7 +441,7 @@ check_results <- function(dat, rm_zv = TRUE, rm_dup = FALSE) {
   x <-
     dat %>%
     dplyr::select(!!!ids, .estimate, .config) %>%
-    tidyr::pivot_wider(id_cols = ids, names_from = c(.config), values_from = c(.estimate))
+    tidyr::pivot_wider(id_cols = c(dplyr::all_of(ids)), names_from = c(.config), values_from = c(.estimate))
 
   exclude <- character(0)
 
@@ -523,5 +519,3 @@ check_hidden_arg <- function(x, name, value) {
   }
   identical(x[[name]], value)
 }
-
-# TODO better autoplot
