@@ -146,8 +146,11 @@ test_parameters_bt <- function(x, alpha =  0.05) {
   ## TODO this model fails periodically so we should wrap in a try-catch and
   ## pass everything if it fails. A fit_lr() function would be a good idea to
   ## compartmentalize the fit and subsequent data manipulations.
-  mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
-                            data = season_data$scoring, br = TRUE)
+
+  suppressWarnings(
+    mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
+                              data = season_data$scoring, br = TRUE)
+  )
 
   q_val <- qt(1 - alpha, 1)
   mod_est <-
