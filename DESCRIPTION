@@ -24,7 +24,7 @@ Suggests:
     BradleyTerry2,
     lme4,
     rsample,
-    recipes (>= 0.1.14.9000),
+    recipes (>= 0.1.15),
     modeldata,
     rpart,
     parsnip,
@@ -34,7 +34,7 @@ Suggests:
     klaR
 Language: en-US
 Depends: 
-    tune (>= 0.1.1.9001)
+    tune (>= 0.1.2)
 Imports: 
     tibble,
     rlang,
@@ -48,6 +48,3 @@ Imports:
     tidyr,
     ggplot2
 Config/testthat/edition: 3
-Remotes:
-    tidymodels/tune,
-    tidymodels/recipes
