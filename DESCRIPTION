@@ -9,11 +9,12 @@ Authors@R:
              comment = c(ORCID = "0000-0003-2402-136X")),
       person(given = "RStudio",
              role = "cph"))
-Description: 'finetune' enhances the 'tune' package by providing more 
- specialized methods for finding reasonable values of model tuning parameters. 
- Two racing methods described by Kuhn (2014) <arXiv:1405.6974> are included. An
- iterative search method using generalized simulated annealing (Bohachevsky, 
- Johnson and Stein, 1986) <doi:10.1080/00401706.1986.10488128> is also included.  
+Description: The ability to tune models is important.. 'finetune' enhances the
+ 'tune' package by providing more  specialized methods for finding reasonable
+ values of model tuning parameters.  Two racing methods described by Kuhn (2014)
+ <arXiv:1405.6974> are included. An  iterative search method using generalized
+ simulated annealing (Bohachevsky,  Johnson and Stein, 1986)
+ <doi:10.1080/00401706.1986.10488128> is also included.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

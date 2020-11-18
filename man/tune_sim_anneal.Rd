@@ -173,7 +173,7 @@ cart_mod <-
 ## -----------------------------------------------------------------------------
 
 # For reproducibility, set the seed before running.
-set.seed(37275)
+set.seed(10)
 sa_search <-
   cart_mod \%>\%
   tune_sim_anneal(Class ~ ., resamples = bt, iter = 10)
@@ -185,10 +185,13 @@ autoplot(sa_search, metric = "roc_auc", type = "parameters") +
 # More iterations. `initial` can be any other tune_* object or an integer
 # (for new values).
 
-set.seed(1970)
+set.seed(20)
 more_search <-
   cart_mod \%>\%
   tune_sim_anneal(Class ~ ., resamples = bt, iter = 10, initial = sa_search)
+
+autoplot(more_search, metric = "roc_auc", type = "performance") +
+  theme_bw()
 }
 }
 \references{

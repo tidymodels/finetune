@@ -283,12 +283,20 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
   if (!control$verbose) {
     return(invisible(NULL))
   }
-  m <- nrow(x)
-  new_res <- x$mean[m]
-  new_std <- x$std_err[m]
-  new_event <- x$results[m]
+  is_initial <- all(x$results == "initial")
+  if (is_initial) {
+    m <- max(which(x$global_best))
+    new_res <- x$mean[m]
+    new_std <- x$std_err[m]
+    new_event <- x$results[m]
+  } else {
+    m <- nrow(x)
+    new_res <- x$mean[m]
+    new_std <- x$std_err[m]
+    new_event <- x$results[m]
+  }
   iter <- max(x$.iter)
-  if (iter > 0) {
+  if (iter > 0 & !is_initial) {
     is_best <- isTRUE(x$global_best[m])
     prev_res <- x$mean[m - 1]
     pct_diff <- percent_diff(prev_res, new_res, maximize) *100

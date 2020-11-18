@@ -20,7 +20,7 @@
 #' @param ... Not currently used.
 #' @references
 #' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
-#' Models." \url{https://arxiv.org/abs/1405.6974.}
+#' Models." \url{https://arxiv.org/abs/1405.6974}.
 #' @details
 #' The technical details of this method are described in Kuhn (2014).
 #'
