@@ -53,7 +53,9 @@ one that will be optimized.}
 
 \item{initial}{An initial set of results in a tidy format (as would the result
 of \code{\link[=tune_grid]{tune_grid()}}, \code{\link[=tune_race_win_loss]{tune_race_win_loss()}}, or \code{\link[=tune_race_anova]{tune_race_anova()}}) or a
-positive integer.}
+positive integer. If the initial object was a sequential search method, the
+simulated annealing iterations start after the last iteration of the initial
+results.}
 
 \item{control}{The results of \code{control_sim_anneal()}.}
 }

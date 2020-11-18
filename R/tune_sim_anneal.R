@@ -17,7 +17,9 @@
 #' @param iter The maximum number of search iterations.
 #' @param initial An initial set of results in a tidy format (as would the result
 #' of [tune_grid()], [tune_race_win_loss()], or [tune_race_anova()]) or a
-#' positive integer.
+#' positive integer. If the initial object was a sequential search method, the
+#' simulated annealing iterations start after the last iteration of the initial
+#' results.
 #' @param control The results of `control_sim_anneal()`.
 #' @param ... Not currently used.
 #' @details
@@ -255,6 +257,7 @@ tune_sim_anneal_workflow <-
   function(object, resamples, iter = 10, param_info = NULL, metrics = NULL,
            initial = 5, control = control_sim_anneal()) {
     start_time <- proc.time()[3]
+    cols <- tune::get_tune_colors()
 
     tune::check_rset(resamples)
     rset_info <- tune::pull_rset_attributes(resamples)
@@ -283,12 +286,18 @@ tune_sim_anneal_workflow <-
         outcomes = y_names,
         rset_info =  rset_info,
         workflow = object
-      )
+      ) %>%
+      update_config(prefix = "initial")
+
     mean_stats <- tune::estimate_tune_results(unsummarized)
 
     tune::check_time(start_time, control$time_limit)
 
-    i <- 0 # In case things fail before iteration.
+    i <- max(unsummarized$.iter) # In case things fail before iteration.
+    iter <- iter + i
+    if (i > 0 && control$verbose) {
+      rlang::inform(cols$message$info("There were ", i, " previous iterations"))
+    }
 
     on.exit({
       if (i < iter) {
@@ -316,7 +325,9 @@ tune_sim_anneal_workflow <-
     current_parent <- best_param$.config
     global_param <- current_param
 
-    existing_iter <- max(result_history$.iter)
+    result_history$global_best <- result_history$.config == current_parent
+
+    existing_iter <- i
 
     ## -----------------------------------------------------------------------------
 
@@ -330,9 +341,7 @@ tune_sim_anneal_workflow <-
       metric = metrics_name
     )
 
-    # TODO iterations when initializing with a previous tune object start from 1 :-O
-
-    for (i in (existing_iter + 1):(existing_iter + iter)) {
+    for (i in (existing_iter + 1):iter) {
 
       new_grid <-
         new_in_neighborhood(current_param,
@@ -353,7 +362,8 @@ tune_sim_anneal_workflow <-
           grid = new_grid %>% dplyr::select(-.config, -.parent),
           metrics = metrics
         ) %>%
-        dplyr::mutate(.iter = i)
+        dplyr::mutate(.iter = i) %>%
+        update_config(config = paste0("Iter", i))
 
       result_history <-
         result_history %>%
@@ -442,8 +452,3 @@ tune_sim_anneal_workflow <-
     # Note; this line is probably not executed due to on.exit():
     unsummarized
   }
-
-
-# TODO
-# - expand time limits
-# - fix sim_anneal as input

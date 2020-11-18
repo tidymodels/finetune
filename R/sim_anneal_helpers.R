@@ -151,6 +151,8 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
     min_dist <- apply(all_values, 2, min)
     min_dist <- min_dist/max(min_dist)
     prob_wt <- min_dist^2
+    prob_wt[is.na(prob_wt)] <- 0.0001
+
     if (diff(range(prob_wt)) < 0.0001) {
       prob_wt <- rep(1/nrow(candidates), nrow(candidates))
     }
@@ -244,9 +246,14 @@ initialize_history <- function(x, ...) {
   # check to see if there is existing history
   res <-
     tune::collect_metrics(x)%>%
-    dplyr::filter(.metric == tune::.get_tune_metric_names(x)[1]) %>%
+    dplyr::filter(.metric == tune::.get_tune_metric_names(x)[1])
+  if (!any(names(res) == ".iter")) {
+    res$.iter <- 0
+  }
+
+  res <-
+    res %>%
     dplyr::mutate(
-      .iter = 0,
       random = NA_real_,
       accept = NA_real_,
       results = "initial"
@@ -316,6 +323,7 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
 format_event <- function(x) {
   result_key <- tibble::tribble(
     ~ orig,               ~ symb,
+    "initial",            cli::symbol$tick,
     "new best",           cli::symbol$heart,
     "better suboptimal",  "+",
     "discard suboptimal", cli::symbol$line,
@@ -332,6 +340,7 @@ format_event <- function(x) {
 color_event <- function(x) {
   cols <- tune::get_tune_colors()
   dplyr::case_when(
+    grepl("initial", x)  ~ cols$symbol$info(x),
     grepl("new", x)      ~ cols$symbol$success(x),
     grepl("better", x)   ~ cols$symbol$success(x),
     grepl("discard", x)  ~ cols$message$danger(x),
@@ -355,4 +364,18 @@ get_outcome_names <- function(x, rs) {
     res <- outcome_names(x)
   }
   res
+}
+
+update_config <- function(x, prefix = NULL, config = "new") {
+  if (!is.null(prefix)) {
+    x$.metrics <-
+      purrr::map(x$.metrics,
+                 ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config)))
+  } else {
+    x$.metrics <-
+      purrr::map(x$.metrics,
+                 ~ dplyr::mutate(.x, .config = config))
+
+  }
+  x
 }
