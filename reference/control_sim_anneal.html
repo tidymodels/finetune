@@ -133,7 +133,7 @@
   save_workflow <span class='op'>=</span> <span class='cn'>FALSE</span>,
   save_history <span class='op'>=</span> <span class='cn'>FALSE</span>,
   event_level <span class='op'>=</span> <span class='st'>"first"</span>,
-  parallel_over <span class='op'>=</span> <span class='st'>"resamples"</span>
+  parallel_over <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -221,7 +221,9 @@ considered the "event".</p></td>
     <tr>
       <th>parallel_over</th>
       <td><p>A single string containing either <code>"resamples"</code> or
-<code>"everything"</code> describing how to use parallel processing.</p>
+<code>"everything"</code> describing how to use parallel processing. Alternatively,
+<code>NULL</code> is allowed, which chooses between <code>"resamples"</code> and <code>"everything"</code>
+automatically.</p>
 <p>If <code>"resamples"</code>, then tuning will be performed in parallel over resamples
 alone. Within each resample, the preprocessor (i.e. recipe or formula) is
 processed once, and is then reused across all models that need to be fit.</p>
@@ -230,11 +232,16 @@ An outer parallel loop will iterate over resamples. Additionally, an
 inner parallel loop will iterate over all unique combinations of
 preprocessor and model tuning parameters for that specific resample. This
 will result in the preprocessor being re-processed multiple times, but
-can be faster if that processing is extremely fast.</p></td>
+can be faster if that processing is extremely fast.</p>
+<p>If <code>NULL</code>, chooses <code>"resamples"</code> if there are more than one resample,
+otherwise chooses <code>"everything"</code> to attempt to maximize core utilization.</p></td>
     </tr>
     </table>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>control_sim_anneal</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Simulated annealing control object</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

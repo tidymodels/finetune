@@ -43,9 +43,10 @@
 
 
 <meta property="og:title" content="Optimization of model parameters via simulated annealing — tune_sim_anneal" />
-<meta property="og:description" content="tune_sim_anneal() uses models to generate new candidate tuning parameter
-combinations based on previous results. It uses the generalized simulated
-annealing method of Bohachevsky, Johnson, and Stein (1986)." />
+<meta property="og:description" content="tune_sim_anneal() uses an iterative search procedure to generate new
+candidate tuning parameter combinations based on previous results. It uses
+the generalized simulated annealing method of Bohachevsky, Johnson, and
+Stein (1986)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -118,9 +119,10 @@ annealing method of Bohachevsky, Johnson, and Stein (1986)." />
     </div>
 
     <div class="ref-description">
-    <p><code>tune_sim_anneal()</code> uses models to generate new candidate tuning parameter
-combinations based on previous results. It uses the generalized simulated
-annealing method of Bohachevsky, Johnson, and Stein (1986).</p>
+    <p><code>tune_sim_anneal()</code> uses an iterative search procedure to generate new
+candidate tuning parameter combinations based on previous results. It uses
+the generalized simulated annealing method of Bohachevsky, Johnson, and
+Stein (1986).</p>
     </div>
 
     <pre class="usage"><span class='fu'>tune_sim_anneal</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -164,7 +166,7 @@ annealing method of Bohachevsky, Johnson, and Stein (1986).</p>
     <tr>
       <th>preprocessor</th>
       <td><p>A traditional model formula or a recipe created using
-<code><a href='https://recipes.tidymodels.org/reference/recipe.html'>recipes::recipe()</a></code>.</p></td>
+<code><a href='https://recipes.tidymodels.org/reference/recipe.html'>recipes::recipe()</a></code>. This is only required when <code>object</code> is not a workflow.</p></td>
     </tr>
     <tr>
       <th>resamples</th>
@@ -177,7 +179,7 @@ annealing method of Bohachevsky, Johnson, and Stein (1986).</p>
     <tr>
       <th>param_info</th>
       <td><p>A <code><a href='https://dials.tidymodels.org/reference/parameters.html'>dials::parameters()</a></code> object or <code>NULL</code>. If none is given,
-a parameters set is derived from other arguments. Passing this argument can
+a parameter set is derived from other arguments. Passing this argument can
 be useful when parameter ranges need to be customized.</p></td>
     </tr>
     <tr>
@@ -189,10 +191,10 @@ one that will be optimized.</p></td>
     <tr>
       <th>initial</th>
       <td><p>An initial set of results in a tidy format (as would the result
-of <code>tune_grid()</code>, <code><a href='tune_race_win_loss.html'>tune_race_win_loss()</a></code>, or <code><a href='tune_race_anova.html'>tune_race_anova()</a></code>) or a
-positive integer. If the initial object was a sequential search method, the
-simulated annealing iterations start after the last iteration of the initial
-results.</p></td>
+of <code>tune_grid()</code>, <code>tune_bayes()</code>, <code><a href='tune_race_win_loss.html'>tune_race_win_loss()</a></code>, or
+<code><a href='tune_race_anova.html'>tune_race_anova()</a></code>) or a positive integer. If the initial object was a
+sequential search method, the simulated annealing iterations start after the
+last iteration of the initial results.</p></td>
     </tr>
     <tr>
       <th>control</th>
@@ -212,7 +214,7 @@ can be used to iteratively search the parameter space for optimal tuning
 parameter combinations. At each iteration, a new parameter combination is
 created by perturbing the current parameters in some small way so that they
 are within a small neighborhood. This new parameter combination is used to
-fit a model and that model's performance is measured using resample (or a
+fit a model and that model's performance is measured using resampling (or a
 simple validation set).</p>
 <p>If the new settings have better results than the current settings, they are
 accepted and the process continues.</p>
@@ -235,18 +237,18 @@ globally best.</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#
 <p>For each numeric parameter, the range of possible values is known as well
 as any transformations. The current values are transformed and scaled to
 have values between zero and one (based on the possible range of values). A
-candidate set of values that are on a sphere with radius <code>r</code> are generated.
-Infeasible values are removed and one value is chosen at random. This value
-is back transformed to the original units and scale and are used as the new
-settings. The argument <code>radius</code> of <code><a href='control_sim_anneal.html'>control_sim_anneal()</a></code> controls the
-neighborhood size.</p>
+candidate set of values that are on a sphere with random radii between
+<code>rmin</code> and <code>rmax</code> are generated. Infeasible values are removed and one value
+is chosen at random. This value is back transformed to the original units
+and scale and are used as the new settings. The argument <code>radius</code> of
+<code><a href='control_sim_anneal.html'>control_sim_anneal()</a></code> controls the range neighborhood sizes.</p>
 <p>For categorical and integer parameters, each is changes with a pre-defined
 probability. The <code>flip</code> argument of <code><a href='control_sim_anneal.html'>control_sim_anneal()</a></code> can be used to
 specify this probability. For integer parameters, a nearby integer value is
 used.</p>
 <p>Simulated annealing search may not be the preferred method when many of the
 parameters are non-numeric or integers with few unique values. In these
-cases, it is likely that the same candidate set may be treated more than
+cases, it is likely that the same candidate set may be tested more than
 once.</p>
 
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Cooling schedule</h3>
@@ -272,7 +274,7 @@ suboptimal result is improved.</p>
 <p>The <code>tune</code> and <code>finetune</code> packages currently parallelize over resamples.
 Specifying a parallel back-end will improve the generation of the initial
 set of sub-models (if any). Each iteration of the search are also run in
-parallel as long as there are 2 or more resamples.</p>
+parallel if a parallel backend is registered.</p>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -325,11 +327,11 @@ Function Optimization", <em>Technometrics</em>, 28:3, 209-217</p>
 <span class='co'># More iterations. `initial` can be any other tune_* object or an integer</span>
 <span class='co'># (for new values).</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>20</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>11</span><span class='op'>)</span>
 <span class='va'>more_search</span> <span class='op'>&lt;-</span>
   <span class='va'>cart_mod</span> <span class='op'>%&gt;%</span>
   <span class='fu'>tune_sim_anneal</span><span class='op'>(</span><span class='va'>Class</span> <span class='op'>~</span> <span class='va'>.</span>, resamples <span class='op'>=</span> <span class='va'>bt</span>, iter <span class='op'>=</span> <span class='fl'>10</span>, initial <span class='op'>=</span> <span class='va'>sa_search</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>There were 10 previous iterations</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>Optimizing roc_auc</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>10 </span><span style='color: #0000BB;'>✔ initial           </span><span style='color: #000000;'> roc_auc=0.835	(+/-0.0102)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>11 </span><span style='color: #BBBB00;'>◯ accept suboptimal </span><span style='color: #000000;'> roc_auc=0.78213	(+/-0.008407)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>12 </span><span style='color: #00BB00;'>+ better suboptimal </span><span style='color: #000000;'> roc_auc=0.79661	(+/-0.01032)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>13 </span><span style='color: #BBBB00;'>◯ accept suboptimal </span><span style='color: #000000;'> roc_auc=0.76934	(+/-0.0136)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>14 </span><span style='color: #BB0000;'>─ discard suboptimal</span><span style='color: #000000;'> roc_auc=0.73095	(+/-0.005275)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>15 </span><span style='color: #BBBB00;'>◯ accept suboptimal </span><span style='color: #000000;'> roc_auc=0.74847	(+/-0.01399)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>16 </span><span style='color: #00BB00;'>+ better suboptimal </span><span style='color: #000000;'> roc_auc=0.75418	(+/-0.01388)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>17 </span><span style='color: #00BB00;'>+ better suboptimal </span><span style='color: #000000;'> roc_auc=0.76901	(+/-0.01412)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>18 </span><span style='color: #BB0000;'>✖ restart from best </span><span style='color: #000000;'> roc_auc=0.80628	(+/-0.01041)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>19 </span><span style='color: #BBBB00;'>◯ accept suboptimal </span><span style='color: #000000;'> roc_auc=0.82838	(+/-0.01102)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>20 </span><span style='color: #BB0000;'>─ discard suboptimal</span><span style='color: #000000;'> roc_auc=0.81147	(+/-0.02008)</span><span></span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>There were 10 previous iterations</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>Optimizing roc_auc</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>10 </span><span style='color: #0000BB;'>✔ initial           </span><span style='color: #000000;'> roc_auc=0.835	(+/-0.0102)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>11 </span><span style='color: #BBBB00;'>◯ accept suboptimal </span><span style='color: #000000;'> roc_auc=0.80918	(+/-0.009188)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>12 </span><span style='color: #00BB00;'>+ better suboptimal </span><span style='color: #000000;'> roc_auc=0.81519	(+/-0.01146)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>13 </span><span style='color: #00BB00;'>+ better suboptimal </span><span style='color: #000000;'> roc_auc=0.82378	(+/-0.01017)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>14 </span><span style='color: #00BB00;'>♥ new best          </span><span style='color: #000000;'> roc_auc=0.83928	(+/-0.007538)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>15 </span><span style='color: #00BB00;'>♥ new best          </span><span style='color: #000000;'> roc_auc=0.84267	(+/-0.006609)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>16 </span><span style='color: #BBBB00;'>◯ accept suboptimal </span><span style='color: #000000;'> roc_auc=0.83912	(+/-0.007893)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>17 </span><span style='color: #BBBB00;'>◯ accept suboptimal </span><span style='color: #000000;'> roc_auc=0.83797	(+/-0.008248)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>18 </span><span style='color: #00BB00;'>+ better suboptimal </span><span style='color: #000000;'> roc_auc=0.83805	(+/-0.008188)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>19 </span><span style='color: #00BB00;'>+ better suboptimal </span><span style='color: #000000;'> roc_auc=0.83912	(+/-0.007893)</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>20 </span><span style='color: #00BB00;'>♥ new best          </span><span style='color: #000000;'> roc_auc=0.84381	(+/-0.006581)</span><span></span></div><div class='input'>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/autoplot.html'>autoplot</a></span><span class='op'>(</span><span class='va'>more_search</span>, metric <span class='op'>=</span> <span class='st'>"roc_auc"</span>, type <span class='op'>=</span> <span class='st'>"performance"</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='img'><img src='tune_sim_anneal-2.png' alt='' width='768' height='552' /></div><div class='input'><span class='co'># }</span>
