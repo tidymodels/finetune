@@ -60,7 +60,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-## 792.239  21.934 814.532
+## 741.660  19.654 761.357 
 ```
 
 
@@ -76,10 +76,10 @@ system.time({
 
 ```
 ##    user  system elapsed 
-## 382.121   9.401 391.558
+## 133.143   3.675 136.822 
 ```
 
-Speed-up of 2.08-fold for racing. 
+Speed-up of 5.56-fold for racing. 
 
 
 ```r
@@ -111,11 +111,11 @@ system.time({
 ```
 
 ```
-##    user  system elapsed 
-##   1.219   0.200 132.704
+##  user  system elapsed 
+## 1.112   0.190 126.650 
 ```
 
-Parallel processing with grid search was 6.138-fold faster than sequential grid search.
+Parallel processing with grid search was 6.01-fold faster than sequential grid search.
 
 
 ```r
@@ -129,11 +129,11 @@ system.time({
 ```
 
 ```
-##    user  system elapsed 
-##  17.161   2.549  85.953
+##  user  system elapsed 
+## 1.908   0.261  21.442 
 ```
 
-Parallel processing with racing was 9.476-fold faster than sequential grid search.
+Parallel processing with racing was 35.51-fold faster than sequential grid search.
 
 There is a compounding effect of racing and parallel processing but its magnitude depends on the type of model, number of resamples, number of tuning parameters, and so on. 
 
