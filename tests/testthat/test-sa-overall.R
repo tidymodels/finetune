@@ -4,6 +4,8 @@ source(file.path(test_path(), "..", "helpers.R"))
 
 test_that('formula interface', {
   skip_on_cran()
+  # Skip for < 4.0 due to random number differences
+  skip_if(getRversion() < "4.0.0")
   expect_message(
     expect_error({
       set.seed(1)
@@ -21,6 +23,8 @@ test_that('formula interface', {
 
 test_that('recipe interface', {
   skip_on_cran()
+  # Skip for < 4.0 due to random number differences
+  skip_if(getRversion() < "4.0.0")
   expect_silent(
     expect_error({
       set.seed(1)
@@ -38,6 +42,8 @@ test_that('recipe interface', {
 
 test_that('variable interface', {
   skip_on_cran()
+  # Skip for < 4.0 due to random number differences
+  skip_if(getRversion() < "4.0.0")
   expect_silent(
     expect_error({
       set.seed(1)
