@@ -4,7 +4,7 @@
 \alias{tune_race_win_loss}
 \alias{tune_race_win_loss.model_spec}
 \alias{tune_race_win_loss.workflow}
-\title{Model tuning via grid search}
+\title{Efficient grid search via racing with win/loss statistics}
 \usage{
 tune_race_win_loss(object, ...)
 
@@ -32,12 +32,50 @@ tune_race_win_loss(object, ...)
 \arguments{
 \item{object}{A \code{parsnip} model specification or a \code{\link[workflows:workflow]{workflows::workflow()}}.}
 
-\item{...}{Not currently used.}
+\item{...}{Not currently used.
+The technical details of this method are described in Kuhn (2014).
+
+Racing methods are efficient approaches to grid search. Initially, the
+function evaluates all tuning parameters on a small initial set of
+resamples. The \code{burn_in} argument of \code{control_race()} sets the number of
+initial resamples.
+
+The performance statistics from the current set of resamples are converted
+to win/loss/tie results. For example, for two parameters (\code{j} and \code{k}) in a
+classification model that have each been resampled three times:
+
+\preformatted{
+            |  area under the ROC curve |
+            -----------------------------
+   resample | parameter j | parameter k | winner
+   ---------------------------------------------
+       1    |    0.81     |     0.92    |   k
+       2    |    0.95     |     0.94    |   j
+       3    |    0.79     |     0.81    |   k
+   ---------------------------------------------
+}
+
+After the third resample, parameter \code{k} has a 2:1 win/loss ratio versus \code{j}.
+Parameters with equal results are treated as a half-win for each setting.
+These statistics are determined for all pairwise combinations of the
+parameters and a Bradley-Terry model is used to model these win/loss/tie
+statistics. This model can compute the ability of a parameter combination to
+win overall. A confidence interval for the winning ability is computed and
+any settings whose interval includes zero are retained for future resamples
+(since it is not statistically different form the best results).
+
+The next resample is used with the remaining parameter combinations and the
+statistical analysis is updated. More candidate parameters may be excluded
+with each new resample that is processed.
+
+The \code{control_race()} function contains are parameter for the significance cutoff
+applied to the Bradley-Terry model results as well as other relevant arguments.}
 
 \item{preprocessor}{A traditional model formula or a recipe created using
 \code{\link[recipes:recipe]{recipes::recipe()}}.}
 
-\item{resamples}{An \code{rset()} object.}
+\item{resamples}{An \code{rset()} object that has multiple resamples (i.e., is not
+a validation set).}
 
 \item{param_info}{A \code{\link[dials:parameters]{dials::parameters()}} object or \code{NULL}. If none is given,
 a parameters set is derived from other arguments. Passing this argument can
@@ -55,5 +93,53 @@ parameter sets to be created automatically.}
 \description{
 \code{\link[=tune_race_win_loss]{tune_race_win_loss()}} computes a set of performance metrics (e.g. accuracy or RMSE)
 for a pre-defined set of tuning parameters that correspond to a model or
-recipe across one or more resamples of the data.
+recipe across one or more resamples of the data. After an initial number of
+resamples have been evaluated, the process eliminates tuning parameter
+combinations that are unlikely to be the best results using a statistical
+model. For each pairwise combinations of tuning parameters, win/loss
+statistics are calculated and a logistic regression model is used to measure
+how likely each combination is to win overall.
+}
+\examples{
+\donttest{
+library(parsnip)
+library(rsample)
+library(discrim)
+library(dials)
+
+## -----------------------------------------------------------------------------
+
+data(two_class_dat, package = "modeldata")
+
+set.seed(6376)
+rs <- bootstraps(two_class_dat, times = 10)
+
+## -----------------------------------------------------------------------------
+
+# optimize an regularized discriminant analysis model
+rda_spec <-
+  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) \%>\%
+  set_engine("klaR")
+
+## -----------------------------------------------------------------------------
+
+ctrl <- control_race(verbose_elim = TRUE)
+
+set.seed(11)
+grid_wl <-
+  rda_spec \%>\%
+    tune_race_win_loss(Class ~ ., resamples = rs, grid = 10, control = ctrl)
+
+# Shows only the fully resampled parameters
+show_best(grid_wl, metric = "roc_auc")
+
+plot_race(grid_wl)
+}
+}
+\references{
+Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
+Models." \url{https://arxiv.org/abs/1405.6974}.
+}
+\seealso{
+\code{\link[tune:tune_grid]{tune::tune_grid()}}, \code{\link[=control_race]{control_race()}}, \code{\link[=tune_race_anova]{tune_race_anova()}}
 }

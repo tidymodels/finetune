@@ -19,6 +19,7 @@
 #' @param randomize Should the resamples be evaluated in a random order?  By
 #' default, the resamples are evaluated in a random order so the random number
 #' seed should be control prior to calling this method (to be reproducible).
+#' For repeated cross-validation the randomization occurs within each repeat.
 #' @param extract An optional function with at least one argument (or `NULL`)
 #'   that can be used to retain arbitrary objects from the model fit object,
 #'   recipe, or other elements of the workflow.
@@ -35,7 +36,9 @@
 #' class prediction is made, and specifies which level of the outcome is
 #' considered the "event".
 #' @param parallel_over A single string containing either `"resamples"` or
-#'   `"everything"` describing how to use parallel processing.
+#'   `"everything"` describing how to use parallel processing. Alternatively,
+#'   `NULL` is allowed, which chooses between `"resamples"` and `"everything"`
+#'   automatically.
 #'
 #'   If `"resamples"`, then tuning will be performed in parallel over resamples
 #'   alone. Within each resample, the preprocessor (i.e. recipe or formula) is
@@ -48,10 +51,10 @@
 #'   will result in the preprocessor being re-processed multiple times, but
 #'   can be faster if that processing is extremely fast.
 #'
-#'   Note that this parameter has a different default (`"everything"`) than its
-#'   counterpart in [tune::control_grid()]. This is the most advantageous value
-#'   for racing.
-#'
+#'   If `NULL`, chooses `"resamples"` if there are more than one resample,
+#'   otherwise chooses `"everything"` to attempt to maximize core utilization.
+#' @examples
+#' control_race()
 #' @export
 control_race <-
   function(verbose = FALSE, verbose_elim = FALSE, allow_par = TRUE,
@@ -72,7 +75,9 @@ control_race <-
     tune::val_class_and_single(event_level,   "character", "control_race()")
     tune::val_class_or_null(extract,          "function",  "control_race()")
     tune::val_class_and_single(save_workflow, "logical",   "control_race()")
-    val_parallel_over(parallel_over, "control_bayes()")
+    if (!is.null(parallel_over)) {
+      val_parallel_over(parallel_over, "control_sim_anneal()")
+    }
 
     if (alpha <= 0 | alpha >= 1) {
       rlang::abort("'alpha' should be on (0, 1)")

@@ -18,7 +18,7 @@ control_sim_anneal(
   save_workflow = FALSE,
   save_history = FALSE,
   event_level = "first",
-  parallel_over = "resamples"
+  parallel_over = NULL
 )
 }
 \arguments{
@@ -76,7 +76,9 @@ class prediction is made, and specifies which level of the outcome is
 considered the "event".}
 
 \item{parallel_over}{A single string containing either \code{"resamples"} or
-\code{"everything"} describing how to use parallel processing.
+\code{"everything"} describing how to use parallel processing. Alternatively,
+\code{NULL} is allowed, which chooses between \code{"resamples"} and \code{"everything"}
+automatically.
 
 If \code{"resamples"}, then tuning will be performed in parallel over resamples
 alone. Within each resample, the preprocessor (i.e. recipe or formula) is
@@ -87,8 +89,14 @@ An outer parallel loop will iterate over resamples. Additionally, an
 inner parallel loop will iterate over all unique combinations of
 preprocessor and model tuning parameters for that specific resample. This
 will result in the preprocessor being re-processed multiple times, but
-can be faster if that processing is extremely fast.}
+can be faster if that processing is extremely fast.
+
+If \code{NULL}, chooses \code{"resamples"} if there are more than one resample,
+otherwise chooses \code{"everything"} to attempt to maximize core utilization.}
 }
 \description{
 Control aspects of the simulated annealing search process
+}
+\examples{
+control_sim_anneal()
 }

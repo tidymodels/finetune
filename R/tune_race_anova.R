@@ -2,12 +2,16 @@
 #'
 #' [tune_race_anova()] computes a set of performance metrics (e.g. accuracy or RMSE)
 #'  for a pre-defined set of tuning parameters that correspond to a model or
-#'  recipe across one or more resamples of the data.
+#'  recipe across one or more resamples of the data. After an initial number of
+#'  resamples have been evaluated, the process eliminates tuning parameter
+#'  combinations that are unlikely to be the best results using a repeated
+#'  measure ANOVA model.
 #'
 #' @param object A `parsnip` model specification or a [workflows::workflow()].
 #' @param preprocessor A traditional model formula or a recipe created using
-#'   [recipes::recipe()].
-#' @param resamples An `rset()` object.
+#'   [recipes::recipe()]. This is only required when `object` is not a workflow.
+#' @param resamples An `rset()` object that has multiple resamples (i.e., is not
+#'  a validation set).
 #' @param param_info A [dials::parameters()] object or `NULL`. If none is given,
 #' a parameters set is derived from other arguments. Passing this argument can
 #' be useful when parameter ranges need to be customized.
@@ -16,7 +20,8 @@
 #'  tuning parameter candidates. An integer denotes the number of candidate
 #'  parameter sets to be created automatically.
 #' @param metrics A [yardstick::metric_set()] or `NULL`.
-#' @param control An object used to modify the tuning process.
+#' @param control An object used to modify the tuning process. See
+#'  [control_race()] for more details.
 #' @param ... Not currently used.
 #' @references
 #' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
@@ -24,27 +29,27 @@
 #' @details
 #' The technical details of this method are described in Kuhn (2014).
 #'
-#'   Racing methods are efficient approaches to grid search. Initially, the
+#' Racing methods are efficient approaches to grid search. Initially, the
 #'  function evaluates all tuning parameters on a small initial set of
 #'  resamples. The `burn_in` argument of `control_race()` sets the number of
 #'  initial resamples.
 #'
-#'   The performance statistics from these resamples are analyzed to determine
+#' The performance statistics from these resamples are analyzed to determine
 #'  which tuning parameters are _not_ statistically different from the current
 #'  best setting. If a parameter is statistically different, it is excluded from
 #'  further resampling.
 #'
-#'   The next resample is used with the remaining parameter combinations and the
+#' The next resample is used with the remaining parameter combinations and the
 #'  statistical analysis is updated. More candidate parameters may be excluded
 #'  with each new resample that is processed.
 #'
-#'   This function determines statistical significance using a simple ANOVA
+#' This function determines statistical significance using a repeated measures ANOVA
 #'  model where the performance statistic (e.g., RMSE, accuracy, etc.) is the
-#'  outcome data. The `control_race()` function contains are parameter for the
-#'  significance cutoff applied to the ANOVA results as well as other relevant
-#'  arguments.
+#'  outcome data and the random effect is due to resamples. The
+#'  `control_race()` function contains are parameter for the significance cutoff
+#'  applied to the ANOVA results as well as other relevant arguments.
 #'
-#'   There is benefit to using racing methods in conjunction with parallel
+#' There is benefit to using racing methods in conjunction with parallel
 #'  processing. The following section shows a benchmark of results for one
 #'  dataset and model.
 #'
@@ -72,11 +77,18 @@
 #'
 #' ## -----------------------------------------------------------------------------
 #'
+#' ctrl <- control_race(verbose_elim = TRUE)
 #' set.seed(11)
-#' grid_anova <- rda_spec %>% tune_race_anova(Class ~ ., resamples = rs, grid = 10)
+#' grid_anova <-
+#'   rda_spec %>%
+#'     tune_race_anova(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 #'
+#' # Shows only the fully resampled parameters
 #' show_best(grid_anova, metric = "roc_auc", n = 2)
+#'
+#' plot_race(grid_anova)
 #' }
+#' @seealso [tune::tune_grid()], [control_race()], [tune_race_win_loss()]
 #' @export
 tune_race_anova <- function(object, ...) {
   UseMethod("tune_race_anova")

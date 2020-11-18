@@ -41,7 +41,9 @@
 #' class prediction is made, and specifies which level of the outcome is
 #' considered the "event".
 #' @param parallel_over A single string containing either `"resamples"` or
-#'   `"everything"` describing how to use parallel processing.
+#'   `"everything"` describing how to use parallel processing. Alternatively,
+#'   `NULL` is allowed, which chooses between `"resamples"` and `"everything"`
+#'   automatically.
 #'
 #'   If `"resamples"`, then tuning will be performed in parallel over resamples
 #'   alone. Within each resample, the preprocessor (i.e. recipe or formula) is
@@ -53,6 +55,11 @@
 #'   preprocessor and model tuning parameters for that specific resample. This
 #'   will result in the preprocessor being re-processed multiple times, but
 #'   can be faster if that processing is extremely fast.
+#'
+#'   If `NULL`, chooses `"resamples"` if there are more than one resample,
+#'   otherwise chooses `"everything"` to attempt to maximize core utilization.
+#' @examples
+#' control_sim_anneal()
 #' @export
 control_sim_anneal <-
   function(verbose = TRUE,
@@ -68,7 +75,7 @@ control_sim_anneal <-
            save_workflow = FALSE,
            save_history = FALSE,
            event_level = "first",
-           parallel_over = "resamples") {
+           parallel_over = NULL) {
 
     tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
@@ -81,7 +88,9 @@ control_sim_anneal <-
     tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
     tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_history, "logical", "control_sim_anneal()")
-    val_parallel_over(parallel_over, "control_bayes()")
+    if (!is.null(parallel_over)) {
+      val_parallel_over(parallel_over, "control_sim_anneal()")
+    }
 
     if (!is.numeric(radius) | !length(radius) == 2) {
       rlang::abort("Argument 'radius' should be two numeric values.")

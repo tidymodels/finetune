@@ -35,9 +35,10 @@ tune_race_anova(object, ...)
 \item{...}{Not currently used.}
 
 \item{preprocessor}{A traditional model formula or a recipe created using
-\code{\link[recipes:recipe]{recipes::recipe()}}.}
+\code{\link[recipes:recipe]{recipes::recipe()}}. This is only required when \code{object} is not a workflow.}
 
-\item{resamples}{An \code{rset()} object.}
+\item{resamples}{An \code{rset()} object that has multiple resamples (i.e., is not
+a validation set).}
 
 \item{param_info}{A \code{\link[dials:parameters]{dials::parameters()}} object or \code{NULL}. If none is given,
 a parameters set is derived from other arguments. Passing this argument can
@@ -50,12 +51,16 @@ parameter sets to be created automatically.}
 
 \item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} or \code{NULL}.}
 
-\item{control}{An object used to modify the tuning process.}
+\item{control}{An object used to modify the tuning process. See
+\code{\link[=control_race]{control_race()}} for more details.}
 }
 \description{
 \code{\link[=tune_race_anova]{tune_race_anova()}} computes a set of performance metrics (e.g. accuracy or RMSE)
 for a pre-defined set of tuning parameters that correspond to a model or
-recipe across one or more resamples of the data.
+recipe across one or more resamples of the data. After an initial number of
+resamples have been evaluated, the process eliminates tuning parameter
+combinations that are unlikely to be the best results using a repeated
+measure ANOVA model.
 }
 \details{
 The technical details of this method are described in Kuhn (2014).
@@ -74,11 +79,11 @@ The next resample is used with the remaining parameter combinations and the
 statistical analysis is updated. More candidate parameters may be excluded
 with each new resample that is processed.
 
-This function determines statistical significance using a simple ANOVA
+This function determines statistical significance using a repeated measures ANOVA
 model where the performance statistic (e.g., RMSE, accuracy, etc.) is the
-outcome data. The \code{control_race()} function contains are parameter for the
-significance cutoff applied to the ANOVA results as well as other relevant
-arguments.
+outcome data and the random effect is due to resamples. The
+\code{control_race()} function contains are parameter for the significance cutoff
+applied to the ANOVA results as well as other relevant arguments.
 
 There is benefit to using racing methods in conjunction with parallel
 processing. The following section shows a benchmark of results for one
@@ -135,7 +140,7 @@ system.time(\{
   svm_wflow \%>\% tune_grid(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
-## 792.239  21.934 814.532
+## 741.660  19.654 761.357 
 }\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
 ## With racing
 
@@ -144,10 +149,10 @@ system.time(\{
   svm_wflow \%>\% tune_race_anova(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
-## 382.121   9.401 391.558
+## 133.143   3.675 136.822 
 }
 
-Speed-up of 2.08-fold for racing.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+Speed-up of 5.56-fold for racing.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Parallel processing setup
 
 cores <- parallel::detectCores(logical = FALSE)
@@ -162,11 +167,11 @@ system.time(\{
   set.seed(2)
   svm_wflow \%>\% tune_grid(resamples = rs, grid = svm_grid)
 \})
-}\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
-##   1.219   0.200 132.704
+}\if{html}{\out{</div>}}\preformatted{##  user  system elapsed 
+## 1.112   0.190 126.650 
 }
 
-Parallel processing with grid search was 6.138-fold faster than
+Parallel processing with grid search was 6.01-fold faster than
 sequential grid search.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Parallel racing
 
@@ -174,11 +179,11 @@ system.time(\{
   set.seed(2)
   svm_wflow \%>\% tune_race_anova(resamples = rs, grid = svm_grid)
 \})
-}\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
-##  17.161   2.549  85.953
+}\if{html}{\out{</div>}}\preformatted{##  user  system elapsed 
+## 1.908   0.261  21.442 
 }
 
-Parallel processing with racing was 9.476-fold faster than sequential
+Parallel processing with racing was 35.51-fold faster than sequential
 grid search.
 
 There is a compounding effect of racing and parallel processing but its
@@ -209,13 +214,22 @@ rda_spec <-
 
 ## -----------------------------------------------------------------------------
 
+ctrl <- control_race(verbose_elim = TRUE)
 set.seed(11)
-grid_anova <- rda_spec \%>\% tune_race_anova(Class ~ ., resamples = rs, grid = 10)
+grid_anova <-
+  rda_spec \%>\%
+    tune_race_anova(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 
+# Shows only the fully resampled parameters
 show_best(grid_anova, metric = "roc_auc", n = 2)
+
+plot_race(grid_anova)
 }
 }
 \references{
 Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
 Models." \url{https://arxiv.org/abs/1405.6974}.
+}
+\seealso{
+\code{\link[tune:tune_grid]{tune::tune_grid()}}, \code{\link[=control_race]{control_race()}}, \code{\link[=tune_race_win_loss]{tune_race_win_loss()}}
 }

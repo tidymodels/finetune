@@ -37,14 +37,14 @@ tune_sim_anneal(object, ...)
 \item{...}{Not currently used.}
 
 \item{preprocessor}{A traditional model formula or a recipe created using
-\code{\link[recipes:recipe]{recipes::recipe()}}.}
+\code{\link[recipes:recipe]{recipes::recipe()}}. This is only required when \code{object} is not a workflow.}
 
 \item{resamples}{An \code{rset()} object.}
 
 \item{iter}{The maximum number of search iterations.}
 
 \item{param_info}{A \code{\link[dials:parameters]{dials::parameters()}} object or \code{NULL}. If none is given,
-a parameters set is derived from other arguments. Passing this argument can
+a parameter set is derived from other arguments. Passing this argument can
 be useful when parameter ranges need to be customized.}
 
 \item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} object containing information on how
@@ -52,10 +52,10 @@ models will be evaluated for performance. The first metric in \code{metrics} is 
 one that will be optimized.}
 
 \item{initial}{An initial set of results in a tidy format (as would the result
-of \code{\link[=tune_grid]{tune_grid()}}, \code{\link[=tune_race_win_loss]{tune_race_win_loss()}}, or \code{\link[=tune_race_anova]{tune_race_anova()}}) or a
-positive integer. If the initial object was a sequential search method, the
-simulated annealing iterations start after the last iteration of the initial
-results.}
+of \code{\link[=tune_grid]{tune_grid()}}, \code{\link[=tune_bayes]{tune_bayes()}}, \code{\link[=tune_race_win_loss]{tune_race_win_loss()}}, or
+\code{\link[=tune_race_anova]{tune_race_anova()}}) or a positive integer. If the initial object was a
+sequential search method, the simulated annealing iterations start after the
+last iteration of the initial results.}
 
 \item{control}{The results of \code{control_sim_anneal()}.}
 }
@@ -65,9 +65,10 @@ However, these results contain an \code{.iter} column and replicate the \code{rs
 object multiple times over iterations (at limited additional memory costs).
 }
 \description{
-\code{\link[=tune_sim_anneal]{tune_sim_anneal()}} uses models to generate new candidate tuning parameter
-combinations based on previous results. It uses the generalized simulated
-annealing method of Bohachevsky, Johnson, and Stein (1986).
+\code{\link[=tune_sim_anneal]{tune_sim_anneal()}} uses an iterative search procedure to generate new
+candidate tuning parameter combinations based on previous results. It uses
+the generalized simulated annealing method of Bohachevsky, Johnson, and
+Stein (1986).
 }
 \details{
 Simulated annealing is a global optimization method. For model tuning, it
@@ -75,7 +76,7 @@ can be used to iteratively search the parameter space for optimal tuning
 parameter combinations. At each iteration, a new parameter combination is
 created by perturbing the current parameters in some small way so that they
 are within a small neighborhood. This new parameter combination is used to
-fit a model and that model's performance is measured using resample (or a
+fit a model and that model's performance is measured using resampling (or a
 simple validation set).
 
 If the new settings have better results than the current settings, they are
@@ -101,11 +102,11 @@ globally best.
 For each numeric parameter, the range of possible values is known as well
 as any transformations. The current values are transformed and scaled to
 have values between zero and one (based on the possible range of values). A
-candidate set of values that are on a sphere with radius \code{r} are generated.
-Infeasible values are removed and one value is chosen at random. This value
-is back transformed to the original units and scale and are used as the new
-settings. The argument \code{radius} of \code{\link[=control_sim_anneal]{control_sim_anneal()}} controls the
-neighborhood size.
+candidate set of values that are on a sphere with random radii between
+\code{rmin} and \code{rmax} are generated. Infeasible values are removed and one value
+is chosen at random. This value is back transformed to the original units
+and scale and are used as the new settings. The argument \code{radius} of
+\code{\link[=control_sim_anneal]{control_sim_anneal()}} controls the range neighborhood sizes.
 
 For categorical and integer parameters, each is changes with a pre-defined
 probability. The \code{flip} argument of \code{\link[=control_sim_anneal]{control_sim_anneal()}} can be used to
@@ -114,7 +115,7 @@ used.
 
 Simulated annealing search may not be the preferred method when many of the
 parameters are non-numeric or integers with few unique values. In these
-cases, it is likely that the same candidate set may be treated more than
+cases, it is likely that the same candidate set may be tested more than
 once.
 }
 
@@ -142,7 +143,7 @@ suboptimal result is improved.
 The \code{tune} and \code{finetune} packages currently parallelize over resamples.
 Specifying a parallel back-end will improve the generation of the initial
 set of sub-models (if any). Each iteration of the search are also run in
-parallel as long as there are 2 or more resamples.
+parallel if a parallel backend is registered.
 }
 }
 \examples{
@@ -185,7 +186,7 @@ autoplot(sa_search, metric = "roc_auc", type = "parameters") +
 # More iterations. `initial` can be any other tune_* object or an integer
 # (for new values).
 
-set.seed(20)
+set.seed(11)
 more_search <-
   cart_mod \%>\%
   tune_sim_anneal(Class ~ ., resamples = bt, iter = 10, initial = sa_search)

@@ -54,7 +54,8 @@ parameter combination.}
 
 \item{randomize}{Should the resamples be evaluated in a random order?  By
 default, the resamples are evaluated in a random order so the random number
-seed should be control prior to calling this method (to be reproducible).}
+seed should be control prior to calling this method (to be reproducible).
+For repeated cross-validation the randomization occurs within each repeat.}
 
 \item{pkgs}{An optional character string of R package names that should be
 loaded (by namespace) during parallel processing.}
@@ -68,7 +69,9 @@ class prediction is made, and specifies which level of the outcome is
 considered the "event".}
 
 \item{parallel_over}{A single string containing either \code{"resamples"} or
-\code{"everything"} describing how to use parallel processing.
+\code{"everything"} describing how to use parallel processing. Alternatively,
+\code{NULL} is allowed, which chooses between \code{"resamples"} and \code{"everything"}
+automatically.
 
 If \code{"resamples"}, then tuning will be performed in parallel over resamples
 alone. Within each resample, the preprocessor (i.e. recipe or formula) is
@@ -81,10 +84,12 @@ preprocessor and model tuning parameters for that specific resample. This
 will result in the preprocessor being re-processed multiple times, but
 can be faster if that processing is extremely fast.
 
-Note that this parameter has a different default (\code{"everything"}) than its
-counterpart in \code{\link[tune:control_grid]{tune::control_grid()}}. This is the most advantageous value
-for racing.}
+If \code{NULL}, chooses \code{"resamples"} if there are more than one resample,
+otherwise chooses \code{"everything"} to attempt to maximize core utilization.}
 }
 \description{
 Control aspects of the grid search racing process
+}
+\examples{
+control_race()
 }
