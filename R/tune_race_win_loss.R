@@ -61,7 +61,7 @@ tune_race_win_loss.model_spec <- function(object, preprocessor, resamples, ...,
 
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
     rlang::abort(paste("To tune a model spec, you must preprocess",
-                       "with a formula or recipe"))
+                       "with a formula, recipe, or variable specification"))
   }
 
   tune::empty_ellipses(...)
@@ -110,8 +110,7 @@ tune_race_win_loss_workflow <-
 
     B <- nrow(resamples)
     if (control$randomize) {
-      resamples <-
-        resamples %>% dplyr::arrange(runif(B))
+      resamples <- randomize_resamples(resamples)
     }
     resamples <- dplyr::mutate(resamples, .order = dplyr::row_number())
 

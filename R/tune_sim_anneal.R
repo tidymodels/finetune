@@ -210,7 +210,7 @@ tune_sim_anneal.model_spec <- function(object,
 
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
     rlang::abort(paste("To tune a model spec, you must preprocess",
-                       "with a formula or recipe"))
+                       "with a formula, recipe, or variable specification"))
   }
 
   tune::empty_ellipses(...)
@@ -445,6 +445,5 @@ tune_sim_anneal_workflow <-
 
 
 # TODO
-# - save_workflows and other attributes
 # - expand time limits
 # - fix sim_anneal as input

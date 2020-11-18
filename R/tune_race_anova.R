@@ -20,7 +20,7 @@
 #' @param ... Not currently used.
 #' @references
 #' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
-#' Models." \url{http://arxiv.org/abs/1405.6974.}
+#' Models." \url{https://arxiv.org/abs/1405.6974.}
 #' @details
 #' The technical details of this method are described in Kuhn (2014).
 #'
@@ -122,7 +122,7 @@ tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
 
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
     rlang::abort(paste("To tune a model spec, you must preprocess",
-                       "with a formula or recipe"))
+                       "with a formula, recipe, or variable specification"))
   }
 
   tune::empty_ellipses(...)
@@ -171,8 +171,7 @@ tune_race_anova_workflow <-
 
     B <- nrow(resamples)
     if (control$randomize) {
-      resamples <-
-        resamples %>% dplyr::arrange(runif(B))
+      resamples <- randomize_resamples(resamples)
     }
     resamples <- dplyr::mutate(resamples, .order = dplyr::row_number())
 

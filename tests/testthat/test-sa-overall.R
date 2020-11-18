@@ -1,46 +1,4 @@
-library(finetune)
-library(rsample)
-library(workflows)
-library(parsnip)
-library(dplyr)
-library(recipes)
-
-## -----------------------------------------------------------------------------
-
-data(cells, package = "modeldata")
-cells <- cells %>% dplyr::select(class, contains("ch_1"))
-set.seed(33)
-cell_folds <- vfold_cv(cells, v = 3)
-
-## -----------------------------------------------------------------------------
-
-knn_spec <-
-  nearest_neighbor(neighbors = tune(), weight_func = tune(), dist_power = tune()) %>%
-  set_mode("classification") %>%
-  set_engine("kknn")
-
-knn_rec <-
-  recipe(class ~ ., data = cells) %>%
-  step_normalize(all_predictors()) %>%
-  step_pca(all_predictors(), num_comp = tune())
-
-rec_wflow <-
-  cell_knn <-
-  workflow() %>%
-  add_model(knn_spec) %>%
-  add_recipe(knn_rec)
-
-f_wflow <-
-  cell_knn <-
-  workflow() %>%
-  add_model(knn_spec) %>%
-  add_formula(class ~ .)
-
-var_wflow <-
-  cell_knn <-
-  workflow() %>%
-  add_model(knn_spec) %>%
-  add_variables(class, everything())
+source(file.path(test_path(), "..", "helpers.R"))
 
 # ------------------------------------------------------------------------------
 

@@ -217,5 +217,5 @@ show_best(grid_anova, metric = "roc_auc", n = 2)
 }
 \references{
 Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
-Models." \url{http://arxiv.org/abs/1405.6974.}
+Models." \url{https://arxiv.org/abs/1405.6974.}
 }

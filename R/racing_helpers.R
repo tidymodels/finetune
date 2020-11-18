@@ -519,3 +519,22 @@ check_hidden_arg <- function(x, name, value) {
   }
   identical(x[[name]], value)
 }
+
+# ------------------------------------------------------------------------------
+
+randomize_resamples <- function(x) {
+  att <- attributes(x)
+  B <- nrow(x)
+  x$.rand <- runif(B)
+  reps <- attr(x, "repeats")
+  if (!is.null(reps) && reps > 1) {
+    x <- x %>% dplyr::group_by(id) %>% dplyr::arrange(.rand, .by_group = TRUE)
+  } else {
+    x <- x %>% dplyr::arrange(.rand)
+  }
+  x$.rand <- NULL
+  att$row.names  <- att$row.names
+  attributes(x) <- att
+  x
+}
+
