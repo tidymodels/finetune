@@ -15,6 +15,7 @@ Description: The ability to tune models is important. 'finetune' enhances the
  <arXiv:1405.6974> are included. An  iterative search method using generalized
  simulated annealing (Bohachevsky, Johnson and Stein, 1986)
  <doi:10.1080/00401706.1986.10488128> is also included.
+URL: https://github.com/tidymodels/finetune, https://finetune.tidymodels.org
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
