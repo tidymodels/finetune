@@ -54,32 +54,32 @@ sa_res <-
 #> 
 #> Optimizing roc_auc
 #> Initial best: 0.86480
-#>  1 ◯ accept suboptimal  roc_auc=0.85625  (+/-0.006354)
-#>  2 + better suboptimal  roc_auc=0.85896  (+/-0.006098)
-#>  3 ♥ new best           roc_auc=0.86716  (+/-0.005235)
-#>  4 ♥ new best           roc_auc=0.8739   (+/-0.004409)
-#>  5 ♥ new best           roc_auc=0.88295  (+/-0.00353)
-#>  6 ◯ accept suboptimal  roc_auc=0.87583  (+/-0.00413)
-#>  7 ◯ accept suboptimal  roc_auc=0.86858  (+/-0.005111)
-#>  8 + better suboptimal  roc_auc=0.86988  (+/-0.005051)
-#>  9 + better suboptimal  roc_auc=0.87918  (+/-0.003877)
-#> 10 ◯ accept suboptimal  roc_auc=0.87349  (+/-0.004475)
-#> 11 ◯ accept suboptimal  roc_auc=0.86836  (+/-0.005163)
-#> 12 ◯ accept suboptimal  roc_auc=0.85878  (+/-0.006142)
-#> 13 x restart from best  roc_auc=0.86732  (+/-0.005274)
-#> 14 ◯ accept suboptimal  roc_auc=0.88057  (+/-0.003712)
-#> 15 ◯ accept suboptimal  roc_auc=0.87135  (+/-0.004772)
-#> 16 ◯ accept suboptimal  roc_auc=0.86193  (+/-0.005737)
-#> 17 ◯ accept suboptimal  roc_auc=0.85101  (+/-0.006655)
-#> 18 ◯ accept suboptimal  roc_auc=0.84378  (+/-0.007069)
-#> 19 + better suboptimal  roc_auc=0.85134  (+/-0.006625)
-#> 20 ◯ accept suboptimal  roc_auc=0.84704  (+/-0.006863)
+#>  1 ♥ new best           roc_auc=0.87739  (+/-0.004113)
+#>  2 ◯ accept suboptimal  roc_auc=0.87315  (+/-0.004446)
+#>  3 ◯ accept suboptimal  roc_auc=0.86729  (+/-0.005237)
+#>  4 + better suboptimal  roc_auc=0.86747  (+/-0.005196)
+#>  5 + better suboptimal  roc_auc=0.87173  (+/-0.004765)
+#>  6 + better suboptimal  roc_auc=0.87337  (+/-0.004425)
+#>  7 ◯ accept suboptimal  roc_auc=0.87085  (+/-0.004774)
+#>  8 ◯ accept suboptimal  roc_auc=0.85972  (+/-0.006017)
+#>  9 x restart from best  roc_auc=0.85759  (+/-0.00626)
+#> 10 ♥ new best           roc_auc=0.87757  (+/-0.004086)
+#> 11 ◯ accept suboptimal  roc_auc=0.8704   (+/-0.005025)
+#> 12 ─ discard suboptimal roc_auc=0.85845  (+/-0.006172)
+#> 13 + better suboptimal  roc_auc=0.87247  (+/-0.004713)
+#> 14 ─ discard suboptimal roc_auc=0.86196  (+/-0.005814)
+#> 15 ♥ new best           roc_auc=0.8788   (+/-0.003924)
+#> 16 ─ discard suboptimal roc_auc=0.87121  (+/-0.004967)
+#> 17 ♥ new best           roc_auc=0.88255  (+/-0.003558)
+#> 18 ◯ accept suboptimal  roc_auc=0.88233  (+/-0.003613)
+#> 19 ◯ accept suboptimal  roc_auc=0.8761   (+/-0.004405)
+#> 20 + better suboptimal  roc_auc=0.88149  (+/-0.003718)
 show_best(sa_res, metric = "roc_auc", n = 2)
 #> # A tibble: 2 x 9
 #>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config
 #>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>  
-#> 1          0.132       0.000739 roc_auc binary     0.883    10 0.00353 Prepro…
-#> 2          0.0356      0.0286   roc_auc binary     0.881    10 0.00371 Prepro…
+#> 1           0.237       0.00661 roc_auc binary     0.883    10 0.00356 Iter17 
+#> 2           0.333       0.00903 roc_auc binary     0.882    10 0.00361 Iter18 
 #> # … with 1 more variable: .iter <int>
 ```
 
