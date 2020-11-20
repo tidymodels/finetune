@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://finetune.tidymodels.org/index.html</loc>
+  </url>
+  <url>
+    <loc>https://finetune.tidymodels.org/reference/control_race.html</loc>
+  </url>
+  <url>
+    <loc>https://finetune.tidymodels.org/reference/control_sim_anneal.html</loc>
+  </url>
+  <url>
+    <loc>https://finetune.tidymodels.org/reference/plot_race.html</loc>
+  </url>
+  <url>
+    <loc>https://finetune.tidymodels.org/reference/tune_race_anova.html</loc>
+  </url>
+  <url>
+    <loc>https://finetune.tidymodels.org/reference/tune_race_win_loss.html</loc>
+  </url>
+  <url>
+    <loc>https://finetune.tidymodels.org/reference/tune_sim_anneal.html</loc>
+  </url>
+</urlset>
