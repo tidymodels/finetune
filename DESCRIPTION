@@ -1,6 +1,6 @@
 Package: finetune
 Title: Additional Functions for Model Tuning
-Version: 0.0.0.9004
+Version: 0.0.1
 Authors@R: 
     c(person(given = "Max",
              family = "Kuhn",
