@@ -486,9 +486,13 @@ fit_anova <- function(x, dat, alpha) {
 
   f <- lmer_formula(x, rs_info)
 
-  mod <- try(lme4::lmer(f, data = dat), silent = TRUE)
+  suppressWarnings(
+    suppressMessages(
+      mod <- try(lme4::lmer(f, data = dat), silent = TRUE)
+    )
+  )
 
-  if (inherits(mod, "try-error")) {
+  if (inherits(mod, "try-error") || !isTRUE(mod@optinfo$conv$opt == 0)) {
     mod <- lm(.estimate ~ .config, data = dat)
   }
   point_est <-
@@ -499,6 +503,7 @@ fit_anova <- function(x, dat, alpha) {
     confint(mod, method = "Wald", level = 1 - alpha, quiet = TRUE) %>%
     mod2tibble() %>%
     setNames(c(".config", "lower", "upper"))
+
   dplyr::inner_join(point_est, interval_est, by = ".config")
 }
 
