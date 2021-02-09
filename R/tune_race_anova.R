@@ -181,6 +181,8 @@ tune_race_anova_workflow <-
   function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
            control = control_race()) {
 
+    rlang::check_installed("lme4")
+
     B <- nrow(resamples)
     if (control$randomize) {
       resamples <- randomize_resamples(resamples)
