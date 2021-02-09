@@ -439,7 +439,7 @@ tune_sim_anneal_workflow <-
       if (count_improve >= control$no_improve) {
         rlang::inform(
           cols$message$danger(
-            paste0("Stopping; no best in ", no_improve, " iterations.")
+            paste0("Stopping; no best in ", control$no_improve, " iterations.")
           )
         )
         break()
