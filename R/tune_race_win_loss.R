@@ -191,6 +191,8 @@ tune_race_win_loss_workflow <-
   function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
            control = control_race()) {
 
+    rlang::check_installed("BradleyTerry2")
+
     B <- nrow(resamples)
     if (control$randomize) {
       resamples <- randomize_resamples(resamples)
