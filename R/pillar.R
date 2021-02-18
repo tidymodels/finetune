@@ -1,5 +1,7 @@
 
 #' @export
+#' @keywords internal
+#' @rdname pillar-helpers
 obj_sum.tune_race <- function(x) {
   null_metrics <- purrr::map_lgl(x$.metrics, is.null)
   if (!all(null_metrics)) {
