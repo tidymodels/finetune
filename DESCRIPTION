@@ -49,5 +49,6 @@ Imports:
     utils,
     tidyr,
     tidyselect,
-    ggplot2
+    ggplot2,
+    vctrs
 Config/testthat/edition: 3
