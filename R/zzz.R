@@ -19,4 +19,9 @@ utils::globalVariables(
   )
 )
 
-
+.onLoad <- function(libname, pkgname) {
+  if (newer_tibble()) {
+    vctrs::s3_register("tibble::obj_sum",  "tune_race")
+    vctrs::s3_register("tibble::size_sum", "tune_race")
+  }
+}
