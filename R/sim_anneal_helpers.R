@@ -95,8 +95,10 @@ random_integer_neighbor_calc <- function(current, pset, prob, change) {
       smol_range <- floor(prm_rng/10) + 1
       val_diff <- abs(current[[i]] - pool)
       pool <- pool[val_diff <= smol_range  & val_diff > 0]
-      if(length(pool) > 0) {
+      if(length(pool) > 1) {
         current[[i]] <- sample(pool, 1)
+      } else if (length(pool) == 1) {
+        current[[i]] <- pool
       }
     }
   }
