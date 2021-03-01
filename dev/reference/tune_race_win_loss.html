@@ -8,6 +8,13 @@
 
 <title>Efficient grid search via racing with win/loss statistics — tune_race_win_loss • finetune</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -51,6 +58,7 @@ combinations that are unlikely to be the best results using a statistical
 model. For each pairwise combinations of tuning parameters, win/loss
 statistics are calculated and a logistic regression model is used to measure
 how likely each combination is to win overall." />
+<meta property="og:image" content="https://finetune.tidymodels.org/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -285,15 +293,15 @@ Models." <a href='https://arxiv.org/abs/1405.6974'>https://arxiv.org/abs/1405.69
 <span class='va'>grid_wl</span> <span class='op'>&lt;-</span>
   <span class='va'>rda_spec</span> <span class='op'>%&gt;%</span>
     <span class='fu'>tune_race_win_loss</span><span class='op'>(</span><span class='va'>Class</span> <span class='op'>~</span> <span class='va'>.</span>, resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='fl'>10</span>, control <span class='op'>=</span> <span class='va'>ctrl</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #000000;'>ℹ Racing will maximize the roc_auc metric.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Resamples are analyzed in a random order.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap05:  1 eliminated;  9 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap07:  1 eliminated;  8 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap10:  1 eliminated;  7 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap01:  1 eliminated;  6 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap08:  1 eliminated;  5 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap03:  1 eliminated;  4 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap09:  1 eliminated;  3 candidates remain.</span><span></span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #000000;'>ℹ Racing will maximize the roc_auc metric.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Resamples are analyzed in a random order.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap09:  1 eliminated;  9 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap08:  1 eliminated;  8 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap01:  1 eliminated;  7 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap07:  1 eliminated;  6 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap10:  1 eliminated;  5 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap04:  1 eliminated;  4 candidates remain.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap03:  1 eliminated;  3 candidates remain.</span><span></span></div><div class='input'>
 <span class='co'># Shows only the fully resampled parameters</span>
 <span class='fu'>show_best</span><span class='op'>(</span><span class='va'>grid_wl</span>, metric <span class='op'>=</span> <span class='st'>"roc_auc"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 3 x 8</span><span>
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 3 x 8</span><span>
 #&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
-#&gt;             </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>         </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #555555;'>1</span><span>          0.069</span><span style='text-decoration: underline;'>1</span><span>        0.043</span><span style='text-decoration: underline;'>7</span><span> roc_auc binary     0.886    10 0.005</span><span style='text-decoration: underline;'>13</span><span> Preproce…
-#&gt; </span><span style='color: #555555;'>2</span><span>          0.392         0.154  roc_auc binary     0.877    10 0.004</span><span style='text-decoration: underline;'>96</span><span> Preproce…
-#&gt; </span><span style='color: #555555;'>3</span><span>          0.555         0.293  roc_auc binary     0.863    10 0.005</span><span style='text-decoration: underline;'>24</span><span> Preproce…</div><div class='input'>
+#&gt;             </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>           0.952        0.064</span><span style='text-decoration: underline;'>2</span><span> roc_auc binary     0.888    10 0.003</span><span style='text-decoration: underline;'>37</span><span> Preproce…
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>           0.886        0.162  roc_auc binary     0.882    10 0.004</span><span style='text-decoration: underline;'>01</span><span> Preproce…
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>           0.585        0.227  roc_auc binary     0.877    10 0.004</span><span style='text-decoration: underline;'>43</span><span> Preproce…</div><div class='input'>
 <span class='fu'><a href='plot_race.html'>plot_race</a></span><span class='op'>(</span><span class='va'>grid_wl</span><span class='op'>)</span>
 </div><div class='img'><img src='tune_race_win_loss-1.png' alt='' width='768' height='552' /></div><div class='input'><span class='co'># }</span>
 </div></span></pre>

@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Additional Functions for Model Tuning • finetune</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="tidyverse.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -20,6 +26,7 @@
  &lt;arXiv:1405.6974&gt; are included. An  iterative search method using generalized
  simulated annealing (Bohachevsky, Johnson and Stein, 1986)
  &lt;doi:10.1080/00401706.1986.10488128&gt; is also included.">
+<meta property="og:image" content="https://finetune.tidymodels.org/logo.png">
 <meta name="twitter:card" content="summary">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -81,9 +88,10 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="finetune" class="section level1">
+<div id="finetune-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#finetune" class="anchor"></a>finetune</h1></div>
+<a href="#finetune-" class="anchor"></a>finetune <a href="https://finetune.tidymodels.org"><img src="reference/figures/logo.png" align="right" height="138"></a>
+</h1></div>
 <!-- badges: start -->
 
 <p><code>finetune</code> contains some extra functions for model tuning that extend what is currently in the <code>tune</code> package.</p>
@@ -122,32 +130,32 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Optimizing roc_auc</span>
 <span class="co">#&gt; Initial best: 0.86480</span>
-<span class="co">#&gt;  1 ♥ new best           roc_auc=0.87739  (+/-0.004113)</span>
-<span class="co">#&gt;  2 ◯ accept suboptimal  roc_auc=0.87315  (+/-0.004446)</span>
-<span class="co">#&gt;  3 ◯ accept suboptimal  roc_auc=0.86729  (+/-0.005237)</span>
-<span class="co">#&gt;  4 + better suboptimal  roc_auc=0.86747  (+/-0.005196)</span>
-<span class="co">#&gt;  5 + better suboptimal  roc_auc=0.87173  (+/-0.004765)</span>
-<span class="co">#&gt;  6 + better suboptimal  roc_auc=0.87337  (+/-0.004425)</span>
-<span class="co">#&gt;  7 ◯ accept suboptimal  roc_auc=0.87085  (+/-0.004774)</span>
-<span class="co">#&gt;  8 ◯ accept suboptimal  roc_auc=0.85972  (+/-0.006017)</span>
-<span class="co">#&gt;  9 x restart from best  roc_auc=0.85759  (+/-0.00626)</span>
-<span class="co">#&gt; 10 ♥ new best           roc_auc=0.87757  (+/-0.004086)</span>
-<span class="co">#&gt; 11 ◯ accept suboptimal  roc_auc=0.8704   (+/-0.005025)</span>
-<span class="co">#&gt; 12 ─ discard suboptimal roc_auc=0.85845  (+/-0.006172)</span>
-<span class="co">#&gt; 13 + better suboptimal  roc_auc=0.87247  (+/-0.004713)</span>
-<span class="co">#&gt; 14 ─ discard suboptimal roc_auc=0.86196  (+/-0.005814)</span>
-<span class="co">#&gt; 15 ♥ new best           roc_auc=0.8788   (+/-0.003924)</span>
-<span class="co">#&gt; 16 ─ discard suboptimal roc_auc=0.87121  (+/-0.004967)</span>
-<span class="co">#&gt; 17 ♥ new best           roc_auc=0.88255  (+/-0.003558)</span>
-<span class="co">#&gt; 18 ◯ accept suboptimal  roc_auc=0.88233  (+/-0.003613)</span>
-<span class="co">#&gt; 19 ◯ accept suboptimal  roc_auc=0.8761   (+/-0.004405)</span>
-<span class="co">#&gt; 20 + better suboptimal  roc_auc=0.88149  (+/-0.003718)</span>
+<span class="co">#&gt;  1 ◯ accept suboptimal  roc_auc=0.86254  (+/-0.005754)</span>
+<span class="co">#&gt;  2 ◯ accept suboptimal  roc_auc=0.86119  (+/-0.00582)</span>
+<span class="co">#&gt;  3 ─ discard suboptimal roc_auc=0.85296  (+/-0.006486)</span>
+<span class="co">#&gt;  4 ◯ accept suboptimal  roc_auc=0.86043  (+/-0.005998)</span>
+<span class="co">#&gt;  5 ♥ new best           roc_auc=0.87226  (+/-0.004803)</span>
+<span class="co">#&gt;  6 ♥ new best           roc_auc=0.88229  (+/-0.003629)</span>
+<span class="co">#&gt;  7 ◯ accept suboptimal  roc_auc=0.87871  (+/-0.004048)</span>
+<span class="co">#&gt;  8 ◯ accept suboptimal  roc_auc=0.87115  (+/-0.005025)</span>
+<span class="co">#&gt;  9 ◯ accept suboptimal  roc_auc=0.86354  (+/-0.005684)</span>
+<span class="co">#&gt; 10 + better suboptimal  roc_auc=0.86984  (+/-0.005159)</span>
+<span class="co">#&gt; 11 + better suboptimal  roc_auc=0.88031  (+/-0.003984)</span>
+<span class="co">#&gt; 12 ◯ accept suboptimal  roc_auc=0.87273  (+/-0.004879)</span>
+<span class="co">#&gt; 13 ◯ accept suboptimal  roc_auc=0.86086  (+/-0.005867)</span>
+<span class="co">#&gt; 14 x restart from best  roc_auc=0.84515  (+/-0.006771)</span>
+<span class="co">#&gt; 15 ◯ accept suboptimal  roc_auc=0.88183  (+/-0.003638)</span>
+<span class="co">#&gt; 16 ♥ new best           roc_auc=0.88233  (+/-0.003587)</span>
+<span class="co">#&gt; 17 ◯ accept suboptimal  roc_auc=0.87944  (+/-0.003864)</span>
+<span class="co">#&gt; 18 ─ discard suboptimal roc_auc=0.86931  (+/-0.00514)</span>
+<span class="co">#&gt; 19 + better suboptimal  roc_auc=0.88197  (+/-0.003607)</span>
+<span class="co">#&gt; 20 ─ discard suboptimal roc_auc=0.87388  (+/-0.004439)</span>
 <span class="fu">show_best</span><span class="op">(</span><span class="va">sa_res</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 2 x 9</span>
 <span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config</span>
 <span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; 1           0.237       0.00661 roc_auc binary     0.883    10 0.00356 Iter17 </span>
-<span class="co">#&gt; 2           0.333       0.00903 roc_auc binary     0.882    10 0.00361 Iter18 </span>
+<span class="co">#&gt; 1           0.287       0.00861 roc_auc binary     0.882    10 0.00359 Iter16 </span>
+<span class="co">#&gt; 2           0.440       0.0109  roc_auc binary     0.882    10 0.00363 Iter6  </span>
 <span class="co">#&gt; # … with 1 more variable: .iter &lt;int&gt;</span></code></pre></div>
 <p>The second set of methods are for “racing”. We start off by doing a small set of resamples for all of the grid points, then statistically testing to see which ones should be dropped or investigated more. The two methods here are based on those should in <a href="https://arxiv.org/abs/1405.6974" class="external-link">Kuhn (2014)</a>.</p>
 <p>For example, using an ANOVA-type analysis to filter out parameter combinations:</p>
@@ -166,15 +174,15 @@
   <span class="fu"><a href="reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
 <span class="co">#&gt; ℹ Racing will maximize the roc_auc metric.</span>
 <span class="co">#&gt; ℹ Resamples are analyzed in a random order.</span>
-<span class="co">#&gt; ℹ Bootstrap10: 14 eliminated;  6 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap04:  2 eliminated;  4 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap03: All but one parameter combination were eliminated.</span>
+<span class="co">#&gt; ℹ Bootstrap10: 18 eliminated;  2 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap07:  0 eliminated;  2 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap05: All but one parameter combination were eliminated.</span>
 
 <span class="fu">show_best</span><span class="op">(</span><span class="va">grid_anova</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 1 x 8</span>
 <span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
 <span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span>
-<span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span></code></pre></div>
+<span class="co">#&gt; 1           0.132        0.0136 roc_auc binary     0.882    10 0.00363 Preproce…</span></code></pre></div>
 <p><code><a href="reference/tune_race_win_loss.html">tune_race_win_loss()</a></code> can also be used. It treats the tuning parameters as sports teams in a tournament and computed win/loss statistics.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>
@@ -183,20 +191,20 @@
   <span class="fu"><a href="reference/tune_race_win_loss.html">tune_race_win_loss</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
 <span class="co">#&gt; ℹ Racing will maximize the roc_auc metric.</span>
 <span class="co">#&gt; ℹ Resamples are analyzed in a random order.</span>
-<span class="co">#&gt; ℹ Bootstrap10:  3 eliminated; 17 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap04:  2 eliminated; 15 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap03:  2 eliminated; 13 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap01:  1 eliminated; 12 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap07:  1 eliminated; 11 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap05:  1 eliminated; 10 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap08:  1 eliminated;  9 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap10:  4 eliminated; 16 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap07:  2 eliminated; 14 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap05:  1 eliminated; 13 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap03:  2 eliminated; 11 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap06:  1 eliminated; 10 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap09:  1 eliminated;  9 candidates remain.</span>
+<span class="co">#&gt; ℹ Bootstrap01:  1 eliminated;  8 candidates remain.</span>
 
 <span class="fu">show_best</span><span class="op">(</span><span class="va">grid_win_loss</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 2 x 8</span>
 <span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
 <span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span>
-<span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span>
-<span class="co">#&gt; 2           0.119        0.0470 roc_auc binary     0.879    10 0.00387 Preproce…</span></code></pre></div>
+<span class="co">#&gt; 1           0.132        0.0136 roc_auc binary     0.882    10 0.00363 Preproce…</span>
+<span class="co">#&gt; 2           0.975        0.0491 roc_auc binary     0.879    10 0.00422 Preproce…</span></code></pre></div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-of-conduct" class="anchor"></a>Code of Conduct</h2>
@@ -235,7 +243,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Max Kuhn <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2402-136X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html">More on authors...</a></li>
 </ul>
 </div>
 
