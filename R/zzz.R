@@ -4,6 +4,7 @@
 #' @importFrom tibble tibble
 #' @importFrom dplyr %>% distinct
 #' @importFrom utils globalVariables
+#' @importFrom yardstick metric_set
 #' @import tune
 NULL
 
