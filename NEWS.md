@@ -6,6 +6,8 @@
 
 * Fixed bug in `random_integer_neighbor_calc` to keep values inside range (#10)
 
+* `tune_sim_anneal()` now retains a finalized parameter set and replaces any exisitng parameter set that was not finalized (#14)
+
 # finetune 0.0.1
 
 * First CRAN release
