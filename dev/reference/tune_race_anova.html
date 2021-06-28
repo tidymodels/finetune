@@ -151,7 +151,7 @@ combinations that are unlikely to be the best results using a repeated
 measure ANOVA model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tune_race_anova</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>tune_race_anova</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for model_spec</span>
 <span class='fu'>tune_race_anova</span><span class='op'>(</span>
@@ -174,7 +174,7 @@ measure ANOVA model.</p>
   grid <span class='op'>=</span> <span class='fl'>10</span>,
   metrics <span class='op'>=</span> <span class='cn'>NULL</span>,
   control <span class='op'>=</span> <span class='fu'><a href='control_race.html'>control_race</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -243,10 +243,10 @@ applied to the ANOVA results as well as other relevant arguments.</p>
 <p>There is benefit to using racing methods in conjunction with parallel
 processing. The following section shows a benchmark of results for one
 dataset and model.</p>
-<h3 class='hasAnchor' id='benchmarking-results'><a class='anchor' href='#benchmarking-results'></a>Benchmarking results</h3>
+<h3 class='hasAnchor' id='benchmarking-results'><a class='anchor' aria-hidden='true' href='#benchmarking-results'></a>Benchmarking results</h3>
 
 
-<p>To demonstrate, we use a SVM model with the <code>kernlab</code> package.<div class="r"></p><pre><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>kernlab</span><span class='op'>)</span>
+<p>To demonstrate, we use a SVM model with the <code>kernlab</code> package.<div class="r"></p><pre class='sourceCode r'><code><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>kernlab</span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>tidymodels</span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/tidymodels/finetune'>finetune</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>doParallel</span><span class='op'>)</span>
@@ -254,87 +254,87 @@ dataset and model.</p>
 <span class='co'>## -----------------------------------------------------------------------------</span>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>cells</span>, package <span class='op'>=</span> <span class='st'>"modeldata"</span><span class='op'>)</span>
-<span class='va'>cells</span> <span class='op'>&lt;-</span> <span class='va'>cells</span> <span class='op'>%&gt;%</span> <span class='fu'>select</span><span class='op'>(</span><span class='op'>-</span><span class='va'>case</span><span class='op'>)</span>
+<span class='va'>cells</span> <span class='op'>&lt;-</span> <span class='va'>cells</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'>select</span><span class='op'>(</span><span class='op'>-</span><span class='va'>case</span><span class='op'>)</span>
 
 <span class='co'>## -----------------------------------------------------------------------------</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>6376</span><span class='op'>)</span>
 <span class='va'>rs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rsample.tidymodels.org/reference/bootstraps.html'>bootstraps</a></span><span class='op'>(</span><span class='va'>cells</span>, times <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span>
-</pre><p></div></p>
-<p>We’ll only tune the model parameters (i.e., not recipe tuning):<div class="r"></p><pre><span class='co'>## -----------------------------------------------------------------------------</span>
+</code></pre><p></div></p>
+<p>We’ll only tune the model parameters (i.e., not recipe tuning):<div class="r"></p><pre class='sourceCode r'><code><span class='co'>## -----------------------------------------------------------------------------</span>
 
 <span class='va'>svm_spec</span> <span class='op'>&lt;-</span>
-  <span class='fu'><a href='https://parsnip.tidymodels.org/reference/svm_rbf.html'>svm_rbf</a></span><span class='op'>(</span>cost <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span>, rbf_sigma <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://parsnip.tidymodels.org/reference/set_engine.html'>set_engine</a></span><span class='op'>(</span><span class='st'>"kernlab"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://parsnip.tidymodels.org/reference/svm_rbf.html'>svm_rbf</a></span><span class='op'>(</span>cost <span class='op'>=</span> <span class='fu'><a href='https://tune.tidymodels.org/reference/tune.html'>tune</a></span><span class='op'>(</span><span class='op'>)</span>, rbf_sigma <span class='op'>=</span> <span class='fu'><a href='https://tune.tidymodels.org/reference/tune.html'>tune</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://parsnip.tidymodels.org/reference/set_engine.html'>set_engine</a></span><span class='op'>(</span><span class='st'>"kernlab"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
   <span class='fu'><a href='https://parsnip.tidymodels.org/reference/set_args.html'>set_mode</a></span><span class='op'>(</span><span class='st'>"classification"</span><span class='op'>)</span>
 
 <span class='va'>svm_rec</span> <span class='op'>&lt;-</span>
-  <span class='fu'>recipe</span><span class='op'>(</span><span class='va'>class</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>cells</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>step_YeoJohnson</span><span class='op'>(</span><span class='fu'>all_predictors</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>recipe</span><span class='op'>(</span><span class='va'>class</span> <span class='op'>~</span> <span class='va'>.</span>, data <span class='op'>=</span> <span class='va'>cells</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+  <span class='fu'>step_YeoJohnson</span><span class='op'>(</span><span class='fu'>all_predictors</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
   <span class='fu'>step_normalize</span><span class='op'>(</span><span class='fu'>all_predictors</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='va'>svm_wflow</span> <span class='op'>&lt;-</span>
-  <span class='fu'>workflow</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>add_model</span><span class='op'>(</span><span class='va'>svm_spec</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>workflow</span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+  <span class='fu'>add_model</span><span class='op'>(</span><span class='va'>svm_spec</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
   <span class='fu'>add_recipe</span><span class='op'>(</span><span class='va'>svm_rec</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>svm_grid</span> <span class='op'>&lt;-</span>
-  <span class='va'>svm_spec</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dials.tidymodels.org/reference/parameters.html'>parameters</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='va'>svm_spec</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
+  <span class='fu'><a href='https://dials.tidymodels.org/reference/parameters.html'>parameters</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span>
   <span class='fu'><a href='https://dials.tidymodels.org/reference/grid_max_entropy.html'>grid_latin_hypercube</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span>
-</pre><p></div></p>
+</code></pre><p></div></p>
 <p>We’ll get the times for grid search and ANOVA racing with and without
-parallel processing:<div class="r"></p><pre><span class='co'>## -----------------------------------------------------------------------------</span>
+parallel processing:<div class="r"></p><pre class='sourceCode r'><code><span class='co'>## -----------------------------------------------------------------------------</span>
 <span class='co'>## Regular grid search</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='op'>{</span>
   <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
-  <span class='va'>svm_wflow</span> <span class='op'>%&gt;%</span> <span class='fu'>tune_grid</span><span class='op'>(</span>resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='va'>svm_grid</span><span class='op'>)</span>
+  <span class='va'>svm_wflow</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://tune.tidymodels.org/reference/tune_grid.html'>tune_grid</a></span><span class='op'>(</span>resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='va'>svm_grid</span><span class='op'>)</span>
 <span class='op'>}</span><span class='op'>)</span>
-</pre><p></div></p><pre><span class='co'>##    user  system elapsed </span>
+</code></pre><p></div></p><pre class='sourceCode r'><code><span class='co'>##    user  system elapsed </span>
 <span class='co'>## 741.660  19.654 761.357 </span>
-</pre><p><div class="r"></p><pre><span class='co'>## -----------------------------------------------------------------------------</span>
+</code></pre><p><div class="r"></p><pre class='sourceCode r'><code><span class='co'>## -----------------------------------------------------------------------------</span>
 <span class='co'>## With racing</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='op'>{</span>
   <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
-  <span class='va'>svm_wflow</span> <span class='op'>%&gt;%</span> <span class='fu'>tune_race_anova</span><span class='op'>(</span>resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='va'>svm_grid</span><span class='op'>)</span>
+  <span class='va'>svm_wflow</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'>tune_race_anova</span><span class='op'>(</span>resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='va'>svm_grid</span><span class='op'>)</span>
 <span class='op'>}</span><span class='op'>)</span>
-</pre><p></div></p><pre><span class='co'>##    user  system elapsed </span>
+</code></pre><p></div></p><pre class='sourceCode r'><code><span class='co'>##    user  system elapsed </span>
 <span class='co'>## 133.143   3.675 136.822 </span>
-</pre>
+</code></pre>
 
-<p>Speed-up of 5.56-fold for racing.<div class="r"></p><pre><span class='co'>## -----------------------------------------------------------------------------</span>
+<p>Speed-up of 5.56-fold for racing.<div class="r"></p><pre class='sourceCode r'><code><span class='co'>## -----------------------------------------------------------------------------</span>
 <span class='co'>## Parallel processing setup</span>
 
 <span class='va'>cores</span> <span class='op'>&lt;-</span> <span class='fu'>parallel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span><span class='op'>(</span>logical <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='va'>cores</span>
-</pre><p></div></p><pre><span class='co'>## [1] 10</span>
-</pre><p><div class="r"></p><pre><span class='va'>cl</span> <span class='op'>&lt;-</span> <span class='fu'>makePSOCKcluster</span><span class='op'>(</span><span class='va'>cores</span><span class='op'>)</span>
+</code></pre><p></div></p><pre class='sourceCode r'><code><span class='co'>## [1] 10</span>
+</code></pre><p><div class="r"></p><pre class='sourceCode r'><code><span class='va'>cl</span> <span class='op'>&lt;-</span> <span class='fu'>makePSOCKcluster</span><span class='op'>(</span><span class='va'>cores</span><span class='op'>)</span>
 <span class='fu'>registerDoParallel</span><span class='op'>(</span><span class='va'>cl</span><span class='op'>)</span>
-</pre><p></div><div class="r"></p><pre><span class='co'>## -----------------------------------------------------------------------------</span>
+</code></pre><p></div><div class="r"></p><pre class='sourceCode r'><code><span class='co'>## -----------------------------------------------------------------------------</span>
 <span class='co'>## Parallel grid search</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='op'>{</span>
   <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
-  <span class='va'>svm_wflow</span> <span class='op'>%&gt;%</span> <span class='fu'>tune_grid</span><span class='op'>(</span>resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='va'>svm_grid</span><span class='op'>)</span>
+  <span class='va'>svm_wflow</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='https://tune.tidymodels.org/reference/tune_grid.html'>tune_grid</a></span><span class='op'>(</span>resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='va'>svm_grid</span><span class='op'>)</span>
 <span class='op'>}</span><span class='op'>)</span>
-</pre><p></div></p><pre><span class='co'>##  user  system elapsed </span>
+</code></pre><p></div></p><pre class='sourceCode r'><code><span class='co'>##  user  system elapsed </span>
 <span class='co'>## 1.112   0.190 126.650 </span>
-</pre>
+</code></pre>
 
 <p>Parallel processing with grid search was 6.01-fold faster than
-sequential grid search.<div class="r"></p><pre><span class='co'>## -----------------------------------------------------------------------------</span>
+sequential grid search.<div class="r"></p><pre class='sourceCode r'><code><span class='co'>## -----------------------------------------------------------------------------</span>
 <span class='co'>## Parallel racing</span>
 
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='op'>{</span>
   <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
-  <span class='va'>svm_wflow</span> <span class='op'>%&gt;%</span> <span class='fu'>tune_race_anova</span><span class='op'>(</span>resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='va'>svm_grid</span><span class='op'>)</span>
+  <span class='va'>svm_wflow</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'>tune_race_anova</span><span class='op'>(</span>resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='va'>svm_grid</span><span class='op'>)</span>
 <span class='op'>}</span><span class='op'>)</span>
-</pre><p></div></p><pre><span class='co'>##  user  system elapsed </span>
+</code></pre><p></div></p><pre class='sourceCode r'><code><span class='co'>##  user  system elapsed </span>
 <span class='co'>## 1.908   0.261  21.442 </span>
-</pre>
+</code></pre>
 
 <p>Parallel processing with racing was 35.51-fold faster than sequential
 grid search.</p>
@@ -351,46 +351,54 @@ Models." <a href='https://arxiv.org/abs/1405.6974'>https://arxiv.org/abs/1405.69
     <div class='dont-index'><p><code><a href='https://tune.tidymodels.org/reference/tune_grid.html'>tune::tune_grid()</a></code>, <code><a href='control_race.html'>control_race()</a></code>, <code><a href='tune_race_win_loss.html'>tune_race_win_loss()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://parsnip.tidymodels.org'>parsnip</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rsample.tidymodels.org'>rsample</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://discrim.tidymodels.org'>discrim</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dials.tidymodels.org'>dials</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: scales</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dials’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:discrim’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    smoothness</span></div><div class='input'>
-<span class='co'>## -----------------------------------------------------------------------------</span>
-
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>two_class_dat</span>, package <span class='op'>=</span> <span class='st'>"modeldata"</span><span class='op'>)</span>
-
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>6376</span><span class='op'>)</span>
-<span class='va'>rs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rsample.tidymodels.org/reference/bootstraps.html'>bootstraps</a></span><span class='op'>(</span><span class='va'>two_class_dat</span>, times <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-
-<span class='co'>## -----------------------------------------------------------------------------</span>
-
-<span class='co'># optimize an regularized discriminant analysis model</span>
-<span class='va'>rda_spec</span> <span class='op'>&lt;-</span>
-  <span class='fu'><a href='https://discrim.tidymodels.org/reference/discrim_regularized.html'>discrim_regularized</a></span><span class='op'>(</span>frac_common_cov <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span>, frac_identity <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://parsnip.tidymodels.org/reference/set_engine.html'>set_engine</a></span><span class='op'>(</span><span class='st'>"klaR"</span><span class='op'>)</span>
-
-<span class='co'>## -----------------------------------------------------------------------------</span>
-
-<span class='va'>ctrl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='control_race.html'>control_race</a></span><span class='op'>(</span>verbose_elim <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>11</span><span class='op'>)</span>
-<span class='va'>grid_anova</span> <span class='op'>&lt;-</span>
-  <span class='va'>rda_spec</span> <span class='op'>%&gt;%</span>
-    <span class='fu'>tune_race_anova</span><span class='op'>(</span><span class='va'>Class</span> <span class='op'>~</span> <span class='va'>.</span>, resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='fl'>10</span>, control <span class='op'>=</span> <span class='va'>ctrl</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #000000;'>ℹ Racing will maximize the roc_auc metric.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Resamples are analyzed in a random order.</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #000000;'>ℹ Bootstrap05: All but one parameter combination were eliminated.</span><span></span></div><div class='input'>
-<span class='co'># Shows only the fully resampled parameters</span>
-<span class='fu'>show_best</span><span class='op'>(</span><span class='va'>grid_anova</span>, metric <span class='op'>=</span> <span class='st'>"roc_auc"</span>, n <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 1 x 8</span><span>
-#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
-#&gt;             </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>          0.069</span><span style='text-decoration: underline;'>1</span><span>        0.043</span><span style='text-decoration: underline;'>7</span><span> roc_auc binary     0.886    10 0.005</span><span style='text-decoration: underline;'>13</span><span> Preproce…</div><div class='input'>
-<span class='fu'><a href='plot_race.html'>plot_race</a></span><span class='op'>(</span><span class='va'>grid_anova</span><span class='op'>)</span>
-</div><div class='img'><img src='tune_race_anova-1.png' alt='' width='768' height='552' /></div><div class='input'><span class='co'># }</span>
-</div></span></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://parsnip.tidymodels.org'>parsnip</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rsample.tidymodels.org'>rsample</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://discrim.tidymodels.org'>discrim</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dials.tidymodels.org'>dials</a></span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Loading required package: scales</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Attaching package: ‘dials’</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> The following object is masked from ‘package:discrim’:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>     smoothness</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## -----------------------------------------------------------------------------</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>two_class_dat</span>, package <span class='op'>=</span> <span class='st'>"modeldata"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>6376</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>rs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rsample.tidymodels.org/reference/bootstraps.html'>bootstraps</a></span><span class='op'>(</span><span class='va'>two_class_dat</span>, times <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## -----------------------------------------------------------------------------</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># optimize an regularized discriminant analysis model</span></span>
+<span class='r-in'><span class='va'>rda_spec</span> <span class='op'>&lt;-</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://discrim.tidymodels.org/reference/discrim_regularized.html'>discrim_regularized</a></span><span class='op'>(</span>frac_common_cov <span class='op'>=</span> <span class='fu'><a href='https://tune.tidymodels.org/reference/tune.html'>tune</a></span><span class='op'>(</span><span class='op'>)</span>, frac_identity <span class='op'>=</span> <span class='fu'><a href='https://tune.tidymodels.org/reference/tune.html'>tune</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://parsnip.tidymodels.org/reference/set_engine.html'>set_engine</a></span><span class='op'>(</span><span class='st'>"klaR"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## -----------------------------------------------------------------------------</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>ctrl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='control_race.html'>control_race</a></span><span class='op'>(</span>verbose_elim <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>11</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>grid_anova</span> <span class='op'>&lt;-</span></span>
+<span class='r-in'>  <span class='va'>rda_spec</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>    <span class='fu'>tune_race_anova</span><span class='op'>(</span><span class='va'>Class</span> <span class='op'>~</span> <span class='va'>.</span>, resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='fl'>10</span>, control <span class='op'>=</span> <span class='va'>ctrl</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Racing will maximize the roc_auc metric.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Resamples are analyzed in a random order.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap05: All but one parameter combination were eliminated.</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Shows only the fully resampled parameters</span></span>
+<span class='r-in'><span class='fu'><a href='https://tune.tidymodels.org/reference/show_best.html'>show_best</a></span><span class='op'>(</span><span class='va'>grid_anova</span>, metric <span class='op'>=</span> <span class='st'>"roc_auc"</span>, n <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 x 8</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>             <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>         <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span>          0.069<span style='text-decoration: underline;'>1</span>        0.043<span style='text-decoration: underline;'>7</span> roc_auc binary     0.886    10 0.005<span style='text-decoration: underline;'>13</span> Preproce…</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='plot_race.html'>plot_race</a></span><span class='op'>(</span><span class='va'>grid_anova</span><span class='op'>)</span></span>
+<span class='r-plt'><img src='tune_race_anova-1.png' alt='' width='768' height='552' /></span>
+<span class='r-in'><span class='co'># }</span></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

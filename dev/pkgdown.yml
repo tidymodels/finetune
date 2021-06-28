@@ -1,8 +1,8 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1.9000
-pkgdown_sha: 9c95f00d2505ddd83c4722e019202370715d3a3d
+pkgdown: 1.6.1.9001
+pkgdown_sha: 51268b0d9cb0588d7a6404a2b8ef4ee19c435e89
 articles: {}
-last_built: 2021-03-05T15:54Z
+last_built: 2021-06-28T22:25Z
 urls:
   reference: https://finetune.tidymodels.org/reference
   article: https://finetune.tidymodels.org/articles
