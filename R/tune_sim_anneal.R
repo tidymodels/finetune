@@ -278,6 +278,7 @@ tune_sim_anneal_workflow <-
     control_init <- control
     control_init$save_workflow <- TRUE
     initial <- tune::check_initial(initial, param_info, object, resamples, metrics, control_init)
+    param_info <- tune::.get_tune_parameters(initial)
 
     y_names <- get_outcome_names(object, resamples)
     # For the above, make changes to tune to get workflow from initial

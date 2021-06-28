@@ -141,6 +141,7 @@ test_parameters_bt <- function(x, alpha =  0.05) {
   season_schedule <- make_config_pairs(analysis_data)
   # Eliminate pairs with all ties
   season_data <- score_season(season_schedule, analysis_data, maximize)
+
   best_team <- levels(season_data$scoring$player_1)[1]
 
   suppressWarnings(
