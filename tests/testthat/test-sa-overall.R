@@ -120,6 +120,6 @@ test_that("unfinalized parameters", {
     rf_res_finetune <- wf_rf %>%
       tune_sim_anneal(resamples = bt, initial = rf_res)
   },
-  regex = FALSE
+  regex = NA
   )
 })
