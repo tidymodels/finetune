@@ -56,6 +56,7 @@ test_that('variable interface', {
 
 test_that('one player is really bad', {
   skip_on_cran()
+  skip_if_not_installed("tune", "0.1.5.9001")
   library(workflows)
   library(rsample)
   library(parsnip)
@@ -92,7 +93,7 @@ test_that('one player is really bad', {
       resamples = df_folds,
       metrics = metric_set(roc_auc),
       grid = grid,
-      control =
+      control = ctrl
     )
   },
   regex = NA,
