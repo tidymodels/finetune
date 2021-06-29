@@ -142,6 +142,8 @@ test_parameters_bt <- function(x, alpha =  0.05) {
   # Eliminate pairs with all ties
   season_data <- score_season(season_schedule, analysis_data, maximize)
 
+  best_team <- levels(season_data$scoring$player_1)[1]
+
   # Cases, esp with 2 players, where one player doesn't lose any games
   if (nrow(season_data$scoring) == 0) {
     return(mercy_rule(season_data, key))
