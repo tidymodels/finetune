@@ -141,7 +141,8 @@
 <ul><li><p>A check was added to make sure that <code>lme4</code> or <code>BradleyTerry2</code> are installed (<a href='https://github.com/tidymodels/finetune/issues/8'>#8</a>)</p></li>
 <li><p>Added <code>pillar</code> methods for formatting <code>tune</code> objects in list columns.</p></li>
 <li><p>Fixed bug in <code>random_integer_neighbor_calc</code> to keep values inside range (<a href='https://github.com/tidymodels/finetune/issues/10'>#10</a>)</p></li>
-<li><p><code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> now retains a finalized parameter set and replaces any exisitng parameter set that was not finalized (<a href='https://github.com/tidymodels/finetune/issues/14'>#14</a>)</p></li>
+<li><p><code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> now retains a finalized parameter set and replaces any existing parameter set that was not finalized (<a href='https://github.com/tidymodels/finetune/issues/14'>#14</a>)</p></li>
+<li><p>A bug in win/loss racing was fixed for cases when one tuning parameter had results that were so bad that it broke the Bradley-Terry model (<a href='https://github.com/tidymodels/finetune/issues/7'>#7</a>)</p></li>
 </ul></div>
     <div id="finetune-001" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.1">
