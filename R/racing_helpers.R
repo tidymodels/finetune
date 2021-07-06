@@ -126,13 +126,13 @@ test_parameters_bt <- function(x, alpha =  0.05) {
   ## ---------------------------------------------------------------------------
   # Analyze data only on current candidate set
 
-  num_resasmples <-
+  num_resamples <-
     res %>%
     dplyr::count(.config, name = "B")
-  max_resasmples <- max(num_resasmples$B)
+  max_resamples <- max(num_resamples$B)
   analysis_config <-
-    num_resasmples %>%
-    dplyr::filter(B == max_resasmples)
+    num_resamples %>%
+    dplyr::filter(B == max_resamples)
   analysis_data <- dplyr::inner_join(res, analysis_config, by = ".config")
 
   ## -----------------------------------------------------------------------------
