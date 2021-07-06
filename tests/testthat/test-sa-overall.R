@@ -85,3 +85,41 @@ test_that('variable interface', {
   expect_true(sum(grepl("^initial", collect_metrics(new_new_res)$.config)) == 4)
 
 })
+
+
+test_that("unfinalized parameters", {
+  skip_on_cran()
+  library(workflows)
+  library(rsample)
+  library(parsnip)
+  library(tibble)
+  library(ranger)
+
+  data(two_class_dat, package = "modeldata")
+
+  set.seed(5046)
+  bt <- bootstraps(two_class_dat, times = 5)
+
+  rec_example <- recipe(Class ~ ., data = two_class_dat)
+
+  # RF
+  model_rf <- rand_forest(mtry = tune()) %>%
+    set_mode("classification") %>%
+    set_engine("ranger")
+
+  wf_rf <- workflow() %>%
+    add_model(model_rf) %>%
+    add_recipe(rec_example)
+
+  set.seed(30)
+  rf_res <- wf_rf %>%
+    tune_grid(resamples = bt, grid = 4)
+
+  expect_error({
+    set.seed(40)
+    rf_res_finetune <- wf_rf %>%
+      tune_sim_anneal(resamples = bt, initial = rf_res)
+  },
+  regex = NA
+  )
+})
