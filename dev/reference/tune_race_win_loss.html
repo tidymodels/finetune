@@ -108,7 +108,7 @@ how likely each combination is to win overall." />
         <a class="navbar-brand" href="../index.html">finetune</a>
         <div class="info hidden-xs hidden-sm">
           <span class="partof">part of <a href="https://github.com/tidymodels">tidymodels</a></span>
-          <span class="version version-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.0.1.9000</span>
+          <span class="version version-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.1.0.9000</span>
         </div>
       </div>
     </div>
@@ -295,22 +295,22 @@ Models." <a href='https://arxiv.org/abs/1405.6974'>https://arxiv.org/abs/1405.69
 <span class='r-in'>    <span class='fu'>tune_race_win_loss</span><span class='op'>(</span><span class='va'>Class</span> <span class='op'>~</span> <span class='va'>.</span>, resamples <span class='op'>=</span> <span class='va'>rs</span>, grid <span class='op'>=</span> <span class='fl'>10</span>, control <span class='op'>=</span> <span class='va'>ctrl</span><span class='op'>)</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Racing will maximize the roc_auc metric.</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Resamples are analyzed in a random order.</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap09:  1 eliminated;  9 candidates remain.</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap08:  1 eliminated;  8 candidates remain.</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap01:  1 eliminated;  7 candidates remain.</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap07:  1 eliminated;  6 candidates remain.</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap10:  1 eliminated;  5 candidates remain.</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap04:  1 eliminated;  4 candidates remain.</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap03:  1 eliminated;  3 candidates remain.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap05:  1 eliminated;  9 candidates remain.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap07:  1 eliminated;  8 candidates remain.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap10:  1 eliminated;  7 candidates remain.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap01:  1 eliminated;  6 candidates remain.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap08:  1 eliminated;  5 candidates remain.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap03:  1 eliminated;  4 candidates remain.</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #000000;'>ℹ Bootstrap09:  1 eliminated;  3 candidates remain.</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Shows only the fully resampled parameters</span></span>
 <span class='r-in'><span class='fu'><a href='https://tune.tidymodels.org/reference/show_best.html'>show_best</a></span><span class='op'>(</span><span class='va'>grid_wl</span>, metric <span class='op'>=</span> <span class='st'>"roc_auc"</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 3 x 8</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>             <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>         <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span>           0.952        0.064<span style='text-decoration: underline;'>2</span> roc_auc binary     0.888    10 0.003<span style='text-decoration: underline;'>37</span> Preproce…</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>2</span>           0.886        0.162  roc_auc binary     0.882    10 0.004<span style='text-decoration: underline;'>01</span> Preproce…</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>3</span>           0.585        0.227  roc_auc binary     0.877    10 0.004<span style='text-decoration: underline;'>43</span> Preproce…</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span>          0.069<span style='text-decoration: underline;'>1</span>        0.043<span style='text-decoration: underline;'>7</span> roc_auc binary     0.886    10 0.005<span style='text-decoration: underline;'>13</span> Preproce…</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>2</span>          0.392         0.154  roc_auc binary     0.877    10 0.004<span style='text-decoration: underline;'>96</span> Preproce…</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>3</span>          0.555         0.293  roc_auc binary     0.863    10 0.005<span style='text-decoration: underline;'>24</span> Preproce…</span>
 <span class='r-in'></span>
 <span class='r-in'><span class='fu'><a href='plot_race.html'>plot_race</a></span><span class='op'>(</span><span class='va'>grid_wl</span><span class='op'>)</span></span>
 <span class='r-plt'><img src='tune_race_win_loss-1.png' alt='' width='768' height='552' /></span>
