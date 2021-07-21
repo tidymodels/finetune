@@ -361,7 +361,7 @@ color_event <- function(x) {
 }
 
 get_outcome_names <- function(x, rs) {
-  preproc <- workflows::pull_workflow_preprocessor(x)
+  preproc <- extract_preprocessor(x)
   if (inherits(preproc, "workflow_variables")) {
     if (any(names(preproc) == "outcomes")) {
       dat <- rs$splits[[1]]$data
