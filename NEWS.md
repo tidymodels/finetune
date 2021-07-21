@@ -1,10 +1,10 @@
-# finetune (development version)
+# finetune 0.1.0
 
 * A check was added to make sure that `lme4` or `BradleyTerry2` are installed (#8)
 
 * Added `pillar` methods for formatting `tune` objects in list columns. 
 
-* Fixed bug in `random_integer_neighbor_calc` to keep values inside range (#10)
+* Fixed bug in `random_integer_neighbor_calc()` to keep values inside range (#10)
 
 * `tune_sim_anneal()` now retains a finalized parameter set and replaces any existing parameter set that was not finalized (#14)
 

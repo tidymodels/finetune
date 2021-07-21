@@ -1,6 +1,6 @@
 Package: finetune
 Title: Additional Functions for Model Tuning
-Version: 0.0.1.9000
+Version: 0.1.0
 Authors@R: 
     c(person(given = "Max",
              family = "Kuhn",
@@ -9,47 +9,48 @@ Authors@R:
              comment = c(ORCID = "0000-0003-2402-136X")),
       person(given = "RStudio",
              role = "cph"))
-Description: The ability to tune models is important. 'finetune' enhances the
- 'tune' package by providing more  specialized methods for finding reasonable
- values of model tuning parameters.  Two racing methods described by Kuhn (2014)
- <arXiv:1405.6974> are included. An  iterative search method using generalized
- simulated annealing (Bohachevsky, Johnson and Stein, 1986)
- <doi:10.1080/00401706.1986.10488128> is also included.
-URL: https://github.com/tidymodels/finetune, https://finetune.tidymodels.org
+Description: The ability to tune models is important. 'finetune' enhances
+    the 'tune' package by providing more specialized methods for finding
+    reasonable values of model tuning parameters.  Two racing methods
+    described by Kuhn (2014) <arXiv:1405.6974> are included. An iterative
+    search method using generalized simulated annealing (Bohachevsky,
+    Johnson and Stein, 1986) <doi:10.1080/00401706.1986.10488128> is also
+    included.
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1.9000
-Suggests: 
-    spelling,
-    BradleyTerry2,
-    lme4,
-    rsample,
-    recipes (>= 0.1.15),
-    modeldata,
-    rpart,
-    parsnip,
-    testthat,
-    covr,
-    discrim,
-    klaR
-Language: en-US
+URL: https://github.com/tidymodels/finetune,
+    https://finetune.tidymodels.org
 Depends: 
-    tune (>= 0.1.2)
+    tune (>= 0.1.6)
 Imports: 
-    tibble,
-    rlang,
-    yardstick,
-    workflows,
-    purrr,
     cli,
     dials,
     dplyr,
-    utils,
+    ggplot2,
+    purrr,
     ranger,
+    rlang,
+    tibble,
     tidyr,
     tidyselect,
-    ggplot2,
-    vctrs
+    utils,
+    vctrs,
+    workflows (>= 0.2.3),
+    yardstick
+Suggests: 
+    BradleyTerry2,
+    covr,
+    discrim,
+    klaR,
+    lme4,
+    modeldata,
+    parsnip,
+    recipes (>= 0.1.15),
+    rpart,
+    rsample,
+    spelling,
+    testthat
 Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-US
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1.9000
