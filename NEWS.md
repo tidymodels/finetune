@@ -1,3 +1,5 @@
+# finetune (development version)
+
 # finetune 0.1.0
 
 * A check was added to make sure that `lme4` or `BradleyTerry2` are installed (#8)
