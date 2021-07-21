@@ -1,6 +1,6 @@
 Package: finetune
 Title: Additional Functions for Model Tuning
-Version: 0.0.1.9000
+Version: 0.1.0
 Authors@R: 
     c(person(given = "Max",
              family = "Kuhn",
@@ -36,12 +36,12 @@ Suggests:
     klaR
 Language: en-US
 Depends: 
-    tune (>= 0.1.2)
+    tune (>= 0.1.6)
 Imports: 
     tibble,
     rlang,
     yardstick,
-    workflows,
+    workflows (>= 0.2.3),
     purrr,
     cli,
     dials,
