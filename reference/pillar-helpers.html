@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot racing results — plot_race • finetune</title>
+<title>Helpers for pillar formatting — obj_sum.tune_race • finetune</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -49,9 +49,8 @@
 
 
 
-<meta property="og:title" content="Plot racing results — plot_race" />
-<meta property="og:description" content="Plot the model results over stages of the racing results. A line is given
-for each submodel that was tested." />
+<meta property="og:title" content="Helpers for pillar formatting — obj_sum.tune_race" />
+<meta property="og:description" content="Helpers for pillar formatting" />
 <meta property="og:image" content="https://finetune.tidymodels.org/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -133,30 +132,31 @@ for each submodel that was tested." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot racing results</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tidymodels/finetune/blob/master/R/plot_race.R'><code>R/plot_race.R</code></a></small>
-    <div class="hidden name"><code>plot_race.Rd</code></div>
+    <h1>Helpers for pillar formatting</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tidymodels/finetune/blob/master/R/pillar.R'><code>R/pillar.R</code></a></small>
+    <div class="hidden name"><code>pillar-helpers.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot the model results over stages of the racing results. A line is given
-for each submodel that was tested.</p>
+    <p>Helpers for pillar formatting</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>plot_race</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></code></pre></div>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>obj_sum.tune_race</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+
+<span class='fu'>size_sum.tune_race</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A object with class <code>tune_results</code></p></td>
+      <td><p>an object</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A ggplot object.</p>
+    <p>A character string.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

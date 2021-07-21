@@ -8,6 +8,13 @@
 
 <title>Changelog • finetune</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -43,6 +50,8 @@
 
 
 <meta property="og:title" content="Changelog" />
+<meta property="og:image" content="https://finetune.tidymodels.org/logo.png" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -66,9 +75,15 @@
   gtag('config', 'UA-115082821-1');
 </script>
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -85,7 +100,7 @@
         <a class="navbar-brand" href="../index.html">finetune</a>
         <div class="info hidden-xs hidden-sm">
           <span class="partof">part of <a href="https://github.com/tidymodels">tidymodels</a></span>
-          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
         </div>
       </div>
     </div>
@@ -99,7 +114,7 @@
 </li>
         <li>
   <a href="https://github.com/tidymodels/finetune/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -120,14 +135,20 @@
       <small>Source: <a href='https://github.com/tidymodels/finetune/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="finetune-010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#finetune-010" class="anchor" aria-hidden="true"></a>finetune 0.1.0<small> Unreleased </small></h1>
+<ul><li><p>A check was added to make sure that <code>lme4</code> or <code>BradleyTerry2</code> are installed (<a href='https://github.com/tidymodels/finetune/issues/8'>#8</a>)</p></li>
+<li><p>Added <code>pillar</code> methods for formatting <code>tune</code> objects in list columns.</p></li>
+<li><p>Fixed bug in <code>random_integer_neighbor_calc()</code> to keep values inside range (<a href='https://github.com/tidymodels/finetune/issues/10'>#10</a>)</p></li>
+<li><p><code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> now retains a finalized parameter set and replaces any existing parameter set that was not finalized (<a href='https://github.com/tidymodels/finetune/issues/14'>#14</a>)</p></li>
+<li><p>A bug in win/loss racing was fixed for cases when one tuning parameter had results that were so bad that it broke the Bradley-Terry model (<a href='https://github.com/tidymodels/finetune/issues/7'>#7</a>)</p></li>
+</ul></div>
     <div id="finetune-001" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.1">
-<a href="#finetune-001" class="anchor"></a>finetune 0.0.1<small> 2020-11-20 </small>
-</h1>
-<ul>
-<li>First CRAN release</li>
-</ul>
-</div>
+<a href="#finetune-001" class="anchor" aria-hidden="true"></a>finetune 0.0.1<small> 2020-11-20 </small></h1>
+<ul><li>First CRAN release</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -156,6 +177,8 @@
 
   
 
+
+  
 
   </body>
 </html>
