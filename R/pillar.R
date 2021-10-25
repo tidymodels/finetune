@@ -1,6 +1,6 @@
 
 #' @export
-obj_sum.tune_race <- function(x) {
+obj_sum.tune_race <- function(x, ...) {
   null_metrics <- purrr::map_lgl(x$.metrics, is.null)
   if (!all(null_metrics)) {
     res <- "race[+]"
@@ -11,7 +11,7 @@ obj_sum.tune_race <- function(x) {
 }
 
 #' @export
-size_sum.tune_race <- function(x) {
+size_sum.tune_race <- function(x, ...) {
   ""
 }
 
