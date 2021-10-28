@@ -1,31 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://finetune.tidymodels.org/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/authors.html</loc>
-  </url>
-  <url>
     <loc>https://finetune.tidymodels.org/index.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/news/index.html</loc>
   </url>
   <url>
     <loc>https://finetune.tidymodels.org/reference/control_race.html</loc>
   </url>
   <url>
     <loc>https://finetune.tidymodels.org/reference/control_sim_anneal.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/reference/index.html</loc>
   </url>
   <url>
     <loc>https://finetune.tidymodels.org/reference/pillar-helpers.html</loc>
