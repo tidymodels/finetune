@@ -1,8 +1,6 @@
 
 #' @export
-#' @keywords internal
-#' @rdname pillar-helpers
-obj_sum.tune_race <- function(x) {
+obj_sum.tune_race <- function(x, ...) {
   null_metrics <- purrr::map_lgl(x$.metrics, is.null)
   if (!all(null_metrics)) {
     res <- "race[+]"
@@ -12,13 +10,8 @@ obj_sum.tune_race <- function(x) {
   res
 }
 
-#' Helpers for pillar formatting
-#' @param x an object
-#' @return A character string.
 #' @export
-#' @keywords internal
-#' @rdname pillar-helpers
-size_sum.tune_race <- function(x) {
+size_sum.tune_race <- function(x, ...) {
   ""
 }
 

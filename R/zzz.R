@@ -1,7 +1,7 @@
 #' @importFrom stats qt runif coef confint lm reorder rnorm setNames dist
 #' @importFrom utils globalVariables
 #' @importFrom rlang syms
-#' @importFrom tibble tibble
+#' @importFrom tibble tibble obj_sum size_sum
 #' @importFrom dplyr %>% distinct
 #' @importFrom utils globalVariables
 #' @import tune
