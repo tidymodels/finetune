@@ -5,9 +5,10 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/tidymodels/finetune/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tidymodels/finetune/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/tidymodels/finetune/branch/master/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/finetune?branch=master)
+coverage](https://codecov.io/gh/tidymodels/finetune/branch/main/graph/badge.svg)](https://codecov.io/gh/tidymodels/finetune?branch=main)
+[![R-CMD-check](https://github.com/tidymodels/finetune/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/finetune/actions)
+[![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
 `finetune` contains some extra functions for model tuning that extend
@@ -52,32 +53,32 @@ sa_res <-
 #> 
 #> Optimizing roc_auc
 #> Initial best: 0.86480
-#>  1 ♥ new best           roc_auc=0.87327  (+/-0.004592)
-#>  2 ♥ new best           roc_auc=0.87915  (+/-0.003864)
-#>  3 ◯ accept suboptimal  roc_auc=0.87029  (+/-0.004994)
-#>  4 + better suboptimal  roc_auc=0.87171  (+/-0.004717)
-#>  5 ◯ accept suboptimal  roc_auc=0.86944  (+/-0.005081)
-#>  6 ◯ accept suboptimal  roc_auc=0.86812  (+/-0.0052)
-#>  7 ♥ new best           roc_auc=0.88172  (+/-0.003647)
-#>  8 ◯ accept suboptimal  roc_auc=0.87678  (+/-0.004276)
-#>  9 ◯ accept suboptimal  roc_auc=0.8627   (+/-0.005784)
-#> 10 + better suboptimal  roc_auc=0.87003  (+/-0.005106)
-#> 11 + better suboptimal  roc_auc=0.87088  (+/-0.004962)
-#> 12 ◯ accept suboptimal  roc_auc=0.86803  (+/-0.005195)
-#> 13 ◯ accept suboptimal  roc_auc=0.85294  (+/-0.006498)
-#> 14 ─ discard suboptimal roc_auc=0.84689  (+/-0.006867)
-#> 15 x restart from best  roc_auc=0.85021  (+/-0.006623)
-#> 16 ◯ accept suboptimal  roc_auc=0.87607  (+/-0.004318)
-#> 17 ◯ accept suboptimal  roc_auc=0.87245  (+/-0.004799)
-#> 18 + better suboptimal  roc_auc=0.87706  (+/-0.004131)
-#> 19 ◯ accept suboptimal  roc_auc=0.87213  (+/-0.004791)
-#> 20 ◯ accept suboptimal  roc_auc=0.86218  (+/-0.005773)
+#>  1 ◯ accept suboptimal  roc_auc=0.86254  (+/-0.005754)
+#>  2 ◯ accept suboptimal  roc_auc=0.86119  (+/-0.00582)
+#>  3 ─ discard suboptimal roc_auc=0.85296  (+/-0.006486)
+#>  4 ◯ accept suboptimal  roc_auc=0.86043  (+/-0.005998)
+#>  5 ♥ new best           roc_auc=0.87226  (+/-0.004803)
+#>  6 ♥ new best           roc_auc=0.88229  (+/-0.003629)
+#>  7 ◯ accept suboptimal  roc_auc=0.87871  (+/-0.004048)
+#>  8 ◯ accept suboptimal  roc_auc=0.87115  (+/-0.005025)
+#>  9 ◯ accept suboptimal  roc_auc=0.86354  (+/-0.005684)
+#> 10 + better suboptimal  roc_auc=0.86984  (+/-0.005159)
+#> 11 + better suboptimal  roc_auc=0.88031  (+/-0.003984)
+#> 12 ◯ accept suboptimal  roc_auc=0.87273  (+/-0.004879)
+#> 13 ◯ accept suboptimal  roc_auc=0.86086  (+/-0.005867)
+#> 14 x restart from best  roc_auc=0.84515  (+/-0.006771)
+#> 15 ◯ accept suboptimal  roc_auc=0.88183  (+/-0.003638)
+#> 16 ♥ new best           roc_auc=0.88233  (+/-0.003587)
+#> 17 ◯ accept suboptimal  roc_auc=0.87944  (+/-0.003864)
+#> 18 ─ discard suboptimal roc_auc=0.86931  (+/-0.00514)
+#> 19 + better suboptimal  roc_auc=0.88197  (+/-0.003607)
+#> 20 ─ discard suboptimal roc_auc=0.87388  (+/-0.004439)
 show_best(sa_res, metric = "roc_auc", n = 2)
-#> # A tibble: 2 × 9
+#> # A tibble: 2 x 9
 #>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config
 #>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>  
-#> 1           0.308        0.0166 roc_auc binary     0.882    10 0.00365 Iter7  
-#> 2           0.121        0.0474 roc_auc binary     0.879    10 0.00386 Iter2  
+#> 1           0.287       0.00861 roc_auc binary     0.882    10 0.00359 Iter16 
+#> 2           0.440       0.0109  roc_auc binary     0.882    10 0.00363 Iter6  
 #> # … with 1 more variable: .iter <int>
 ```
 
@@ -105,15 +106,15 @@ grid_anova <-
   tune_race_anova(Class ~ ., resamples = rs, grid = grid, control = ctrl)
 #> ℹ Racing will maximize the roc_auc metric.
 #> ℹ Resamples are analyzed in a random order.
-#> ℹ Bootstrap10: 14 eliminated;  6 candidates remain.
-#> ℹ Bootstrap04:  2 eliminated;  4 candidates remain.
-#> ℹ Bootstrap03: All but one parameter combination were eliminated.
+#> ℹ Bootstrap10: 18 eliminated;  2 candidates remain.
+#> ℹ Bootstrap07:  0 eliminated;  2 candidates remain.
+#> ℹ Bootstrap05: All but one parameter combination were eliminated.
 
 show_best(grid_anova, metric = "roc_auc", n = 2)
-#> # A tibble: 1 × 8
+#> # A tibble: 1 x 8
 #>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
 #>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>    
-#> 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…
+#> 1           0.132        0.0136 roc_auc binary     0.882    10 0.00363 Preproce…
 ```
 
 `tune_race_win_loss()` can also be used. It treats the tuning parameters
@@ -126,20 +127,20 @@ grid_win_loss<-
   tune_race_win_loss(Class ~ ., resamples = rs, grid = grid, control = ctrl)
 #> ℹ Racing will maximize the roc_auc metric.
 #> ℹ Resamples are analyzed in a random order.
-#> ℹ Bootstrap10:  3 eliminated; 17 candidates remain.
-#> ℹ Bootstrap04:  2 eliminated; 15 candidates remain.
-#> ℹ Bootstrap03:  2 eliminated; 13 candidates remain.
-#> ℹ Bootstrap01:  1 eliminated; 12 candidates remain.
-#> ℹ Bootstrap07:  1 eliminated; 11 candidates remain.
-#> ℹ Bootstrap05:  1 eliminated; 10 candidates remain.
-#> ℹ Bootstrap08:  1 eliminated;  9 candidates remain.
+#> ℹ Bootstrap10:  4 eliminated; 16 candidates remain.
+#> ℹ Bootstrap07:  2 eliminated; 14 candidates remain.
+#> ℹ Bootstrap05:  1 eliminated; 13 candidates remain.
+#> ℹ Bootstrap03:  2 eliminated; 11 candidates remain.
+#> ℹ Bootstrap06:  1 eliminated; 10 candidates remain.
+#> ℹ Bootstrap09:  1 eliminated;  9 candidates remain.
+#> ℹ Bootstrap01:  1 eliminated;  8 candidates remain.
 
 show_best(grid_win_loss, metric = "roc_auc", n = 2)
-#> # A tibble: 2 × 8
+#> # A tibble: 2 x 8
 #>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
 #>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>    
-#> 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…
-#> 2           0.119        0.0470 roc_auc binary     0.879    10 0.00387 Preproce…
+#> 1           0.132        0.0136 roc_auc binary     0.882    10 0.00363 Preproce…
+#> 2           0.975        0.0491 roc_auc binary     0.879    10 0.00422 Preproce…
 ```
 
 ## Code of Conduct
