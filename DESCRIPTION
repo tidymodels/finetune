@@ -1,6 +1,6 @@
 Package: finetune
 Title: Additional Functions for Model Tuning
-Version: 0.1.0.9001
+Version: 0.1.1
 Authors@R: c(
     person("Max", "Kuhn", , "max@rstudio.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2402-136X")),
@@ -24,15 +24,13 @@ Imports:
     dplyr,
     ggplot2,
     purrr,
-    ranger,
     rlang,
     tibble,
     tidyr,
     tidyselect,
     utils,
     vctrs,
-    workflows (>= 0.2.3),
-    yardstick
+    workflows (>= 0.2.3)
 Suggests: 
     BradleyTerry2,
     covr,
@@ -41,11 +39,13 @@ Suggests:
     lme4,
     modeldata,
     parsnip,
+    ranger,
     recipes (>= 0.1.15),
     rpart,
     rsample,
     spelling,
-    testthat
+    testthat,
+    yardstick
 Config/Needs/website: 
     tidyverse/tidytemplate
 Config/testthat/edition: 3
