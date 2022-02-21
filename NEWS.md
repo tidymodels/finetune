@@ -1,6 +1,6 @@
 # finetune (development version)
 
-* `tune_sim_anneal()` only overwrites tuning parameter information when they originally contain unknowns. 
+* `tune_sim_anneal()` only overwrites tuning parameter information when they originally contain unknowns.
 
 # finetune 0.1.0
 
