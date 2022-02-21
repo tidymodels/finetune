@@ -91,7 +91,7 @@ dataset and model.
 
 \subsection{Benchmarking results}{
 
-To demonstrate, we use a SVM model with the \code{kernlab} package.\if{html}{\out{<div class="r">}}\preformatted{library(kernlab)
+To demonstrate, we use a SVM model with the \code{kernlab} package.\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(kernlab)
 library(tidymodels)
 library(finetune)
 library(doParallel)
@@ -107,7 +107,7 @@ set.seed(6376)
 rs <- bootstraps(cells, times = 25)
 }\if{html}{\out{</div>}}
 
-We’ll only tune the model parameters (i.e., not recipe tuning):\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+We’ll only tune the model parameters (i.e., not recipe tuning):\if{html}{\out{<div class="sourceCode r">}}\preformatted{## -----------------------------------------------------------------------------
 
 svm_spec <-
   svm_rbf(cost = tune(), rbf_sigma = tune()) \%>\%
@@ -132,7 +132,7 @@ svm_grid <-
 }\if{html}{\out{</div>}}
 
 We’ll get the times for grid search and ANOVA racing with and without
-parallel processing:\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+parallel processing:\if{html}{\out{<div class="sourceCode r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Regular grid search
 
 system.time(\{
@@ -141,7 +141,7 @@ system.time(\{
 \})
 }\if{html}{\out{</div>}}\preformatted{##    user  system elapsed 
 ## 741.660  19.654 761.357 
-}\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+}\if{html}{\out{<div class="sourceCode r">}}\preformatted{## -----------------------------------------------------------------------------
 ## With racing
 
 system.time(\{
@@ -152,15 +152,15 @@ system.time(\{
 ## 133.143   3.675 136.822 
 }
 
-Speed-up of 5.56-fold for racing.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+Speed-up of 5.56-fold for racing.\if{html}{\out{<div class="sourceCode r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Parallel processing setup
 
 cores <- parallel::detectCores(logical = FALSE)
 cores
 }\if{html}{\out{</div>}}\preformatted{## [1] 10
-}\if{html}{\out{<div class="r">}}\preformatted{cl <- makePSOCKcluster(cores)
+}\if{html}{\out{<div class="sourceCode r">}}\preformatted{cl <- makePSOCKcluster(cores)
 registerDoParallel(cl)
-}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="sourceCode r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Parallel grid search
 
 system.time(\{
@@ -172,7 +172,7 @@ system.time(\{
 }
 
 Parallel processing with grid search was 6.01-fold faster than
-sequential grid search.\if{html}{\out{<div class="r">}}\preformatted{## -----------------------------------------------------------------------------
+sequential grid search.\if{html}{\out{<div class="sourceCode r">}}\preformatted{## -----------------------------------------------------------------------------
 ## Parallel racing
 
 system.time(\{
