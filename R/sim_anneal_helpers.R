@@ -11,7 +11,7 @@ treat_as_integer <- function(x, num_unique = 10) {
   is_int <- param_type == "integer"
   x_vals <- purrr::map(x$object, ~ dials::value_seq(.x, n = 200))
   x_vals <- purrr::map_int(x_vals, ~ length(unique(.x)))
-  x_vals < num_unique  & is_int
+  x_vals < num_unique & is_int
 }
 
 new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.15), flip = 0.1) {
@@ -20,10 +20,12 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
   if (any(param_type == "double")) {
     dbl_nms <- pset$id[param_type == "double"]
     new_dbl <-
-      random_real_neighbor(current %>% dplyr::select(dplyr::all_of(dbl_nms)),
-                           hist_values = hist_values %>% dplyr::select(dplyr::all_of(dbl_nms)),
-                           pset %>% dplyr::filter(id %in% dbl_nms),
-                           r = radius)
+      random_real_neighbor(
+        current %>% dplyr::select(dplyr::all_of(dbl_nms)),
+        hist_values = hist_values %>% dplyr::select(dplyr::all_of(dbl_nms)),
+        pset %>% dplyr::filter(id %in% dbl_nms),
+        r = radius
+      )
     current[, dbl_nms] <- new_dbl
   }
 
@@ -31,11 +33,13 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
     int_nms <- pset$id[param_type == "integer"]
     flip_one <- all(param_type == "integer")
     new_int <-
-      random_integer_neighbor(current %>% dplyr::select(dplyr::all_of(int_nms)),
-                              hist_values = hist_values %>% dplyr::select(dplyr::all_of(int_nms)),
-                              pset %>% dplyr::filter(id %in% int_nms),
-                              prob = flip,
-                              change = flip_one)
+      random_integer_neighbor(
+        current %>% dplyr::select(dplyr::all_of(int_nms)),
+        hist_values = hist_values %>% dplyr::select(dplyr::all_of(int_nms)),
+        pset %>% dplyr::filter(id %in% int_nms),
+        prob = flip,
+        change = flip_one
+      )
     current[, int_nms] <- new_int
   }
 
@@ -43,10 +47,12 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
     chr_nms <- pset$id[param_type == "character"]
     flip_one <- all(param_type == "character")
     new_chr <-
-      random_discrete_neighbor(current %>% dplyr::select(!!!chr_nms),
-                               pset %>% dplyr::filter(id %in% chr_nms),
-                               prob = flip,
-                               change = flip_one)
+      random_discrete_neighbor(
+        current %>% dplyr::select(!!!chr_nms),
+        pset %>% dplyr::filter(id %in% chr_nms),
+        prob = flip,
+        change = flip_one
+      )
     current[, chr_nms] <- new_chr
   }
   current
@@ -73,8 +79,10 @@ random_discrete_neighbor <- function(current, pset, prob, change) {
 
 random_integer_neighbor <- function(current, hist_values, pset, prob, change, retain = 1, tries = 500) {
   candidates <-
-    purrr::map_dfr(1:tries,
-                   ~ random_integer_neighbor_calc(current, pset, prob, change))
+    purrr::map_dfr(
+      1:tries,
+      ~ random_integer_neighbor_calc(current, pset, prob, change)
+    )
 
   rnd <- tune::encode_set(candidates, pset, as_matrix = TRUE)
   sample_by_distance(rnd, hist_values, retain = retain, pset = pset)
@@ -87,15 +95,15 @@ random_integer_neighbor_calc <- function(current, pset, prob, change) {
   }
   if (any(change_val)) {
     param_change <- pset$id[change_val]
-    for(i in param_change) {
+    for (i in param_change) {
       prm <- pset$object[[which(pset$id == i)]]
       prm_rng <- prm$range$upper - prm$range$lower
       tries <- min(prm_rng + 1, 500)
       pool <- dials::value_seq(prm, n = tries)
-      smol_range <- floor(prm_rng/10) + 1
+      smol_range <- floor(prm_rng / 10) + 1
       val_diff <- abs(current[[i]] - pool)
-      pool <- pool[val_diff <= smol_range  & val_diff > 0]
-      if(length(pool) > 1) {
+      pool <- pool[val_diff <= smol_range & val_diff > 0]
+      if (length(pool) > 1) {
         current[[i]] <- sample(pool, 1)
       } else if (length(pool) == 1) {
         current[[i]] <- pool
@@ -113,21 +121,20 @@ random_real_neighbor <- function(current, hist_values, pset, retain = 1,
   encoded <- tune::encode_set(current, pset, as_matrix = TRUE)
 
   num_param <- ncol(encoded)
-  if(num_param > 1) {
+  if (num_param > 1) {
     rnd <- rnorm(num_param * tries)
     rnd <- matrix(rnd, ncol = num_param)
-    rnd <- t(apply(rnd, 1, function(x) x/sqrt(sum(x^2))))
+    rnd <- t(apply(rnd, 1, function(x) x / sqrt(sum(x^2))))
     rnd <- rnd * runif(tries, min = min(r), max = max(r))
     rnd <- sweep(rnd, 2, as.vector(encoded), "+")
     outside <- apply(rnd, 1, function(x) any(x > 1 | x < 0))
-    rnd <- rnd[!outside,,drop = FALSE]
+    rnd <- rnd[!outside, , drop = FALSE]
   } else {
     rnd <- runif(tries, min = -max(r), max = max(r)) + encoded[[1]]
     rnd <- ifelse(rnd > 1, 1, rnd)
     rnd <- ifelse(rnd < 0, 0, rnd)
     rnd <- matrix(rnd, ncol = 1)
-    rnd <- rnd[!duplicated(rnd),, drop = FALSE]
-
+    rnd <- rnd[!duplicated(rnd), , drop = FALSE]
   }
   colnames(rnd) <- names(current)
   retain <- min(retain, nrow(rnd))
@@ -136,7 +143,7 @@ random_real_neighbor <- function(current, hist_values, pset, retain = 1,
 }
 
 encode_set_backwards <- function(x, pset, ...) {
-  pset <- pset[pset$id %in% names(x),]
+  pset <- pset[pset$id %in% names(x), ]
   new_vals <- purrr::map2(pset$object, x, dials::encode_unit, direction = "backward")
   names(new_vals) <- names(x)
   tibble::as_tibble(new_vals)
@@ -151,15 +158,15 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
     all_values <- as.matrix(all_values)
     all_values <- all_values[hist_index, -hist_index, drop = FALSE]
     min_dist <- apply(all_values, 2, min)
-    min_dist <- min_dist/max(min_dist)
+    min_dist <- min_dist / max(min_dist)
     prob_wt <- min_dist^2
     prob_wt[is.na(prob_wt)] <- 0.0001
 
     if (diff(range(prob_wt)) < 0.0001) {
-      prob_wt <- rep(1/nrow(candidates), nrow(candidates))
+      prob_wt <- rep(1 / nrow(candidates), nrow(candidates))
     }
   } else {
-    prob_wt <- rep(1/nrow(candidates), nrow(candidates))
+    prob_wt <- rep(1 / nrow(candidates), nrow(candidates))
   }
   retain <- min(retain, nrow(candidates))
 
@@ -167,7 +174,7 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
   candidates <- encode_set_backwards(candidates, pset)
 
   selected <- sample(seq_along(prob_wt), size = retain, prob = prob_wt)
-  candidates[selected,]
+  candidates[selected, ]
 }
 
 ## -----------------------------------------------------------------------------
@@ -205,7 +212,7 @@ sa_decide <- function(x, parent, metric, maximize, coef) {
   res <- dplyr::filter(x, .metric == metric)
   latest_ind <- which.max(res$.iter)
   prev_ind <- which(res$.config == parent)
-  prev_metric   <- res$mean[prev_ind]
+  prev_metric <- res$mean[prev_ind]
   latest_metric <- res$mean[latest_ind]
   all_prev <- res$mean[1:prev_ind]
 
@@ -247,7 +254,7 @@ sa_decide <- function(x, parent, metric, maximize, coef) {
 initialize_history <- function(x, ...) {
   # check to see if there is existing history
   res <-
-    tune::collect_metrics(x)%>%
+    tune::collect_metrics(x) %>%
     dplyr::filter(.metric == tune::.get_tune_metric_names(x)[1])
   if (!any(names(res) == ".iter")) {
     res$.iter <- 0
@@ -266,14 +273,14 @@ initialize_history <- function(x, ...) {
 
 percent_diff <- function(current, new, maximize = TRUE) {
   if (maximize) {
-    pct_diff <- (new - current)/current
+    pct_diff <- (new - current) / current
   } else {
-    pct_diff <- (current - new)/current
+    pct_diff <- (current - new) / current
   }
   pct_diff * 100
 }
 
-acceptance_prob <- function(current, new, iter, maximize = TRUE, coef = 2/100) {
+acceptance_prob <- function(current, new, iter, maximize = TRUE, coef = 2 / 100) {
   pct_diff <- percent_diff(current, new, maximize)
   if (pct_diff > 0) {
     return(1.0)
@@ -301,7 +308,7 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
   if (iter > 0 & !is_initial) {
     is_best <- isTRUE(x$global_best[m])
     prev_res <- x$mean[m - 1]
-    pct_diff <- percent_diff(prev_res, new_res, maximize) *100
+    pct_diff <- percent_diff(prev_res, new_res, maximize) * 100
     pct_diff <- sprintf("%6.2f", pct_diff)
   } else {
     is_best <- FALSE
@@ -315,7 +322,7 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
   if (iter > 0) {
     msg <- paste0(metric, "=", signif(new_res, digits = digits))
     if (!is.na(new_std) && new_std > 0) {
-      msg <- paste0(msg,  "\t(+/-", signif(new_std, digits = digits - 1), ")")
+      msg <- paste0(msg, "\t(+/-", signif(new_std, digits = digits - 1), ")")
     }
     msg <- paste(chr_iter, format_event(new_event), msg)
   } else {
@@ -332,7 +339,7 @@ log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter,
 
 format_event <- function(x) {
   result_key <- tibble::tribble(
-    ~ orig,               ~ symb,
+    ~orig,               ~symb,
     "initial",            cli::symbol$tick,
     "new best",           cli::symbol$heart,
     "better suboptimal",  "+",
@@ -379,13 +386,16 @@ get_outcome_names <- function(x, rs) {
 update_config <- function(x, prefix = NULL, config = "new") {
   if (!is.null(prefix)) {
     x$.metrics <-
-      purrr::map(x$.metrics,
-                 ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config)))
+      purrr::map(
+        x$.metrics,
+        ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config))
+      )
   } else {
     x$.metrics <-
-      purrr::map(x$.metrics,
-                 ~ dplyr::mutate(.x, .config = config))
-
+      purrr::map(
+        x$.metrics,
+        ~ dplyr::mutate(.x, .config = config)
+      )
   }
   x
 }

@@ -1,13 +1,13 @@
 
 ## -----------------------------------------------------------------------------
 
-test_that('control_sim_anneal arg passing', {
+test_that("control_sim_anneal arg passing", {
   expect_equal(control_sim_anneal(verbose = TRUE)$verbose, TRUE)
   expect_equal(control_sim_anneal(no_improve = 13)$no_improve, 13L)
   expect_equal(control_sim_anneal(restart = 2)$restart, 2)
   expect_equal(control_sim_anneal(radius = rep(.12, 2))$radius, rep(.12, 2))
   expect_equal(control_sim_anneal(flip = .122)$flip, .122)
-  expect_equal(control_sim_anneal(cooling_coef = 1/10)$cooling_coef, 1/10)
+  expect_equal(control_sim_anneal(cooling_coef = 1 / 10)$cooling_coef, 1 / 10)
   expect_equal(control_sim_anneal(extract = function(x) x)$extract, function(x) x)
   expect_equal(control_sim_anneal(save_pred = TRUE)$save_pred, TRUE)
   expect_equal(control_sim_anneal(time_limit = 2)$time_limit, 2)
@@ -15,7 +15,7 @@ test_that('control_sim_anneal arg passing', {
   expect_equal(control_sim_anneal(save_workflow = TRUE)$save_workflow, TRUE)
 })
 
-test_that('control_sim_anneal bad arg passing', {
+test_that("control_sim_anneal bad arg passing", {
   expect_error(
     control_sim_anneal(verbose = "TRUE"),
     "should be a single logical value"
@@ -83,7 +83,7 @@ test_that('control_sim_anneal bad arg passing', {
     "should be a single numeric value"
   )
   expect_equal(control_sim_anneal(flip = -1)$flip, 0)
-  expect_equal(control_sim_anneal(flip =  2)$flip, 1)
+  expect_equal(control_sim_anneal(flip = 2)$flip, 1)
   expect_error(
     control_sim_anneal(cooling_coef = 0:1),
     "should be a single numeric value"
@@ -93,7 +93,7 @@ test_that('control_sim_anneal bad arg passing', {
     "should be a single numeric value"
   )
   expect_equal(control_sim_anneal(cooling_coef = -1)$cooling_coef, 0.0001)
-  expect_equal(control_sim_anneal(cooling_coef =  2)$cooling_coef, 2)
+  expect_equal(control_sim_anneal(cooling_coef = 2)$cooling_coef, 2)
   expect_error(
     control_sim_anneal(pkg = 0:1),
     "should be a character or NULL in"

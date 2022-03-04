@@ -1,7 +1,7 @@
 
 ## -----------------------------------------------------------------------------
 
-test_that('control_race arg passing', {
+test_that("control_race arg passing", {
   expect_equal(control_race(verbose = TRUE)$verbose, TRUE)
   expect_equal(control_race(verbose_elim = TRUE)$verbose_elim, TRUE)
   expect_equal(control_race(burn_in = 13)$burn_in, 13)
@@ -13,7 +13,7 @@ test_that('control_race arg passing', {
   expect_equal(control_race(save_workflow = TRUE)$save_workflow, TRUE)
 })
 
-test_that('control_race bad arg passing', {
+test_that("control_race bad arg passing", {
   expect_error(
     control_race(verbose = "TRUE"),
     "should be a single logical value"

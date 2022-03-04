@@ -24,7 +24,8 @@ refactor_by_mean <- function(res, maximize = TRUE) {
     dplyr::group_by(.config) %>%
     dplyr::summarize(
       mean = mean(.estimate, na.rm = TRUE),
-      B = sum(!is.na(.estimate))) %>%
+      B = sum(!is.na(.estimate))
+    ) %>%
     dplyr::ungroup()
 
   max_resamples <- max(best_config$B, na.rm = TRUE)
@@ -33,13 +34,13 @@ refactor_by_mean <- function(res, maximize = TRUE) {
   if (maximize) {
     config_levels <- best_config$.config[order(-best_config$mean)]
   } else {
-    config_levels <- best_config$.config[order( best_config$mean)]
+    config_levels <- best_config$.config[order(best_config$mean)]
   }
   configs$.config <- factor(configs$.config, levels = config_levels)
   configs
 }
 
-test_parameters_gls <- function(x, alpha =  0.05) {
+test_parameters_gls <- function(x, alpha = 0.05) {
   if (all(purrr::map_lgl(x$.metrics, is.null))) {
     rlang::abort("There were no valid metrics for the ANOVA model.")
   }
@@ -108,7 +109,7 @@ test_parameters_gls <- function(x, alpha =  0.05) {
 ## -----------------------------------------------------------------------------
 # Racing via discrete competitions
 
-test_parameters_bt <- function(x, alpha =  0.05) {
+test_parameters_bt <- function(x, alpha = 0.05) {
   param_names <- tune::.get_tune_parameter_names(x)
   metric_data <- metric_tibble(x)
   metric <- metric_data$metric[1]
@@ -152,7 +153,8 @@ test_parameters_bt <- function(x, alpha =  0.05) {
   best_team <- levels(season_data$scoring$player_1)[1]
   suppressWarnings(
     mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
-                              data = season_data$scoring, br = TRUE)
+      data = season_data$scoring, br = TRUE
+    )
   )
 
   q_val <- qt(1 - alpha, 1)
@@ -194,9 +196,9 @@ make_config_pairs <- function(x) {
 
 score_match <- function(x, y, maximize) {
   if (maximize) {
-    1.0 * (x > y) + sum(x == y)/2
+    1.0 * (x > y) + sum(x == y) / 2
   } else {
-    1.0 * sum(x < y) + sum(x == y)/2
+    1.0 * sum(x < y) + sum(x == y) / 2
   }
 }
 
@@ -257,7 +259,8 @@ score_season <- function(x, dat, maximize = FALSE) {
         dplyr::mutate(pair = dplyr::row_number()) %>%
         dplyr::select(.config = p1, pair),
       dat,
-      by = ".config") %>%
+      by = ".config"
+    ) %>%
     dplyr::select(player_1 = .config, metric_1 = .estimate, pair, dplyr::starts_with("id"))
 
   player_2 <-
@@ -266,7 +269,8 @@ score_season <- function(x, dat, maximize = FALSE) {
         dplyr::mutate(pair = dplyr::row_number()) %>%
         dplyr::select(.config = p2, pair),
       dat,
-      by = ".config") %>%
+      by = ".config"
+    ) %>%
     dplyr::select(player_2 = .config, metric_2 = .estimate, pair, dplyr::starts_with("id"))
 
   game_results <-
@@ -347,7 +351,7 @@ score_season <- function(x, dat, maximize = FALSE) {
 restore_rset <- function(x, index) {
   att <- attributes(x)
   x <- x %>% dplyr::slice(index)
-  att$row.names  <- att$row.names[index]
+  att$row.names <- att$row.names[index]
   attributes(x) <- att
   x
 }
@@ -420,7 +424,8 @@ log_racing <- function(control, x, splits, grid_size, metric) {
       chr_seq[num_elim + 1],
       "eliminated;",
       chr_seq[remaining + 1],
-      "candidates remain.")
+      "candidates remain."
+    )
   } else {
     msg <- paste("All but one parameter combination were eliminated.")
   }
@@ -436,16 +441,16 @@ log_racing <- function(control, x, splits, grid_size, metric) {
 
 tie_breaker <- function(res, control) {
   param_names <- tune::.get_tune_parameter_names(res)
-  metrics     <- tune::.get_tune_metrics(res)
+  metrics <- tune::.get_tune_metrics(res)
   analysis_metric <- names(attr(metrics, "metrics"))[1]
-  analysis_max    <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
+  analysis_max <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
   x <-
     res %>%
     tune::collect_metrics() %>%
     dplyr::filter(.metric == analysis_metric)
   all_config <- x$.config
   max_rs <- max(x$n)
-  finalists <- x[x$n == max_rs,]
+  finalists <- x[x$n == max_rs, ]
   best <- finalists$.config[order(finalists$mean, decreasing = analysis_max)][1]
   if (control$verbose_elim) {
     tune_cols <- tune::get_tune_colors()
@@ -499,7 +504,7 @@ lmer_formula <- function(x, info) {
     ids <- x %>% dplyr::select(id2, id)
     unique_res <- dplyr::count(ids, id)
     if (nrow(unique_res) > 1 && all(unique_res$n > 1)) {
-      f <- .estimate ~ .config + (1 | id2/id)
+      f <- .estimate ~ .config + (1 | id2 / id)
     } else {
       f <- .estimate ~ .config + (1 | .all_id)
     }
@@ -511,7 +516,7 @@ lmer_formula <- function(x, info) {
 fit_anova <- function(x, dat, alpha) {
   rs_info <- attr(x, "rset_info")$att
   if (any(rs_info$class == "vfold_cv") && rs_info$repeats > 1) {
-   dat <- dplyr::mutate(dat, .all_id = paste(id2, id))
+    dat <- dplyr::mutate(dat, .all_id = paste(id2, id))
   }
 
   f <- lmer_formula(x, rs_info)
@@ -539,7 +544,7 @@ fit_anova <- function(x, dat, alpha) {
 
 ## -----------------------------------------------------------------------------
 
-metric_tibble <- function (x, ...)  {
+metric_tibble <- function(x, ...) {
   metrics <- attributes(x)$metrics
   metrics <- attributes(metrics)$metrics
   directions <- purrr::map_chr(metrics, ~ attr(.x, "direction"))
@@ -563,13 +568,14 @@ randomize_resamples <- function(x) {
   x$.rand <- runif(B)
   reps <- attr(x, "repeats")
   if (!is.null(reps) && reps > 1) {
-    x <- x %>% dplyr::group_by(id) %>% dplyr::arrange(.rand, .by_group = TRUE)
+    x <- x %>%
+      dplyr::group_by(id) %>%
+      dplyr::arrange(.rand, .by_group = TRUE)
   } else {
     x <- x %>% dplyr::arrange(.rand)
   }
   x$.rand <- NULL
-  att$row.names  <- att$row.names
+  att$row.names <- att$row.names
   attributes(x) <- att
   x
 }
-

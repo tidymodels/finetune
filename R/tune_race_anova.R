@@ -81,7 +81,7 @@
 #' set.seed(11)
 #' grid_anova <-
 #'   rda_spec %>%
-#'     tune_race_anova(Class ~ ., resamples = rs, grid = 10, control = ctrl)
+#'   tune_race_anova(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 #'
 #' # Shows only the fully resampled parameters
 #' show_best(grid_anova, metric = "roc_auc", n = 2)
@@ -107,12 +107,14 @@ tune_race_anova.default <- function(object, ...) {
 tune_race_anova.recipe <- function(object, model, resamples, ..., param_info = NULL,
                                    grid = 10, metrics = NULL,
                                    control = control_race()) {
-
   tune::empty_ellipses(...)
 
-  tune_race_anova(model, preprocessor = object, resamples = resamples,
-                  param_info = param_info, grid = grid,
-                  metrics = metrics, control = control)
+  tune_race_anova(
+    model,
+    preprocessor = object, resamples = resamples,
+    param_info = param_info, grid = grid,
+    metrics = metrics, control = control
+  )
 }
 
 #' @export
@@ -121,9 +123,12 @@ tune_race_anova.formula <- function(formula, model, resamples, ..., param_info =
                                     control = control_race()) {
   tune::empty_ellipses(...)
 
-  tune_race_anova(model, preprocessor = formula, resamples = resamples,
-                  param_info = param_info, grid = grid,
-                  metrics = metrics, control = control)
+  tune_race_anova(
+    model,
+    preprocessor = formula, resamples = resamples,
+    param_info = param_info, grid = grid,
+    metrics = metrics, control = control
+  )
 }
 
 #' @export
@@ -131,10 +136,11 @@ tune_race_anova.formula <- function(formula, model, resamples, ..., param_info =
 tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
                                        param_info = NULL, grid = 10, metrics = NULL,
                                        control = control_race()) {
-
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-    rlang::abort(paste("To tune a model spec, you must preprocess",
-                       "with a formula, recipe, or variable specification"))
+    rlang::abort(paste(
+      "To tune a model spec, you must preprocess",
+      "with a formula, recipe, or variable specification"
+    ))
   }
 
   tune::empty_ellipses(...)
@@ -162,7 +168,6 @@ tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
 tune_race_anova.workflow <- function(object, resamples, ..., param_info = NULL,
                                      grid = 10, metrics = NULL,
                                      control = control_race()) {
-
   tune::empty_ellipses(...)
 
   tune_race_anova_workflow(
@@ -180,7 +185,6 @@ tune_race_anova.workflow <- function(object, resamples, ..., param_info = NULL,
 tune_race_anova_workflow <-
   function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
            control = control_race()) {
-
     rlang::check_installed("lme4")
 
     B <- nrow(resamples)
@@ -205,15 +209,17 @@ tune_race_anova_workflow <-
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
-    metrics     <- tune::.get_tune_metrics(res)
+    metrics <- tune::.get_tune_metrics(res)
     analysis_metric <- names(attr(metrics, "metrics"))[1]
-    analysis_max    <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
+    analysis_max <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
 
     cols <- tune::get_tune_colors()
     if (control$verbose_elim) {
       msg <-
-        paste("Racing will", ifelse(analysis_max, "maximize", "minimize"),
-              "the", analysis_metric, "metric.")
+        paste(
+          "Racing will", ifelse(analysis_max, "maximize", "minimize"),
+          "the", analysis_metric, "metric."
+        )
       rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
       if (control$randomize) {
         msg <- "Resamples are analyzed in a random order."
@@ -226,7 +232,7 @@ tune_race_anova_workflow <-
 
     log_final <- TRUE
     num_ties <- 0
-    for(rs in (min_rs + 1):B) {
+    for (rs in (min_rs + 1):B) {
       if (sum(filters_results$pass) == 2) {
         num_ties <- num_ties + 1
       }

@@ -15,11 +15,10 @@ cart_rset_info <- attributes(cart_search)$rset_info
 
 ## -----------------------------------------------------------------------------
 
-test_that('simulated annealing decisions', {
-  for(iter_val in 1:max(cart_history$.iter)) {
-
+test_that("simulated annealing decisions", {
+  for (iter_val in 1:max(cart_history$.iter)) {
     iter_hist <- cart_history %>% filter(.iter < iter_val)
-    iter_res  <-
+    iter_res <-
       cart_search %>%
       filter(.iter == iter_val) %>%
       tune:::new_tune_results(
@@ -59,14 +58,12 @@ test_that('simulated annealing decisions', {
       new_sa_res$accept[new_sa_res$.iter == iter_val],
       cart_history$accept[cart_history$.iter == iter_val]
     )
-
   }
-
 })
 
 ## -----------------------------------------------------------------------------
 
-test_that('percent difference', {
+test_that("percent difference", {
   expect_equal(finetune:::percent_diff(1, 2), 100)
   expect_equal(finetune:::percent_diff(1, 1), 0)
   expect_equal(finetune:::percent_diff(1, 2, FALSE), -100)
@@ -76,7 +73,7 @@ test_that('percent difference', {
 
 ## -----------------------------------------------------------------------------
 
-test_that('acceptance probabilities', {
+test_that("acceptance probabilities", {
   expect_equal(finetune:::acceptance_prob(1, 2, iter = 1, maximize = TRUE), 1)
   expect_equal(finetune:::acceptance_prob(1, 1, iter = 1, maximize = TRUE), 1)
 
@@ -100,16 +97,14 @@ test_that('acceptance probabilities', {
     finetune:::acceptance_prob(1, 3, iter = 10, maximize = FALSE),
     exp(finetune:::percent_diff(1, 3, maximize = FALSE) * 10 * control_sim_anneal()$cooling_coef)
   )
-
 })
 
 ## -----------------------------------------------------------------------------
 
-test_that('logging results', {
+test_that("logging results", {
   iters <- max(cart_history$.iter)
 
-  for(i in 1:iters) {
-
+  for (i in 1:iters) {
     expect_message(
       finetune:::log_sa_progress(
         x = cart_history %>% filter(.iter <= i),
@@ -119,7 +114,4 @@ test_that('logging results', {
       regexp = cart_history$results[cart_history$.iter == i]
     )
   }
-
-
 })
-
