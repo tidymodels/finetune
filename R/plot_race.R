@@ -28,9 +28,9 @@ stage_results <- function(ind, x) {
     dplyr::summarize(
       mean = mean(.estimate, na.rm = TRUE),
       n = sum(!is.na(.estimate)),
-      .groups = "drop") %>%
+      .groups = "drop"
+    ) %>%
     dplyr::mutate(stage = ind) %>%
     dplyr::ungroup() %>%
     dplyr::filter(n == ind)
 }
-

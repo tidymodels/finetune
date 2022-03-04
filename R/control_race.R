@@ -112,4 +112,3 @@ print.control_race <- function(x, ...) {
   cat("Racing method control object\n")
   invisible(x)
 }
-
