@@ -1,3 +1,12 @@
+#' @keywords internal
+"_PACKAGE"
+
+## usethis namespace: start
+## usethis namespace: end
+NULL
+
+# ------------------------------------------------------------------------------
+
 #' @importFrom stats qt runif coef confint lm reorder rnorm setNames dist
 #' @importFrom utils globalVariables
 #' @importFrom rlang syms
