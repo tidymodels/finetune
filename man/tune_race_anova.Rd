@@ -218,7 +218,7 @@ ctrl <- control_race(verbose_elim = TRUE)
 set.seed(11)
 grid_anova <-
   rda_spec \%>\%
-    tune_race_anova(Class ~ ., resamples = rs, grid = 10, control = ctrl)
+  tune_race_anova(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 
 # Shows only the fully resampled parameters
 show_best(grid_anova, metric = "roc_auc", n = 2)

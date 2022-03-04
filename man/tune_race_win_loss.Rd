@@ -128,7 +128,7 @@ ctrl <- control_race(verbose_elim = TRUE)
 set.seed(11)
 grid_wl <-
   rda_spec \%>\%
-    tune_race_win_loss(Class ~ ., resamples = rs, grid = 10, control = ctrl)
+  tune_race_win_loss(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 
 # Shows only the fully resampled parameters
 show_best(grid_wl, metric = "roc_auc")
