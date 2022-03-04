@@ -5,9 +5,9 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/tidymodels/finetune/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tidymodels/finetune/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/tidymodels/finetune/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/finetune?branch=main)
-[![R-CMD-check](https://github.com/tidymodels/finetune/workflows/R-CMD-check/badge.svg)](https://github.com/tidymodels/finetune/actions)
 [![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
