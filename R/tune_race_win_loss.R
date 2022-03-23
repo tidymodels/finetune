@@ -69,12 +69,12 @@
 #' \donttest{
 #' library(parsnip)
 #' library(rsample)
-#' library(discrim)
 #' library(dials)
 #'
 #' ## -----------------------------------------------------------------------------
 #'
-#' if (rlang::is_installed("modeldata")) {
+#' if (rlang::is_installed(c("discrim", "modeldata"))) {
+#'   library(discrim)
 #'   data(two_class_dat, package = "modeldata")
 #'
 #'   set.seed(6376)
