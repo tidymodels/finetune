@@ -109,31 +109,33 @@ library(dials)
 
 ## -----------------------------------------------------------------------------
 
-data(two_class_dat, package = "modeldata")
+if (rlang::is_installed("modeldata")) {
+  data(two_class_dat, package = "modeldata")
 
-set.seed(6376)
-rs <- bootstraps(two_class_dat, times = 10)
+  set.seed(6376)
+  rs <- bootstraps(two_class_dat, times = 10)
 
-## -----------------------------------------------------------------------------
+  ## -----------------------------------------------------------------------------
 
-# optimize an regularized discriminant analysis model
-rda_spec <-
-  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) \%>\%
-  set_engine("klaR")
+  # optimize an regularized discriminant analysis model
+  rda_spec <-
+    discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) \%>\%
+    set_engine("klaR")
 
-## -----------------------------------------------------------------------------
+  ## -----------------------------------------------------------------------------
 
-ctrl <- control_race(verbose_elim = TRUE)
+  ctrl <- control_race(verbose_elim = TRUE)
 
-set.seed(11)
-grid_wl <-
-  rda_spec \%>\%
-  tune_race_win_loss(Class ~ ., resamples = rs, grid = 10, control = ctrl)
+  set.seed(11)
+  grid_wl <-
+    rda_spec \%>\%
+    tune_race_win_loss(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 
-# Shows only the fully resampled parameters
-show_best(grid_wl, metric = "roc_auc")
+  # Shows only the fully resampled parameters
+  show_best(grid_wl, metric = "roc_auc")
 
-plot_race(grid_wl)
+  plot_race(grid_wl)
+}
 }
 }
 \references{
