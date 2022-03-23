@@ -282,7 +282,7 @@ tune_sim_anneal_workflow <-
     maximize <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
 
     if (is.null(param_info)) {
-      param_info <- dials::parameters(object)
+      param_info <- extract_parameter_set_dials(object)
     }
     tune::check_workflow(object, check_dials = is.null(param_info), pset = param_info)
 

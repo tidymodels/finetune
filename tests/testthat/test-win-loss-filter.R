@@ -21,7 +21,7 @@ wflow <- workflow() %>%
 grid <- expand.grid(cost_complexity = c(0.001, 0.01), min_n = c(2:5))
 rec <- recipe(mpg ~ ., data = mtcars) %>%
   step_normalize(all_predictors())
-prm <- parameters(wflow) %>% update(min_n = min_n(c(2, 20)))
+prm <- extract_parameter_set_dials(wflow) %>% update(min_n = min_n(c(2, 20)))
 
 ## -----------------------------------------------------------------------------
 

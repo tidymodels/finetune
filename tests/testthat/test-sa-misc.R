@@ -18,7 +18,7 @@ rda_spec <-
   set_engine("klaR")
 
 rda_param <- rda_spec %>%
-  parameters() %>%
+  extract_parameter_set_dials() %>%
   update(
     frac_common_cov = frac_common_cov(c(.3, .6)),
     frac_identity = frac_identity(c(.3, .6))
