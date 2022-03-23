@@ -10,7 +10,6 @@ NULL
 #' @importFrom stats qt runif coef confint lm reorder rnorm setNames dist
 #' @importFrom utils globalVariables
 #' @importFrom rlang syms
-#' @importFrom tibble tibble obj_sum size_sum
 #' @importFrom dplyr %>% distinct
 #' @importFrom utils globalVariables
 #' @import tune
@@ -28,9 +27,3 @@ utils::globalVariables(
   )
 )
 
-.onLoad <- function(libname, pkgname) {
-  if (newer_tibble()) {
-    vctrs::s3_register("tibble::obj_sum", "tune_race")
-    vctrs::s3_register("tibble::size_sum", "tune_race")
-  }
-}

@@ -19,10 +19,10 @@ URL: https://github.com/tidymodels/finetune,
 BugReports: https://github.com/tidymodels/finetune/issues
 Depends: 
     R (>= 3.4),
-    tune (>= 0.1.6)
+    tune (>= 0.2.0)
 Imports: 
     cli,
-    dials,
+    dials (>= 0.1.0),
     dplyr,
     ggplot2,
     purrr,
@@ -32,7 +32,7 @@ Imports:
     tidyselect,
     utils,
     vctrs,
-    workflows (>= 0.2.3)
+    workflows (>= 0.2.6)
 Suggests: 
     BradleyTerry2,
     covr,
@@ -40,9 +40,9 @@ Suggests:
     klaR,
     lme4,
     modeldata,
-    parsnip,
+    parsnip (>= 0.2.1),
     ranger,
-    recipes (>= 0.1.15),
+    recipes (>= 0.2.0),
     rpart,
     rsample,
     spelling,
