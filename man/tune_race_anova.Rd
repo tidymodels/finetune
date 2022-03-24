@@ -54,6 +54,10 @@ parameter sets to be created automatically.}
 \item{control}{An object used to modify the tuning process. See
 \code{\link[=control_race]{control_race()}} for more details.}
 }
+\value{
+An object with primary class \code{tune_race} in the same standard format
+as objects produced by \code{\link[tune:tune_grid]{tune::tune_grid()}}.
+}
 \description{
 \code{\link[=tune_race_anova]{tune_race_anova()}} computes a set of performance metrics (e.g. accuracy or RMSE)
 for a pre-defined set of tuning parameters that correspond to a model or

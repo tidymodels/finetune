@@ -52,7 +52,8 @@
 #' There is benefit to using racing methods in conjunction with parallel
 #'  processing. The following section shows a benchmark of results for one
 #'  dataset and model.
-#'
+#' @return An object with primary class `tune_race` in the same standard format
+#' as objects produced by [tune::tune_grid()].
 #' @includeRmd  man/rmd/anova-benchmark.md details
 #' @examples
 #' \donttest{

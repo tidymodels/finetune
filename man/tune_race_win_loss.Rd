@@ -90,6 +90,10 @@ parameter sets to be created automatically.}
 
 \item{control}{An object used to modify the tuning process.}
 }
+\value{
+An object with primary class \code{tune_race} in the same standard format
+as objects produced by \code{\link[tune:tune_grid]{tune::tune_grid()}}.
+}
 \description{
 \code{\link[=tune_race_win_loss]{tune_race_win_loss()}} computes a set of performance metrics (e.g. accuracy or RMSE)
 for a pre-defined set of tuning parameters that correspond to a model or

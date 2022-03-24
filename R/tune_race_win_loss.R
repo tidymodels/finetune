@@ -102,6 +102,8 @@
 #'   plot_race(grid_wl)
 #' }
 #' }
+#' @return An object with primary class `tune_race` in the same standard format
+#' as objects produced by [tune::tune_grid()].
 #' @seealso [tune::tune_grid()], [control_race()], [tune_race_anova()]
 #' @export
 tune_race_win_loss <- function(object, ...) {
