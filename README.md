@@ -95,7 +95,7 @@ combinations:
 set.seed(3)
 grid <-
   rda_spec %>%
-  parameters() %>%
+  extract_parameter_set_dials() %>%
   grid_max_entropy(size = 20)
 
 ctrl <- control_race(verbose_elim = TRUE)

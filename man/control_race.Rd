@@ -87,6 +87,9 @@ can be faster if that processing is extremely fast.
 If \code{NULL}, chooses \code{"resamples"} if there are more than one resample,
 otherwise chooses \code{"everything"} to attempt to maximize core utilization.}
 }
+\value{
+An object of class \code{control_race} that echos the argument values.
+}
 \description{
 Control aspects of the grid search racing process
 }

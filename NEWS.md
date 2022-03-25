@@ -1,4 +1,10 @@
-# finetune (development version)
+# finetune 0.2.0
+
+* Maintenance release for CRAN requirements. 
+
+* Use `extract_parameter_set_dials()` instead of `parameters()` to get parameter sets. 
+
+* Removed some pillar-related S3 methods that currently live in tune. 
 
 # finetune 0.1.1
 

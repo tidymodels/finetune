@@ -52,18 +52,19 @@
 #' There is benefit to using racing methods in conjunction with parallel
 #'  processing. The following section shows a benchmark of results for one
 #'  dataset and model.
-#'
+#' @return An object with primary class `tune_race` in the same standard format
+#' as objects produced by [tune::tune_grid()].
 #' @includeRmd  man/rmd/anova-benchmark.md details
 #' @examples
 #' \donttest{
 #' library(parsnip)
 #' library(rsample)
-#' library(discrim)
 #' library(dials)
 #'
 #' ## -----------------------------------------------------------------------------
 #'
-#' if (rlang::is_installed(c("lme4", "modeldata"))) {
+#' if (rlang::is_installed(c("discrim", "lme4", "modeldata"))) {
+#'   library(discrim)
 #'   data(two_class_dat, package = "modeldata")
 #'
 #'   set.seed(6376)

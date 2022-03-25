@@ -53,6 +53,7 @@
 #'
 #'   If `NULL`, chooses `"resamples"` if there are more than one resample,
 #'   otherwise chooses `"everything"` to attempt to maximize core utilization.
+#' @return An object of class `control_race` that echos the argument values.
 #' @examples
 #' control_race()
 #' @export
