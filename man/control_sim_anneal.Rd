@@ -18,16 +18,11 @@ control_sim_anneal(
   save_workflow = FALSE,
   save_history = FALSE,
   event_level = "first",
-  parallel_over = NULL
+  parallel_over = NULL,
+  allow_par = TRUE
 )
 }
 \arguments{
-\item{verbose}{A logical for logging results as they are generated. Despite
-this argument, warnings and errors are always shown. If using a dark IDE
-theme, some logging messages might be hard to see. If this is the case,
-try setting the \code{tidymodels.dark} option with
-\code{options(tidymodels.dark = TRUE)} to print lighter colors.}
-
 \item{no_improve}{The integer cutoff for the number of iterations without
 better results.}
 
@@ -46,53 +41,16 @@ any non-numeric parameter values at each iteration.}
 schedule. Larger values decrease the probability of accepting a sub-optimal
 parameter setting.}
 
-\item{extract}{An optional function with at least one argument (or \code{NULL})
-that can be used to retain arbitrary objects from the model fit object,
-recipe, or other elements of the workflow.}
-
-\item{save_pred}{A logical for whether the out-of-sample predictions should
-be saved for each model \emph{evaluated}.}
-
 \item{time_limit}{A number for the minimum number of \emph{minutes} (elapsed) that
 the function should execute. The elapsed time is evaluated at internal
 checkpoints and, if over time, the results at that time are returned (with
 a warning). This means that the \code{time_limit} is not an exact limit, but a
 minimum time limit.}
 
-\item{pkgs}{An optional character string of R package names that should be
-loaded (by namespace) during parallel processing.}
-
-\item{save_workflow}{A logical for whether the workflow should be appended
-to the output as an attribute.}
-
 \item{save_history}{A logical to save the iteration details of the search.
 These are saved to \code{tempdir()} named \code{sa_history.RData}. These results are
 deleted when the R session ends. This option is only useful for teaching
 purposes.}
-
-\item{event_level}{A single string containing either "first" or "second".
-This argument is passed on to \code{yardstick} metric functions when any type of
-class prediction is made, and specifies which level of the outcome is
-considered the "event".}
-
-\item{parallel_over}{A single string containing either \code{"resamples"} or
-\code{"everything"} describing how to use parallel processing. Alternatively,
-\code{NULL} is allowed, which chooses between \code{"resamples"} and \code{"everything"}
-automatically.
-
-If \code{"resamples"}, then tuning will be performed in parallel over resamples
-alone. Within each resample, the preprocessor (i.e. recipe or formula) is
-processed once, and is then reused across all models that need to be fit.
-
-If \code{"everything"}, then tuning will be performed in parallel at two levels.
-An outer parallel loop will iterate over resamples. Additionally, an
-inner parallel loop will iterate over all unique combinations of
-preprocessor and model tuning parameters for that specific resample. This
-will result in the preprocessor being re-processed multiple times, but
-can be faster if that processing is extremely fast.
-
-If \code{NULL}, chooses \code{"resamples"} if there are more than one resample,
-otherwise chooses \code{"everything"} to attempt to maximize core utilization.}
 }
 \value{
 An object of class \code{control_sim_anneal} that echos the argument values.
