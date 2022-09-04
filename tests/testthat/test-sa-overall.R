@@ -1,22 +1,13 @@
-source(file.path(test_path(), "..", "helpers.R"))
-
-# ------------------------------------------------------------------------------
-
 test_that("formula interface", {
   skip_on_cran()
-  expect_message(
-    expect_error(
-      {
-        set.seed(1)
-        res <- f_wflow %>%
-          tune_sim_anneal(cell_folds,
-            iter = 2,
-            control = control_sim_anneal(verbose = TRUE)
-          )
-      },
-      regex = NA
-    )
-  )
+  expect_snapshot({
+    set.seed(1)
+    res <- f_wflow %>%
+      tune_sim_anneal(cell_folds,
+                      iter = 2,
+                      control = control_sim_anneal(verbose = TRUE)
+      )
+  })
   expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == 6)
 })
@@ -25,19 +16,15 @@ test_that("formula interface", {
 
 test_that("recipe interface", {
   skip_on_cran()
-  expect_silent(
-    expect_error(
-      {
-        set.seed(1)
-        res <- rec_wflow %>%
-          tune_sim_anneal(cell_folds,
-            iter = 2,
-            control = control_sim_anneal(verbose = FALSE)
-          )
-      },
-      regex = NA
-    )
-  )
+  expect_silent({
+    set.seed(1)
+    res <- rec_wflow %>%
+      tune_sim_anneal(cell_folds,
+                      iter = 2,
+                      control = control_sim_anneal(verbose = FALSE)
+      )
+  })
+
   expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == 6)
 })
@@ -46,38 +33,28 @@ test_that("recipe interface", {
 
 test_that("variable interface", {
   skip_on_cran()
-  expect_silent(
-    expect_error(
-      {
-        set.seed(1)
-        res <- var_wflow %>%
-          tune_sim_anneal(cell_folds,
-            iter = 2,
-            control = control_sim_anneal(verbose = FALSE)
-          )
-      },
-      regex = NA
-    )
-  )
+  expect_silent({
+    set.seed(1)
+    res <- var_wflow %>%
+      tune_sim_anneal(cell_folds,
+                      iter = 2,
+                      control = control_sim_anneal(verbose = FALSE)
+      )
+  })
   expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == 6)
 
   # Check to see if iterations are picked up when an iterative object is used
   # as the initial object
 
-  expect_silent(
-    expect_error(
-      {
-        set.seed(1)
-        new_res <- var_wflow %>%
-          tune_sim_anneal(cell_folds,
-            iter = 2, initial = res,
-            control = control_sim_anneal(verbose = FALSE)
-          )
-      },
-      regex = NA
-    )
-  )
+  expect_silent({
+    set.seed(1)
+    new_res <- var_wflow %>%
+      tune_sim_anneal(cell_folds,
+                      iter = 2, initial = res,
+                      control = control_sim_anneal(verbose = FALSE)
+      )
+  })
   expect_true(nrow(collect_metrics(new_res)) == 10)
   expect_true(max(new_res$.iter) == 4)
   expect_true(sum(grepl("^initial", collect_metrics(new_res)$.config)) == 6)
@@ -87,19 +64,14 @@ test_that("variable interface", {
   grid_res <- var_wflow %>%
     tune_grid(cell_folds, grid = 2)
 
-  expect_silent(
-    expect_error(
-      {
-        set.seed(1)
-        new_new_res <- var_wflow %>%
-          tune_sim_anneal(cell_folds,
-            iter = 2, initial = grid_res,
-            control = control_sim_anneal(verbose = FALSE)
-          )
-      },
-      regex = NA
-    )
-  )
+  expect_silent({
+    set.seed(1)
+    new_new_res <- var_wflow %>%
+      tune_sim_anneal(cell_folds,
+                      iter = 2, initial = grid_res,
+                      control = control_sim_anneal(verbose = FALSE)
+      )
+  })
   expect_true(nrow(collect_metrics(new_new_res)) == 8)
   expect_true(max(new_new_res$.iter) == 2)
   expect_true(sum(grepl("^initial", collect_metrics(new_new_res)$.config)) == 4)
@@ -108,11 +80,6 @@ test_that("variable interface", {
 
 test_that("unfinalized parameters", {
   skip_on_cran()
-  library(workflows)
-  library(rsample)
-  library(parsnip)
-  library(tibble)
-  library(ranger)
 
   data(two_class_dat, package = "modeldata")
 
@@ -134,12 +101,76 @@ test_that("unfinalized parameters", {
   rf_res <- wf_rf %>%
     tune_grid(resamples = bt, grid = 4)
 
-  expect_error(
-    {
-      set.seed(40)
-      rf_res_finetune <- wf_rf %>%
-        tune_sim_anneal(resamples = bt, initial = rf_res)
-    },
-    regex = NA
-  )
+  expect_snapshot({
+    set.seed(40)
+    rf_res_finetune <- wf_rf %>%
+      tune_sim_anneal(resamples = bt, initial = rf_res)
+  })
 })
+
+test_that("set event-level", {
+  # See issue 40
+  skip_if_not_installed("rpart")
+  skip_if_not_installed("modeldata")
+  skip_if_not_installed("yardstick")
+  skip_if_not_installed("rsample")
+  skip_on_cran()
+
+  # ------------------------------------------------------------------------------
+
+  set.seed(1)
+  dat <- modeldata::sim_classification(500, intercept = 8)
+
+  # We should get high sensitivity and low specificity when event_level = "first"
+  # count(dat, class)
+  # levels(dat$class)
+
+  set.seed(2)
+  rs <- vfold_cv(dat, strata = class)
+
+  cart_spec <- decision_tree(min_n = tune()) %>% set_mode("classification")
+
+  stats <- metric_set(accuracy, sensitivity, specificity)
+
+  # ------------------------------------------------------------------------------
+  # high sensitivity and low specificity
+
+  set.seed(3)
+  cart_res_first <-
+    cart_spec %>%
+    tune_sim_anneal(class ~ .,
+                    rs,
+                    control = control_sim_anneal(event_level = "first", verbose = FALSE),
+                    metrics = stats)
+
+  results_first <-
+    cart_res_first %>%
+    collect_metrics() %>%
+    dplyr::filter(.metric != "accuracy") %>%
+    dplyr::select(.config, .metric, mean) %>%
+    tidyr::pivot_wider(id_cols = .config, names_from = .metric, values_from = mean)
+print(results_first)
+  expect_true(all(results_first$sensitivity > results_first$specificity))
+
+  # ------------------------------------------------------------------------------
+  # Now reversed
+
+  set.seed(3)
+  cart_res_second <-
+    cart_spec %>%
+    tune_sim_anneal(class ~ .,
+                    rs,
+                    control = control_sim_anneal(event_level = "second", verbose = FALSE),
+                    metrics = stats)
+
+  results_second <-
+    cart_res_second %>%
+    collect_metrics() %>%
+    dplyr::filter(.metric != "accuracy") %>%
+    dplyr::select(.config, .metric, mean) %>%
+    pivot_wider(id_cols = .config, names_from = .metric, values_from = mean)
+
+  expect_true(all(results_first$sensitivity < results_first$specificity))
+
+})
+

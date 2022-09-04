@@ -1,13 +1,3 @@
-library(parsnip)
-library(rsample)
-library(dplyr)
-library(lme4)
-library(yardstick)
-library(workflows)
-library(recipes)
-library(dials)
-
-## -----------------------------------------------------------------------------
 
 set.seed(2332)
 folds <- vfold_cv(mtcars, v = 5, repeats = 2)
