@@ -111,5 +111,5 @@ test_that("one player is really bad", {
     },
     regex = NA,
   )
-  expect_equal(nrow(show_best(tuning_results)), 1)
+  expect_equal(nrow(show_best(tuning_results)), 5)
 })
