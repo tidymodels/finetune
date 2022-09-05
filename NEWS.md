@@ -1,3 +1,5 @@
+# finetune (development version)
+
 # finetune 1.0.0
 
 * An informative error is given when there are not enough resamples for racing (#33).
