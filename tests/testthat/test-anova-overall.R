@@ -62,3 +62,26 @@ test_that("variable interface", {
   expect_equal(class(res), c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == nrow(grid_mod) * 2)
 })
+
+# ------------------------------------------------------------------------------
+
+
+test_that("too few resamples", {
+
+  rs <- rsample::vfold_cv(modeldata::cells, v = 2)
+  expect_snapshot_error(
+    f_wflow %>%
+      tune_race_anova(rs,
+                      grid = grid_mod,
+                      control = control_race(verbose_elim = TRUE)
+      )
+  )
+  expect_snapshot_error(
+    f_wflow %>%
+      tune_race_win_loss(rs,
+                         grid = grid_mod,
+                         control = control_race(verbose_elim = TRUE)
+      )
+  )
+})
+
