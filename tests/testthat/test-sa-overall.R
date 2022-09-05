@@ -94,7 +94,7 @@ test_that("unfinalized parameters", {
   rec_example <- recipe(Class ~ ., data = two_class_dat)
 
   # RF
-  model_rf <- rand_forest(mtry = tune()) %>%
+  model_rf <- rand_forest(min_n = tune()) %>%
     set_mode("classification") %>%
     set_engine("ranger")
 
