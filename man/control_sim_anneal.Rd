@@ -18,14 +18,16 @@ control_sim_anneal(
   save_workflow = FALSE,
   save_history = FALSE,
   event_level = "first",
-  parallel_over = NULL
+  parallel_over = NULL,
+  allow_par = TRUE
 )
 }
 \arguments{
-\item{verbose}{A logical for logging results as they are generated. Despite
-this argument, warnings and errors are always shown. If using a dark IDE
-theme, some logging messages might be hard to see. If this is the case,
-try setting the \code{tidymodels.dark} option with
+\item{verbose}{A logical for logging results (other than warnings and errors,
+which are always shown) as they are generated during training in a single
+R process. When using most parallel backends, this argument typically will
+not result in any logging. If using a dark IDE theme, some logging messages
+might be hard to see; try setting the \code{tidymodels.dark} option with
 \code{options(tidymodels.dark = TRUE)} to print lighter colors.}
 
 \item{no_improve}{The integer cutoff for the number of iterations without
@@ -70,10 +72,10 @@ These are saved to \code{tempdir()} named \code{sa_history.RData}. These results
 deleted when the R session ends. This option is only useful for teaching
 purposes.}
 
-\item{event_level}{A single string containing either "first" or "second".
-This argument is passed on to \code{yardstick} metric functions when any type of
-class prediction is made, and specifies which level of the outcome is
-considered the "event".}
+\item{event_level}{A single string containing either \code{"first"} or \code{"second"}.
+This argument is passed on to yardstick metric functions when any type
+of class prediction is made, and specifies which level of the outcome
+is considered the "event".}
 
 \item{parallel_over}{A single string containing either \code{"resamples"} or
 \code{"everything"} describing how to use parallel processing. Alternatively,
@@ -92,7 +94,15 @@ will result in the preprocessor being re-processed multiple times, but
 can be faster if that processing is extremely fast.
 
 If \code{NULL}, chooses \code{"resamples"} if there are more than one resample,
-otherwise chooses \code{"everything"} to attempt to maximize core utilization.}
+otherwise chooses \code{"everything"} to attempt to maximize core utilization.
+
+Note that switching between \code{parallel_over} strategies is not guaranteed
+to use the same random number generation schemes. However, re-tuning a
+model using the same \code{parallel_over} strategy is guaranteed to be
+reproducible between runs.}
+
+\item{allow_par}{A logical to allow parallel processing (if a parallel
+backend is registered).}
 }
 \value{
 An object of class \code{control_sim_anneal} that echos the argument values.

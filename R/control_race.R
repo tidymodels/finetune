@@ -1,10 +1,6 @@
 #' Control aspects of the grid search racing process
 #'
-#' @param verbose A logical for logging results as they are generated. Despite
-#'   this argument, warnings and errors are always shown. If using a dark IDE
-#'   theme, some logging messages might be hard to see. If this is the case,
-#'   try setting the `tidymodels.dark` option with
-#'   `options(tidymodels.dark = TRUE)` to print lighter colors.
+#' @inheritParams tune::control_grid
 #' @param verbose_elim A logical for whether logging of the elimination of
 #'  tuning parameter combinations should occur.
 #' @param burn_in An integer for how many resamples should be completed for all
@@ -20,39 +16,6 @@
 #' default, the resamples are evaluated in a random order so the random number
 #' seed should be control prior to calling this method (to be reproducible).
 #' For repeated cross-validation the randomization occurs within each repeat.
-#' @param extract An optional function with at least one argument (or `NULL`)
-#'   that can be used to retain arbitrary objects from the model fit object,
-#'   recipe, or other elements of the workflow.
-#' @param save_pred A logical for whether the out-of-sample predictions should
-#'   be saved for each model _evaluated_.
-#' @param pkgs An optional character string of R package names that should be
-#'   loaded (by namespace) during parallel processing.
-#' @param allow_par A logical to allow parallel processing (if a parallel
-#'   backend is registered).
-#' @param save_workflow A logical for whether the workflow should be appended
-#' to the output as an attribute.
-#' @param event_level A single string containing either "first" or "second".
-#' This argument is passed on to `yardstick` metric functions when any type of
-#' class prediction is made, and specifies which level of the outcome is
-#' considered the "event".
-#' @param parallel_over A single string containing either `"resamples"` or
-#'   `"everything"` describing how to use parallel processing. Alternatively,
-#'   `NULL` is allowed, which chooses between `"resamples"` and `"everything"`
-#'   automatically.
-#'
-#'   If `"resamples"`, then tuning will be performed in parallel over resamples
-#'   alone. Within each resample, the preprocessor (i.e. recipe or formula) is
-#'   processed once, and is then reused across all models that need to be fit.
-#'
-#'   If `"everything"`, then tuning will be performed in parallel at two levels.
-#'   An outer parallel loop will iterate over resamples. Additionally, an
-#'   inner parallel loop will iterate over all unique combinations of
-#'   preprocessor and model tuning parameters for that specific resample. This
-#'   will result in the preprocessor being re-processed multiple times, but
-#'   can be faster if that processing is extremely fast.
-#'
-#'   If `NULL`, chooses `"resamples"` if there are more than one resample,
-#'   otherwise chooses `"everything"` to attempt to maximize core utilization.
 #' @return An object of class `control_race` that echos the argument values.
 #' @examples
 #' control_race()

@@ -304,6 +304,7 @@ tune_sim_anneal_workflow <-
 
     control_init <- control
     control_init$save_workflow <- TRUE
+    control_init$verbose <- FALSE
     initial <- tune::check_initial(initial, param_info, object, resamples, metrics, control_init)
     if (any(dials::has_unknowns(param_info$object))) {
       param_info <- tune::.get_tune_parameters(initial)
@@ -397,7 +398,8 @@ tune_sim_anneal_workflow <-
         tune::tune_grid(
           resamples = resamples,
           grid = new_grid %>% dplyr::select(-.config, -.parent),
-          metrics = metrics
+          metrics = metrics,
+          control = control_init
         ) %>%
         dplyr::mutate(.iter = i) %>%
         update_config(config = paste0("Iter", i))

@@ -14,76 +14,22 @@ test_that("control_race arg passing", {
 })
 
 test_that("control_race bad arg passing", {
-  expect_error(
-    control_race(verbose = "TRUE"),
-    "should be a single logical value"
-  )
-  expect_error(
-    control_race(verbose = rep(TRUE, 2)),
-    "should be a single logical value"
-  )
-  expect_error(
-    control_race(verbose_elim = "TRUE"),
-    "should be a single logical value"
-  )
-  expect_error(
-    control_race(verbose_elim = rep(TRUE, 2)),
-    "should be a single logical value"
-  )
-  expect_error(
-    control_race(save_pred = "TRUE"),
-    "should be a single logical value"
-  )
-  expect_error(
-    control_race(save_pred = rep(TRUE, 2)),
-    "should be a single logical value"
-  )
-  expect_error(
-    control_race(save_workflow = "TRUE"),
-    "should be a single logical value"
-  )
-  expect_error(
-    control_race(save_workflow = rep(TRUE, 2)),
-    "should be a single logical value"
-  )
-  expect_error(
-    control_race(burn_in = "yes"),
-    "should be a single numeric value"
-  )
-  expect_error(
-    control_race(burn_in = 0:1),
-    "should be a single numeric value"
-  )
-  expect_error(
-    control_race(burn_in = 1),
-    "ould be at least two"
-  )
-  expect_error(
-    control_race(num_ties = "yes"),
-    "a single numeric value"
-  )
-  expect_error(
-    control_race(num_ties = 0:1),
-    "a single numeric value"
-  )
-  expect_error(
-    control_race(alpha = 0:1),
-    "should be a single numeric value"
-  )
-  expect_error(
-    control_race(alpha = "huge"),
-    "should be a single numeric value"
-  )
-  expect_error(
-    control_race(alpha = 1),
-    "'alpha' should be on"
-  )
-  expect_error(
-    control_race(pkg = 0:1),
-    "should be a character or NULL in"
-  )
-  expect_error(
-    control_race(extract = 0:1),
-    "should be a function or NULL in"
-  )
+  expect_snapshot_error(control_race(verbose = "TRUE"))
+  expect_snapshot_error(control_race(verbose = rep(TRUE, 2)))
+  expect_snapshot_error(control_race(verbose_elim = "TRUE"))
+  expect_snapshot_error(control_race(verbose_elim = rep(TRUE, 2)))
+  expect_snapshot_error(control_race(save_pred = "TRUE"))
+  expect_snapshot_error(control_race(save_pred = rep(TRUE, 2)))
+  expect_snapshot_error(control_race(save_workflow = "TRUE"))
+  expect_snapshot_error(control_race(save_workflow = rep(TRUE, 2)))
+  expect_snapshot_error(control_race(burn_in = "yes"))
+  expect_snapshot_error(control_race(burn_in = 0:1))
+  expect_snapshot_error(control_race(burn_in = 1))
+  expect_snapshot_error(control_race(num_ties = "yes"))
+  expect_snapshot_error(control_race(num_ties = 0:1))
+  expect_snapshot_error(control_race(alpha = 0:1))
+  expect_snapshot_error(control_race(alpha = "huge"))
+  expect_snapshot_error(control_race(alpha = 1))
+  expect_snapshot_error(control_race(pkg = 0:1))
+  expect_snapshot_error(control_race(extract = 0:1))
 })
