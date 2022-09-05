@@ -83,6 +83,8 @@ test_that("variable interface", {
 
 test_that("unfinalized parameters", {
   skip_on_cran()
+  skip_on_os("windows")
+  skip_on_os("linux")
 
   data(two_class_dat, package = "modeldata")
 
