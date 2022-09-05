@@ -20,9 +20,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="deps/_Source%20Sans%20Pro-0.4.1/font.css" rel="stylesheet">
-<link href="deps/_Source%20Code%20Pro-0.4.1/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
+<link href="deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Additional Functions for Model Tuning">
@@ -47,7 +47,7 @@
     
     <a class="navbar-brand me-2" href="index.html">finetune</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,118 +88,116 @@
 </h1>
 </div>
 <!-- badges: start -->
-
 <p><code>finetune</code> contains some extra functions for model tuning that extend what is currently in the <code>tune</code> package.</p>
 <p>Very rough version of the package right now but it works fairly well. There are two main sets of tools.</p>
 <p>Tuning via <em>simulated annealing</em> optimization is another iterative search tool for finding good values:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/finetune" class="external-link">finetune</a></span><span class="op">)</span>
-
-<span class="co"># Syntax very similar to `tune_grid()` or `tune_Bayes()`: </span>
-
-<span class="co">## -----------------------------------------------------------------------------</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">two_class_dat</span>, package <span class="op">=</span> <span class="st">"modeldata"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-<span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu">bootstraps</span><span class="op">(</span><span class="va">two_class_dat</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># more resamples usually needed</span>
-
-<span class="co"># Optimize a regularized discriminant analysis model</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://discrim.tidymodels.org/" class="external-link">discrim</a></span><span class="op">)</span>
-<span class="va">rda_spec</span> <span class="op">&lt;-</span>
-  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/discrim_regularized.html" class="external-link">discrim_regularized</a></span><span class="op">(</span>frac_common_cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/hardhat/man/tune.html" class="external-link">tune</a></span><span class="op">(</span><span class="op">)</span>, frac_identity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/hardhat/man/tune.html" class="external-link">tune</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine</a></span><span class="op">(</span><span class="st">"klaR"</span><span class="op">)</span>
-
-<span class="co">## -----------------------------------------------------------------------------</span>
-
-<span class="va">ctrl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/control_sim_anneal.html">control_sim_anneal</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
-<span class="va">sa_res</span> <span class="op">&lt;-</span> 
-  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="reference/tune_sim_anneal.html">tune_sim_anneal</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, iter <span class="op">=</span> <span class="fl">20</span>, initial <span class="op">=</span> <span class="fl">4</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; &gt;  Generating a set of 4 initial parameter results</span>
-<span class="co">#&gt; ✓ Initialization complete</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Optimizing roc_auc</span>
-<span class="co">#&gt; Initial best: 0.86480</span>
-<span class="co">#&gt;  1 ♥ new best           roc_auc=0.87327  (+/-0.004592)</span>
-<span class="co">#&gt;  2 ♥ new best           roc_auc=0.87915  (+/-0.003864)</span>
-<span class="co">#&gt;  3 ◯ accept suboptimal  roc_auc=0.87029  (+/-0.004994)</span>
-<span class="co">#&gt;  4 + better suboptimal  roc_auc=0.87171  (+/-0.004717)</span>
-<span class="co">#&gt;  5 ◯ accept suboptimal  roc_auc=0.86944  (+/-0.005081)</span>
-<span class="co">#&gt;  6 ◯ accept suboptimal  roc_auc=0.86812  (+/-0.0052)</span>
-<span class="co">#&gt;  7 ♥ new best           roc_auc=0.88172  (+/-0.003647)</span>
-<span class="co">#&gt;  8 ◯ accept suboptimal  roc_auc=0.87678  (+/-0.004276)</span>
-<span class="co">#&gt;  9 ◯ accept suboptimal  roc_auc=0.8627   (+/-0.005784)</span>
-<span class="co">#&gt; 10 + better suboptimal  roc_auc=0.87003  (+/-0.005106)</span>
-<span class="co">#&gt; 11 + better suboptimal  roc_auc=0.87088  (+/-0.004962)</span>
-<span class="co">#&gt; 12 ◯ accept suboptimal  roc_auc=0.86803  (+/-0.005195)</span>
-<span class="co">#&gt; 13 ◯ accept suboptimal  roc_auc=0.85294  (+/-0.006498)</span>
-<span class="co">#&gt; 14 ─ discard suboptimal roc_auc=0.84689  (+/-0.006867)</span>
-<span class="co">#&gt; 15 x restart from best  roc_auc=0.85021  (+/-0.006623)</span>
-<span class="co">#&gt; 16 ◯ accept suboptimal  roc_auc=0.87607  (+/-0.004318)</span>
-<span class="co">#&gt; 17 ◯ accept suboptimal  roc_auc=0.87245  (+/-0.004799)</span>
-<span class="co">#&gt; 18 + better suboptimal  roc_auc=0.87706  (+/-0.004131)</span>
-<span class="co">#&gt; 19 ◯ accept suboptimal  roc_auc=0.87213  (+/-0.004791)</span>
-<span class="co">#&gt; 20 ◯ accept suboptimal  roc_auc=0.86218  (+/-0.005773)</span>
-<span class="fu"><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best</a></span><span class="op">(</span><span class="va">sa_res</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 2 × 9</span>
-<span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config</span>
-<span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  </span>
-<span class="co">#&gt; 1           0.308        0.0166 roc_auc binary     0.882    10 0.00365 Iter7  </span>
-<span class="co">#&gt; 2           0.121        0.0474 roc_auc binary     0.879    10 0.00386 Iter2  </span>
-<span class="co">#&gt; # … with 1 more variable: .iter &lt;int&gt;</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/finetune" class="external-link">finetune</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Syntax very similar to `tune_grid()` or `tune_Bayes()`: </span></span>
+<span></span>
+<span><span class="co">## -----------------------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">two_class_dat</span>, package <span class="op">=</span> <span class="st">"modeldata"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">rs</span> <span class="op">&lt;-</span> <span class="fu">bootstraps</span><span class="op">(</span><span class="va">two_class_dat</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># more resamples usually needed</span></span>
+<span></span>
+<span><span class="co"># Optimize a regularized discriminant analysis model</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://discrim.tidymodels.org/" class="external-link">discrim</a></span><span class="op">)</span></span>
+<span><span class="va">rda_spec</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/discrim_regularized.html" class="external-link">discrim_regularized</a></span><span class="op">(</span>frac_common_cov <span class="op">=</span> <span class="fu"><a href="https://hardhat.tidymodels.org/reference/tune.html" class="external-link">tune</a></span><span class="op">(</span><span class="op">)</span>, frac_identity <span class="op">=</span> <span class="fu"><a href="https://hardhat.tidymodels.org/reference/tune.html" class="external-link">tune</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine</a></span><span class="op">(</span><span class="st">"klaR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## -----------------------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="va">ctrl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/control_sim_anneal.html">control_sim_anneal</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">sa_res</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="reference/tune_sim_anneal.html">tune_sim_anneal</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, iter <span class="op">=</span> <span class="fl">20</span>, initial <span class="op">=</span> <span class="fl">4</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Optimizing roc_auc</span></span>
+<span><span class="co">#&gt; Initial best: 0.86480</span></span>
+<span><span class="co">#&gt;  1 ♥ new best           roc_auc=0.87327  (+/-0.004592)</span></span>
+<span><span class="co">#&gt;  2 ♥ new best           roc_auc=0.87915  (+/-0.003864)</span></span>
+<span><span class="co">#&gt;  3 ◯ accept suboptimal  roc_auc=0.87029  (+/-0.004994)</span></span>
+<span><span class="co">#&gt;  4 + better suboptimal  roc_auc=0.87171  (+/-0.004717)</span></span>
+<span><span class="co">#&gt;  5 ◯ accept suboptimal  roc_auc=0.86944  (+/-0.005081)</span></span>
+<span><span class="co">#&gt;  6 ◯ accept suboptimal  roc_auc=0.86812  (+/-0.0052)</span></span>
+<span><span class="co">#&gt;  7 ♥ new best           roc_auc=0.88172  (+/-0.003647)</span></span>
+<span><span class="co">#&gt;  8 ◯ accept suboptimal  roc_auc=0.87678  (+/-0.004276)</span></span>
+<span><span class="co">#&gt;  9 ◯ accept suboptimal  roc_auc=0.8627   (+/-0.005784)</span></span>
+<span><span class="co">#&gt; 10 + better suboptimal  roc_auc=0.87003  (+/-0.005106)</span></span>
+<span><span class="co">#&gt; 11 + better suboptimal  roc_auc=0.87088  (+/-0.004962)</span></span>
+<span><span class="co">#&gt; 12 ◯ accept suboptimal  roc_auc=0.86803  (+/-0.005195)</span></span>
+<span><span class="co">#&gt; 13 ◯ accept suboptimal  roc_auc=0.85294  (+/-0.006498)</span></span>
+<span><span class="co">#&gt; 14 ─ discard suboptimal roc_auc=0.84689  (+/-0.006867)</span></span>
+<span><span class="co">#&gt; 15 ✖ restart from best  roc_auc=0.85021  (+/-0.006623)</span></span>
+<span><span class="co">#&gt; 16 ◯ accept suboptimal  roc_auc=0.87607  (+/-0.004318)</span></span>
+<span><span class="co">#&gt; 17 ◯ accept suboptimal  roc_auc=0.87245  (+/-0.004799)</span></span>
+<span><span class="co">#&gt; 18 + better suboptimal  roc_auc=0.87706  (+/-0.004131)</span></span>
+<span><span class="co">#&gt; 19 ◯ accept suboptimal  roc_auc=0.87213  (+/-0.004791)</span></span>
+<span><span class="co">#&gt; 20 ◯ accept suboptimal  roc_auc=0.86218  (+/-0.005773)</span></span>
+<span><span class="fu"><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best</a></span><span class="op">(</span><span class="va">sa_res</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 9</span></span>
+<span><span class="co">#&gt;   frac_common_cov frac_ident…¹ .metric .esti…²  mean     n std_err .config .iter</span></span>
+<span><span class="co">#&gt;             &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1           0.308       0.0166 roc_auc binary  0.882    10 0.00365 Iter7       7</span></span>
+<span><span class="co">#&gt; 2           0.121       0.0474 roc_auc binary  0.879    10 0.00386 Iter2       2</span></span>
+<span><span class="co">#&gt; # … with abbreviated variable names ¹​frac_identity, ²​.estimator</span></span></code></pre></div>
 <p>The second set of methods are for “racing”. We start off by doing a small set of resamples for all of the grid points, then statistically testing to see which ones should be dropped or investigated more. The two methods here are based on those should in <a href="https://arxiv.org/abs/1405.6974" class="external-link">Kuhn (2014)</a>.</p>
 <p>For example, using an ANOVA-type analysis to filter out parameter combinations:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
-<span class="va">grid</span> <span class="op">&lt;-</span>
-  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/pkg/hardhat/man/hardhat-extract.html" class="external-link">extract_parameter_set_dials</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu">grid_max_entropy</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
-
-<span class="va">ctrl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/control_race.html">control_race</a></span><span class="op">(</span>verbose_elim <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>
-<span class="va">grid_anova</span> <span class="op">&lt;-</span> 
-  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
-<span class="co">#&gt; ℹ Racing will maximize the roc_auc metric.</span>
-<span class="co">#&gt; ℹ Resamples are analyzed in a random order.</span>
-<span class="co">#&gt; ℹ Bootstrap10: 14 eliminated;  6 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap04:  2 eliminated;  4 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap03: All but one parameter combination were eliminated.</span>
-
-<span class="fu"><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best</a></span><span class="op">(</span><span class="va">grid_anova</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 × 8</span>
-<span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
-<span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span>
-<span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://hardhat.tidymodels.org/reference/hardhat-extract.html" class="external-link">extract_parameter_set_dials</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">grid_max_entropy</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ctrl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/control_race.html">control_race</a></span><span class="op">(</span>verbose_elim <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">grid_anova</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Racing will maximize the roc_auc metric.</span></span>
+<span><span class="co">#&gt; ℹ Resamples are analyzed in a random order.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap10: 14 eliminated;  6 candidates remain.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap04:  2 eliminated;  4 candidates remain.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap03: All but one parameter combination were eliminated.</span></span>
+<span></span>
+<span><span class="fu"><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best</a></span><span class="op">(</span><span class="va">grid_anova</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 9</span></span>
+<span><span class="co">#&gt;   .order frac_common_cov frac_iden…¹ .metric .esti…²  mean     n std_err .config</span></span>
+<span><span class="co">#&gt;    &lt;int&gt;           &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  </span></span>
+<span><span class="co">#&gt; 1      9           0.831      0.0207 roc_auc binary  0.901     1      NA Prepro…</span></span>
+<span><span class="co">#&gt; 2      8           0.831      0.0207 roc_auc binary  0.893     1      NA Prepro…</span></span>
+<span><span class="co">#&gt; # … with abbreviated variable names ¹​frac_identity, ²​.estimator</span></span></code></pre></div>
 <p><code><a href="reference/tune_race_win_loss.html">tune_race_win_loss()</a></code> can also be used. It treats the tuning parameters as sports teams in a tournament and computed win/loss statistics.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>
-<span class="va">grid_win_loss</span><span class="op">&lt;-</span> 
-  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="reference/tune_race_win_loss.html">tune_race_win_loss</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span>
-<span class="co">#&gt; ℹ Racing will maximize the roc_auc metric.</span>
-<span class="co">#&gt; ℹ Resamples are analyzed in a random order.</span>
-<span class="co">#&gt; ℹ Bootstrap10:  3 eliminated; 17 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap04:  2 eliminated; 15 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap03:  2 eliminated; 13 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap01:  1 eliminated; 12 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap07:  1 eliminated; 11 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap05:  1 eliminated; 10 candidates remain.</span>
-<span class="co">#&gt; ℹ Bootstrap08:  1 eliminated;  9 candidates remain.</span>
-
-<span class="fu"><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best</a></span><span class="op">(</span><span class="va">grid_win_loss</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 2 × 8</span>
-<span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span>
-<span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span>
-<span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span>
-<span class="co">#&gt; 2           0.119        0.0470 roc_auc binary     0.879    10 0.00387 Preproce…</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">grid_win_loss</span><span class="op">&lt;-</span> </span>
+<span>  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="reference/tune_race_win_loss.html">tune_race_win_loss</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">grid</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Racing will maximize the roc_auc metric.</span></span>
+<span><span class="co">#&gt; ℹ Resamples are analyzed in a random order.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap10:  3 eliminated; 17 candidates remain.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap04:  2 eliminated; 15 candidates remain.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap03:  2 eliminated; 13 candidates remain.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap01:  1 eliminated; 12 candidates remain.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap07:  1 eliminated; 11 candidates remain.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap05:  1 eliminated; 10 candidates remain.</span></span>
+<span><span class="co">#&gt; ℹ Bootstrap08:  1 eliminated;  9 candidates remain.</span></span>
+<span></span>
+<span><span class="fu"><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best</a></span><span class="op">(</span><span class="va">grid_win_loss</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 9</span></span>
+<span><span class="co">#&gt;   .order frac_common_cov frac_iden…¹ .metric .esti…²  mean     n std_err .config</span></span>
+<span><span class="co">#&gt;    &lt;int&gt;           &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  </span></span>
+<span><span class="co">#&gt; 1      9           0.831      0.0207 roc_auc binary  0.901     1      NA Prepro…</span></span>
+<span><span class="co">#&gt; 2      9           0.321      0.0561 roc_auc binary  0.898     1      NA Prepro…</span></span>
+<span><span class="co">#&gt; # … with abbreviated variable names ¹​frac_identity, ²​.estimator</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
@@ -253,14 +251,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/tidymodels/finetune/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/tidymodels/finetune/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/tidymodels/finetune?branch=main" class="external-link"><img src="https://codecov.io/gh/tidymodels/finetune/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>
@@ -275,7 +266,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
   </div></footer>
