@@ -1,10 +1,5 @@
 #' Control aspects of the simulated annealing search process
-#'
-#' @param verbose A logical for logging results as they are generated. Despite
-#'   this argument, warnings and errors are always shown. If using a dark IDE
-#'   theme, some logging messages might be hard to see. If this is the case,
-#'   try setting the `tidymodels.dark` option with
-#'   `options(tidymodels.dark = TRUE)` to print lighter colors.
+#' @inheritParams tune::control_grid
 #' @param no_improve The integer cutoff for the number of iterations without
 #'   better results.
 #' @param restart The number of iterations with no improvement before new tuning
@@ -23,41 +18,10 @@
 #'   checkpoints and, if over time, the results at that time are returned (with
 #'   a warning). This means that the `time_limit` is not an exact limit, but a
 #'   minimum time limit.
-#' @param extract An optional function with at least one argument (or `NULL`)
-#'   that can be used to retain arbitrary objects from the model fit object,
-#'   recipe, or other elements of the workflow.
-#' @param save_pred A logical for whether the out-of-sample predictions should
-#'   be saved for each model _evaluated_.
-#' @param pkgs An optional character string of R package names that should be
-#'   loaded (by namespace) during parallel processing.
-#' @param save_workflow A logical for whether the workflow should be appended
-#' to the output as an attribute.
 #' @param save_history A logical to save the iteration details of the search.
 #'  These are saved to `tempdir()` named `sa_history.RData`. These results are
 #'  deleted when the R session ends. This option is only useful for teaching
 #'  purposes.
-#' @param event_level A single string containing either "first" or "second".
-#' This argument is passed on to `yardstick` metric functions when any type of
-#' class prediction is made, and specifies which level of the outcome is
-#' considered the "event".
-#' @param parallel_over A single string containing either `"resamples"` or
-#'   `"everything"` describing how to use parallel processing. Alternatively,
-#'   `NULL` is allowed, which chooses between `"resamples"` and `"everything"`
-#'   automatically.
-#'
-#'   If `"resamples"`, then tuning will be performed in parallel over resamples
-#'   alone. Within each resample, the preprocessor (i.e. recipe or formula) is
-#'   processed once, and is then reused across all models that need to be fit.
-#'
-#'   If `"everything"`, then tuning will be performed in parallel at two levels.
-#'   An outer parallel loop will iterate over resamples. Additionally, an
-#'   inner parallel loop will iterate over all unique combinations of
-#'   preprocessor and model tuning parameters for that specific resample. This
-#'   will result in the preprocessor being re-processed multiple times, but
-#'   can be faster if that processing is extremely fast.
-#'
-#'   If `NULL`, chooses `"resamples"` if there are more than one resample,
-#'   otherwise chooses `"everything"` to attempt to maximize core utilization.
 #' @return An object of class `control_sim_anneal` that echos the argument values.
 #' @examples
 #' control_sim_anneal()
@@ -76,7 +40,8 @@ control_sim_anneal <-
            save_workflow = FALSE,
            save_history = FALSE,
            event_level = "first",
-           parallel_over = NULL) {
+           parallel_over = NULL,
+           allow_par = TRUE) {
     tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
     tune::val_class_and_single(no_improve, c("numeric", "integer"), "control_sim_anneal()")
@@ -88,6 +53,8 @@ control_sim_anneal <-
     tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
     tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_history, "logical", "control_sim_anneal()")
+    tune::val_class_and_single(allow_par, "logical", "control_sim_anneal()")
+
     if (!is.null(parallel_over)) {
       val_parallel_over(parallel_over, "control_sim_anneal()")
     }
@@ -130,7 +97,8 @@ control_sim_anneal <-
         save_workflow = save_workflow,
         save_history = save_history,
         event_level = event_level,
-        parallel_over = parallel_over
+        parallel_over = parallel_over,
+        allow_par = allow_par
       )
 
     class(res) <- "control_sim_anneal"

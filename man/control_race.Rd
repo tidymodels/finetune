@@ -21,10 +21,11 @@ control_race(
 )
 }
 \arguments{
-\item{verbose}{A logical for logging results as they are generated. Despite
-this argument, warnings and errors are always shown. If using a dark IDE
-theme, some logging messages might be hard to see. If this is the case,
-try setting the \code{tidymodels.dark} option with
+\item{verbose}{A logical for logging results (other than warnings and errors,
+which are always shown) as they are generated during training in a single
+R process. When using most parallel backends, this argument typically will
+not result in any logging. If using a dark IDE theme, some logging messages
+might be hard to see; try setting the \code{tidymodels.dark} option with
 \code{options(tidymodels.dark = TRUE)} to print lighter colors.}
 
 \item{verbose_elim}{A logical for whether logging of the elimination of
@@ -63,10 +64,10 @@ loaded (by namespace) during parallel processing.}
 \item{save_workflow}{A logical for whether the workflow should be appended
 to the output as an attribute.}
 
-\item{event_level}{A single string containing either "first" or "second".
-This argument is passed on to \code{yardstick} metric functions when any type of
-class prediction is made, and specifies which level of the outcome is
-considered the "event".}
+\item{event_level}{A single string containing either \code{"first"} or \code{"second"}.
+This argument is passed on to yardstick metric functions when any type
+of class prediction is made, and specifies which level of the outcome
+is considered the "event".}
 
 \item{parallel_over}{A single string containing either \code{"resamples"} or
 \code{"everything"} describing how to use parallel processing. Alternatively,
@@ -85,7 +86,12 @@ will result in the preprocessor being re-processed multiple times, but
 can be faster if that processing is extremely fast.
 
 If \code{NULL}, chooses \code{"resamples"} if there are more than one resample,
-otherwise chooses \code{"everything"} to attempt to maximize core utilization.}
+otherwise chooses \code{"everything"} to attempt to maximize core utilization.
+
+Note that switching between \code{parallel_over} strategies is not guaranteed
+to use the same random number generation schemes. However, re-tuning a
+model using the same \code{parallel_over} strategy is guaranteed to be
+reproducible between runs.}
 }
 \value{
 An object of class \code{control_race} that echos the argument values.
