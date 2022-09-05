@@ -16,6 +16,9 @@ test_that("formula interface", {
 
 test_that("recipe interface", {
   skip_on_cran()
+  skip_on_os("windows")
+  skip_on_os("linux")
+
   expect_silent({
     set.seed(1)
     res <- rec_wflow %>%
