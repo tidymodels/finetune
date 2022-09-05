@@ -84,6 +84,8 @@ test_that("one player is really bad", {
     grid = grid,
     control = ctrl
   )
+
   # TODO Needs to be fixed in tune package
   expect_true(nrow(show_best(tuning_results)) > 0)
+
 })

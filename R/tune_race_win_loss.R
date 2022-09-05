@@ -208,6 +208,7 @@ tune_race_win_loss_workflow <-
     resamples <- dplyr::mutate(resamples, .order = dplyr::row_number())
 
     min_rs <- control$burn_in
+    check_num_resamples(B, min_rs)
     tmp_resamples <- restore_rset(resamples, 1:min_rs)
 
     res <-

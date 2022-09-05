@@ -197,6 +197,7 @@ tune_race_anova_workflow <-
     resamples <- dplyr::mutate(resamples, .order = dplyr::row_number())
 
     min_rs <- control$burn_in
+    check_num_resamples(B, min_rs)
     tmp_resamples <- restore_rset(resamples, 1:min_rs)
 
     control$pkgs <- c(tune::required_pkgs(object), "workflows", "tidyr", "rlang")
@@ -284,3 +285,16 @@ tune_race_anova_workflow <-
 
     res
   }
+
+check_num_resamples <- function(B, min_rs) {
+  if (B <= min_rs) {
+    rlang::abort(
+      paste0("The number of resamples (", B, ") needs to be more than the ",
+             "number of burn-in resamples (", min_rs, ") set by the control ",
+             "function `control_race()`."),
+      call = NULL
+    )
+  }
+  invisible(NULL)
+}
+

@@ -1,5 +1,7 @@
 # finetune (development version)
 
+* An informative error is given when there are not enough resamples for racing (#33).
+
 # finetune 0.2.0
 
 * Maintenance release for CRAN requirements. 
