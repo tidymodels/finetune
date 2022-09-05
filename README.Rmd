@@ -32,7 +32,6 @@ library(tidymodels)
 library(finetune)
 library(discrim)
 library(rlang)
-library(vctrs)
 library(MASS)
 ```
 ```{r sa}

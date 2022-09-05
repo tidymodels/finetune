@@ -149,8 +149,9 @@ test_that("set event-level", {
     dplyr::filter(.metric != "accuracy") %>%
     dplyr::select(.config, .metric, mean) %>%
     tidyr::pivot_wider(id_cols = .config, names_from = .metric, values_from = mean)
-print(results_first)
-  expect_true(all(results_first$sensitivity > results_first$specificity))
+
+  dir_check <- all(results_first$sensitivity > results_first$specificity)
+  expect_true(dir_check)
 
   # ------------------------------------------------------------------------------
   # Now reversed
@@ -168,9 +169,10 @@ print(results_first)
     collect_metrics() %>%
     dplyr::filter(.metric != "accuracy") %>%
     dplyr::select(.config, .metric, mean) %>%
-    pivot_wider(id_cols = .config, names_from = .metric, values_from = mean)
+    tidyr::pivot_wider(id_cols = .config, names_from = .metric, values_from = mean)
 
-  expect_true(all(results_first$sensitivity < results_first$specificity))
+  rev_dir_check <- all(results_second$sensitivity < results_second$specificity)
+  expect_true(rev_dir_check)
 
 })
 

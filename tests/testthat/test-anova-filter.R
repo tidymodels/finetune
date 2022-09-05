@@ -21,6 +21,11 @@ test_that("anova filtering and logging", {
 
   grid_res <-
     spec %>% tune_grid(mpg ~ ., folds, grid = grid, metrics = metric_set(rmse))
+  # Pull out rmse values, format them to emulate the racing tests then
+  # use lme4 package to create the model results for removing configurations.
+
+  alpha <- 0.0381
+
   rmse_means <- collect_metrics(grid_res)
   configs <- rmse_means$.config[order(rmse_means$mean)]
   rmse_vals <- collect_metrics(grid_res, summarize = FALSE)
@@ -32,13 +37,13 @@ test_that("anova filtering and logging", {
   rmse_res <- tibble::as_tibble(rmse_summary)
   rmse_res$.config <- gsub("\\.config", "", rownames(rmse_summary))
   rmse_res$.config <- gsub("(Intercept)", configs[1], rmse_res$.config, fixed = TRUE)
-  rmse_ci <- confint(rmse_mod, level = 1 - 0.0381, method = "Wald", quiet = TRUE)
+  rmse_ci <- confint(rmse_mod, level = 1 - alpha, method = "Wald", quiet = TRUE)
   rmse_ci <- rmse_ci[grepl("config", rownames(rmse_ci)), ]
 
   # ------------------------------------------------------------------------------
   # anova results
 
-  anova_res <- finetune:::fit_anova(grid_res, rmse_configs, alpha = 0.0381)
+  anova_res <- finetune:::fit_anova(grid_res, rmse_configs, alpha = alpha)
   expect_equal(anova_res$estimate, rmse_res$Estimate[-1])
   expect_equal(anova_res$lower, unname(rmse_ci[, 1]))
   expect_equal(anova_res$upper, unname(rmse_ci[, 2]))
@@ -71,45 +76,6 @@ test_that("anova filtering and logging", {
   expect_true(tibble::is_tibble((anova_wlfow)))
   expect_true(sum(names(anova_wlfow) == ".predictions") == 1)
 
-  # ------------------------------------------------------------------------------
-#
-#   param <- .get_tune_parameter_names(grid_res)
-#   ames_grid_res <- collect_metrics(grid_res)
-#   ames_grid_res <- ames_grid_res[ames_grid_res$.metric == "rmse", ]
-#
-#   anova_res <- finetune:::test_parameters_gls(grid_res)
-#   expect_equal(
-#     names(anova_res),
-#     c(
-#       ".config", "lower", "upper", "estimate", "pass", "K", "weight_func",
-#       "dist_power", "lon", "lat"
-#     )
-#   )
-#   expect_equal(nrow(anova_res), nrow(ames_grid_res))
-#   expect_equal(anova_res$lower <= 0, anova_res$pass)
-#   expect_equal(
-#     anova_res %>% dplyr::select(!!!param, .config) %>% arrange(.config),
-#     ames_grid_res %>% dplyr::select(!!!param, .config) %>% arrange(.config)
-#   )
-#
-#   expect_snapshot(
-#     finetune:::log_racing(
-#       control_race(verbose_elim = TRUE), anova_res,
-#       grid_res$splits, 10, "rmse"
-#     )
-#   )
-#   expect_snapshot(
-#     finetune:::log_racing(
-#       control_race(verbose_elim = TRUE), anova_res,
-#       grid_res$splits, 10, "rmse"
-#     )
-#   )
-#   expect_snapshot(
-#     finetune:::log_racing(
-#       control_race(verbose_elim = TRUE), anova_res,
-#       grid_res$splits, 10, "rmse"
-#     )
-#   )
 
   ## -----------------------------------------------------------------------------
   ## anova formula
@@ -123,7 +89,7 @@ test_that("anova filtering and logging", {
     }
   }
   # This one takes a while to run:
-  # expect_equal(environment(f), rlang::base_env())
+  expect_equal(environment(f), rlang::base_env())
 
   car_bt <- bootstraps(mtcars, times = 5)
   car_att <- attributes(car_bt)
@@ -132,15 +98,53 @@ test_that("anova filtering and logging", {
     f <- finetune:::lmer_formula(car_bt %>% slice(1:i), car_att)
     expect_equal(f, .estimate ~ .config + (1 | id), ignore_attr = TRUE)
   }
-  # expect_equal(environment(f), rlang::base_env())
+  expect_equal(environment(f), rlang::base_env())
 
   res <- finetune:::refactor_by_mean(rmse_vals, maximize = FALSE)
   expect_equal(res, rmse_configs)
 
+  # ------------------------------------------------------------------------------
+
+  # Ue the built-in `ames_grid_search` object to test the object structure andU
+  # printing
+
+  param <- .get_tune_parameter_names(ames_grid_search)
+  ames_grid_res <- collect_metrics(ames_grid_search)
+  ames_grid_res <- ames_grid_res[ames_grid_res$.metric == "rmse", ]
+
+  anova_res <- finetune:::test_parameters_gls(ames_grid_search)
+  expect_equal(
+    names(anova_res),
+    c(
+      ".config", "lower", "upper", "estimate", "pass", "K", "weight_func",
+      "dist_power", "lon", "lat"
+    )
+  )
+  expect_equal(nrow(anova_res), nrow(ames_grid_res))
+  expect_equal(anova_res$lower <= 0, anova_res$pass)
+  expect_equal(
+    anova_res %>% dplyr::select(!!!param, .config) %>% arrange(.config),
+    ames_grid_res %>% dplyr::select(!!!param, .config) %>% arrange(.config)
+  )
+
+  expect_snapshot(
+    finetune:::log_racing(
+      control_race(verbose_elim = TRUE), anova_res,
+      ames_grid_search$splits, 10, "rmse"
+    )
+  )
+  expect_snapshot(
+    finetune:::log_racing(
+      control_race(verbose_elim = TRUE), anova_res,
+      ames_grid_search$splits, 10, "rmse"
+    )
+  )
+  expect_snapshot(
+    finetune:::log_racing(
+      control_race(verbose_elim = TRUE), anova_res,
+      ames_grid_search$splits, 10, "rmse"
+    )
+  )
+
 })
 
-
-## -----------------------------------------------------------------------------
-
-test_that("
-})

@@ -1,30 +1,36 @@
 
-data("two_class_dat", package = "modeldata")
-
 ## -----------------------------------------------------------------------------
 
-rda_spec <-
-  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
-  set_engine("klaR")
-
-rda_param <- rda_spec %>%
-  extract_parameter_set_dials() %>%
-  update(
-    frac_common_cov = frac_common_cov(c(.3, .6)),
-    frac_identity = frac_identity(c(.3, .6))
-  )
-
-
-set.seed(813)
-rs <- bootstraps(two_class_dat, times = 3)
-
-rec <- recipe(Class ~ ., data = two_class_dat) %>%
-  step_ns(A, deg_free = tune())
-
-## -----------------------------------------------------------------------------
-
-test_that("tune_sim_anneal formula", {
+test_that("tune_sim_anneal interfaces", {
   skip_on_cran()
+  skip_if_not_installed(c("discrim", "klaR"))
+
+  library(discrim)
+  data("two_class_dat", package = "modeldata")
+
+  ## -----------------------------------------------------------------------------
+
+  rda_spec <-
+    discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
+    set_engine("klaR")
+
+  rda_param <- rda_spec %>%
+    extract_parameter_set_dials() %>%
+    update(
+      frac_common_cov = frac_common_cov(c(.3, .6)),
+      frac_identity = frac_identity(c(.3, .6))
+    )
+
+
+  set.seed(813)
+  rs <- bootstraps(two_class_dat, times = 3)
+
+  rec <- recipe(Class ~ ., data = two_class_dat) %>%
+    step_ns(A, deg_free = tune())
+
+  # ------------------------------------------------------------------------------
+  # formula interface
+
 
   expect_snapshot({
     set.seed(1)
@@ -40,12 +46,9 @@ test_that("tune_sim_anneal formula", {
   expect_true(all(collect_metrics(f_res_2)$frac_common_cov <= 0.6))
   expect_true(all(collect_metrics(f_res_2)$frac_identity >= 0.3))
   expect_true(all(collect_metrics(f_res_2)$frac_identity <= 0.6))
-})
 
-## -----------------------------------------------------------------------------
-
-test_that("tune_sim_anneal recipe", {
-  skip_on_cran()
+  # ------------------------------------------------------------------------------
+  # recipe interface
 
   expect_snapshot({
     set.seed(1)
@@ -54,14 +57,9 @@ test_that("tune_sim_anneal recipe", {
   expect_equal(sum(names(collect_metrics(f_rec_1)) == "deg_free"), 1)
   expect_equal(sum(names(collect_metrics(f_rec_1)) == "frac_common_cov"), 1)
   expect_equal(sum(names(collect_metrics(f_rec_1)) == "frac_identity"), 1)
-})
 
-
-
-## -----------------------------------------------------------------------------
-
-test_that("tune_sim_anneal workflow", {
-  skip_on_cran()
+  # ------------------------------------------------------------------------------
+  # workflow interface
 
   wflow <-
     workflow() %>%

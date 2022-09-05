@@ -31,7 +31,6 @@ Imports:
     tidyr,
     tidyselect,
     utils,
-    vctrs,
     workflows (>= 0.2.6)
 Suggests: 
     BradleyTerry2,

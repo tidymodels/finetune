@@ -1,10 +1,9 @@
 
-num_prm <- parameters(mixture(), threshold())
-cat_prm <- parameters(activation(), weight_func())
-
-## -----------------------------------------------------------------------------
-
 test_that("numerical neighborhood", {
+  library(dials)
+
+  num_prm <- dials::parameters(dials::mixture(), dials::threshold())
+
   vals <- tibble::tibble(mixture = 0.5, threshold = 0.5)
   set.seed(1)
   new_vals <-
@@ -17,7 +16,7 @@ test_that("numerical neighborhood", {
       new_vals$mixture, new_vals$threshold,
       ~ sqrt((.x - .5)^2 + (.y - .5)^2)
     ) %>%
-    map_lgl(~ .x >= rad[1] & .x <= rad[2])
+    purrr::map_lgl(~ .x >= rad[1] & .x <= rad[2])
   expect_true(all(correct_r))
 
   set.seed(1)
@@ -31,6 +30,9 @@ test_that("numerical neighborhood", {
 })
 
 test_that("numerical neighborhood boundary filters", {
+  library(dials)
+  num_prm <- dials::parameters(dials::mixture(), dials::threshold())
+
   vals <- tibble::tibble(mixture = 0.05, threshold = 0.05)
   set.seed(1)
   new_vals <-
@@ -41,6 +43,9 @@ test_that("numerical neighborhood boundary filters", {
 ## -----------------------------------------------------------------------------
 
 test_that("categorical value switching", {
+  library(dials)
+  cat_prm <- parameters(activation(), weight_func())
+
   vals <- tibble::tibble(activation = "relu", weight_func = "biweight")
   set.seed(1)
   new_vals <-
@@ -68,6 +73,7 @@ test_that("categorical value switching", {
 ## -----------------------------------------------------------------------------
 
 test_that("reverse-unit encoding", {
+  library(dials)
   prm <-
     parameters(batch_size(), Laplace(), activation()) %>%
     update(Laplace = Laplace(c(2, 4)), batch_size = batch_size(c(10, 20)))
