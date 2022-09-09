@@ -25,7 +25,7 @@ control_race <-
            extract = NULL, save_pred = FALSE,
            burn_in = 3, num_ties = 10, alpha = 0.05, randomize = TRUE,
            pkgs = NULL, save_workflow = FALSE, event_level = "first",
-           parallel_over = "everything") {
+           parallel_over = "everything", backend_options = NULL) {
 
     tune::val_class_and_single(verbose,       "logical",   "control_race()")
     tune::val_class_and_single(verbose_elim,  "logical",   "control_race()")

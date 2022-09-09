@@ -19,7 +19,8 @@ control_sim_anneal(
   save_history = FALSE,
   event_level = "first",
   parallel_over = NULL,
-  allow_par = TRUE
+  allow_par = TRUE,
+  backend_options = NULL
 )
 }
 \arguments{
@@ -103,6 +104,10 @@ reproducible between runs.}
 
 \item{allow_par}{A logical to allow parallel processing (if a parallel
 backend is registered).}
+
+\item{backend_options}{An object of class \code{"tune_backend_options"} as created
+by \code{tune::new_backend_options()}, used to pass arguments to specific tuning
+backend. Defaults to \code{NULL} for default backend options.}
 }
 \value{
 An object of class \code{control_sim_anneal} that echos the argument values.
