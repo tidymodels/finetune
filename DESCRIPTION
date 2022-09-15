@@ -39,7 +39,7 @@ Suggests:
     klaR,
     lme4,
     modeldata,
-    parsnip (>= 0.2.1),
+    parsnip (>= 1.0.1.9000),
     ranger,
     recipes (>= 0.2.0),
     rpart,
@@ -53,3 +53,5 @@ Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1.9000
+Remotes:
+    tidymodels/parsnip@control_control
