@@ -179,6 +179,8 @@ tune_sim_anneal.recipe <- function(object,
                                    control = control_sim_anneal()) {
   tune::empty_ellipses(...)
 
+  control <- parsnip::condense_control(control, control_sim_anneal())
+
   tune_sim_anneal(
     model,
     preprocessor = object, resamples = resamples,
@@ -198,6 +200,8 @@ tune_sim_anneal.formula <- function(formula,
                                     initial = 1,
                                     control = control_sim_anneal()) {
   tune::empty_ellipses(...)
+
+  control <- parsnip::condense_control(control, control_sim_anneal())
 
   tune_sim_anneal(
     model,
@@ -226,6 +230,8 @@ tune_sim_anneal.model_spec <- function(object,
   }
 
   tune::empty_ellipses(...)
+
+  control <- parsnip::condense_control(control, control_sim_anneal())
 
   wflow <- workflows::add_model(workflows::workflow(), object)
 
@@ -256,6 +262,8 @@ tune_sim_anneal.workflow <-
            initial = 1,
            control = control_sim_anneal()) {
     tune::empty_ellipses(...)
+
+    control <- parsnip::condense_control(control, control_sim_anneal())
 
     tune_sim_anneal_workflow(
       object,

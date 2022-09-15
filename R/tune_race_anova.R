@@ -112,6 +112,8 @@ tune_race_anova.recipe <- function(object, model, resamples, ..., param_info = N
                                    control = control_race()) {
   tune::empty_ellipses(...)
 
+  control <- parsnip::condense_control(control, control_race())
+
   tune_race_anova(
     model,
     preprocessor = object, resamples = resamples,
@@ -125,6 +127,8 @@ tune_race_anova.formula <- function(formula, model, resamples, ..., param_info =
                                     grid = 10, metrics = NULL,
                                     control = control_race()) {
   tune::empty_ellipses(...)
+
+  control <- parsnip::condense_control(control, control_race())
 
   tune_race_anova(
     model,
@@ -147,6 +151,8 @@ tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
   }
 
   tune::empty_ellipses(...)
+
+  control <- parsnip::condense_control(control, control_race())
 
   wflow <- workflows::add_model(workflows::workflow(), object)
 
@@ -172,6 +178,8 @@ tune_race_anova.workflow <- function(object, resamples, ..., param_info = NULL,
                                      grid = 10, metrics = NULL,
                                      control = control_race()) {
   tune::empty_ellipses(...)
+
+  control <- parsnip::condense_control(control, control_race())
 
   tune_race_anova_workflow(
     object,
