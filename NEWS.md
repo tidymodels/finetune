@@ -1,5 +1,7 @@
 # finetune (development version)
 
+* `tune_race_anova()`, `tune_race_win_loss()`, and `tune_sim_anneal()` no longer error if `control` argument isn't a the corresponding `control_*()` object. Will work as long as the object passed to `control` includes the same elements as the required `control_*()` object.
+
 # finetune 1.0.0
 
 * An informative error is given when there are not enough resamples for racing (#33).
