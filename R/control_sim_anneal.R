@@ -42,6 +42,10 @@ control_sim_anneal <-
            event_level = "first",
            parallel_over = NULL,
            allow_par = TRUE) {
+
+    # Any added arguments should also be added in superset control functions
+    # in other package
+
     tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
     tune::val_class_and_single(no_improve, c("numeric", "integer"), "control_sim_anneal()")
