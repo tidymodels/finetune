@@ -37,6 +37,7 @@ Suggests:
     BradleyTerry2,
     covr,
     discrim,
+    kknn,
     klaR,
     lme4,
     modeldata,
