@@ -579,3 +579,115 @@ randomize_resamples <- function(x) {
   attributes(x) <- att
   x
 }
+
+# ------------------------------------------------------------------------------
+# S3 methods
+
+#' Obtain and format results produced by racing functions
+#' @inheritParams tune::collect_predictions
+#' @param all_configs A logical: should we return the complete set of model
+#' configurations or just those that made it to the end of the race (the
+#' default).
+#' @export
+#' @return A tibble. The column names depend on the results and the mode of the
+#' model.
+#' @details
+#'
+#' For [collect_metrics()] and [collect_predictions()], when unsummarized,
+#' there are columns for each tuning parameter (using the `id` from [tune()],
+#' if any).
+#' [collect_metrics()] also has columns `.metric`, and `.estimator`.  When the
+#' results are summarized, there are columns for `mean`, `n`, and `std_err`.
+#' When not summarized, the additional columns for the resampling identifier(s)
+#' and `.estimate`.
+#'
+#' For [collect_predictions()], there are additional columns for the resampling
+#' identifier(s), columns for the predicted values (e.g., `.pred`,
+#' `.pred_class`, etc.), and a column for the outcome(s) using the original
+#' column name(s) in the data.
+#'
+#' [collect_predictions()] can summarize the various results over
+#'  replicate out-of-sample predictions. For example, when using the bootstrap,
+#'  each row in the original training set has multiple holdout predictions
+#'  (across assessment sets). To convert these results to a format where every
+#'  training set same has a single predicted value, the results are averaged
+#'  over replicate predictions.
+#'
+#' For regression cases, the numeric predictions are simply averaged. For
+#'  classification models, the problem is more complex. When class probabilities
+#'  are used, these are averaged and then re-normalized to make sure that they
+#'  add to one. If hard class predictions also exist in the data, then these are
+#'  determined from the summarized probability estimates (so that they match).
+#'  If only hard class predictions are in the results, then the mode is used to
+#'  summarize.
+#'
+#' For racing results, it is best to only
+#' collect model configurations that finished the race (i.e., were completely
+#' resampled). Comparing performance metrics for configurations averaged with
+#' different resamples is likely to lead to inappropriate results.
+#' @name collect_predictions
+collect_predictions.tune_race <-
+  function(x,
+           summarize = FALSE,
+           parameters = NULL,
+           all_configs = FALSE,
+           ...) {
+    x <- dplyr::select(x, -.order)
+    res <- NextMethod(summarize = summarize, parameters = parameters)
+    if (!all_configs) {
+      final_configs <- race_subset(x)
+      res <- dplyr::inner_join(res, final_configs, by = ".config")
+    }
+    res
+  }
+
+#' @inheritParams tune::collect_metrics
+#' @export
+#' @rdname collect_predictions
+collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, ...) {
+  x <- dplyr::select(x, -.order)
+  final_configs <- race_subset(x)
+  res <- NextMethod(summarize = summarize, ...)
+  if (!all_configs) {
+    final_configs <- race_subset(x)
+    res <- dplyr::inner_join(res, final_configs, by = ".config")
+  }
+  res
+}
+
+#' Investigate best tuning parameters
+#'
+#' [show_best()] displays the top sub-models and their performance estimates.
+#' @inheritParams tune::show_best
+#' @rdname show_best
+#' @param n An integer for the maximum number of top results/rows to return.
+#' @details
+#' For racing results (from the \pkg{finetune} package), it is best to only
+#' report configurations that finished the race (i.e., were completely
+#' resampled). Comparing performance metrics for configurations averaged with
+#' different resamples is likely to lead to inappropriate results.
+#' @export
+show_best.tune_race <- function(x, metric = NULL, n = 5, ...) {
+  x <- dplyr::select(x, -.order)
+  final_configs <- race_subset(x)
+  res <- NextMethod(metric = metric, n = Inf, ...)
+  res$.ranked <- 1:nrow(res)
+  res <- dplyr::inner_join(res, final_configs, by = ".config")
+  res$.ranked <- NULL
+  n <- min(n, nrow(res))
+  res[1:n,]
+}
+
+
+
+# Only return configurations that were completely resampled
+race_subset <- function(x) {
+  x <- dplyr::select(x, -dplyr::any_of(".order"))
+  full_res <- tune::estimate_tune_results(x)
+  # At least one configuration was completely resampled
+  max_b <- max(full_res$n)
+  final_configs <- dplyr::filter(full_res, n == max_b)
+  final_configs <- dplyr::distinct(final_configs, .config)
+  final_configs <- dplyr::select(final_configs, .config)
+  final_configs
+}
