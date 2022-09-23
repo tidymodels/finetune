@@ -19,6 +19,9 @@
     <loc>https://finetune.tidymodels.org/dev/news/index.html</loc>
   </url>
   <url>
+    <loc>https://finetune.tidymodels.org/dev/reference/collect_predictions.html</loc>
+  </url>
+  <url>
     <loc>https://finetune.tidymodels.org/dev/reference/control_race.html</loc>
   </url>
   <url>
@@ -32,6 +35,9 @@
   </url>
   <url>
     <loc>https://finetune.tidymodels.org/dev/reference/plot_race.html</loc>
+  </url>
+  <url>
+    <loc>https://finetune.tidymodels.org/dev/reference/show_best.html</loc>
   </url>
   <url>
     <loc>https://finetune.tidymodels.org/dev/reference/tune_race_anova.html</loc>

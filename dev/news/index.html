@@ -46,8 +46,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="finetune-development-version">finetune (development version)<a class="anchor" aria-label="anchor" href="#finetune-development-version"></a></h2>
-<ul><li>
-<code><a href="../reference/tune_race_anova.html">tune_race_anova()</a></code>, <code><a href="../reference/tune_race_win_loss.html">tune_race_win_loss()</a></code>, and <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> no longer error if <code>control</code> argument isn’t a the corresponding <code>control_*()</code> object. Will work as long as the object passed to <code>control</code> includes the same elements as the required <code>control_*()</code> object.</li></ul></div>
+<ul><li><p>For racing:</p></li>
+<li><p><code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics()</a></code> and <code><a href="../reference/collect_predictions.html">collect_predictions()</a></code> have a <code>'complete'</code> argument that only returns results for model configurations that were fully resampled.</p></li>
+<li><p><code><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">select_best()</a></code> and <code><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best()</a></code> now only show results for model configurations that were fully resampled.</p></li>
+<li><p><code><a href="../reference/tune_race_anova.html">tune_race_anova()</a></code>, <code><a href="../reference/tune_race_win_loss.html">tune_race_win_loss()</a></code>, and <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> no longer error if <code>control</code> argument isn’t a the corresponding <code>control_*()</code> object. Will work as long as the object passed to <code>control</code> includes the same elements as the required <code>control_*()</code> object.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="finetune-100">finetune 1.0.0<a class="anchor" aria-label="anchor" href="#finetune-100"></a></h2><p class="text-muted">CRAN release: 2022-09-05</p>
 <ul><li><p>An informative error is given when there are not enough resamples for racing (<a href="https://github.com/tidymodels/finetune/issues/33" class="external-link">#33</a>).</p></li>
