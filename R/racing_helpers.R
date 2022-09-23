@@ -635,7 +635,7 @@ collect_predictions.tune_race <-
     x <- dplyr::select(x, -.order)
     res <- NextMethod(summarize = summarize, parameters = parameters)
     if (!all_configs) {
-      final_configs <- race_subset(x)
+      final_configs <- subset_finished_race(x)
       res <- dplyr::inner_join(res, final_configs, by = ".config")
     }
     res
@@ -646,10 +646,10 @@ collect_predictions.tune_race <-
 #' @rdname collect_predictions
 collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, ...) {
   x <- dplyr::select(x, -.order)
-  final_configs <- race_subset(x)
+  final_configs <- subset_finished_race(x)
   res <- NextMethod(summarize = summarize, ...)
   if (!all_configs) {
-    final_configs <- race_subset(x)
+    final_configs <- subset_finished_race(x)
     res <- dplyr::inner_join(res, final_configs, by = ".config")
   }
   res
@@ -669,7 +669,7 @@ collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, 
 #' @export
 show_best.tune_race <- function(x, metric = NULL, n = 5, ...) {
   x <- dplyr::select(x, -.order)
-  final_configs <- race_subset(x)
+  final_configs <- subset_finished_race(x)
   res <- NextMethod(metric = metric, n = Inf, ...)
   res$.ranked <- 1:nrow(res)
   res <- dplyr::inner_join(res, final_configs, by = ".config")
@@ -681,7 +681,7 @@ show_best.tune_race <- function(x, metric = NULL, n = 5, ...) {
 
 
 # Only return configurations that were completely resampled
-race_subset <- function(x) {
+subset_finished_race <- function(x) {
   x <- dplyr::select(x, -dplyr::any_of(".order"))
   full_res <- tune::estimate_tune_results(x)
   # At least one configuration was completely resampled
