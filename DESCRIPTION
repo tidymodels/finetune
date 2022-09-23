@@ -31,11 +31,13 @@ Imports:
     tidyr,
     tidyselect,
     utils,
-    workflows (>= 0.2.6)
+    workflows (>= 0.2.6),
+    vctrs
 Suggests: 
     BradleyTerry2,
     covr,
     discrim,
+    kknn,
     klaR,
     lme4,
     modeldata,

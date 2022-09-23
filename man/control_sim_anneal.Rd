@@ -80,10 +80,7 @@ is considered the "event".}
 \item{parallel_over}{A single string containing either \code{"resamples"} or
 \code{"everything"} describing how to use parallel processing. Alternatively,
 \code{NULL} is allowed, which chooses between \code{"resamples"} and \code{"everything"}
-automatically.}
-
-\item{allow_par}{A logical to allow parallel processing (if a parallel
-backend is registered).
+automatically.
 
 If \code{"resamples"}, then tuning will be performed in parallel over resamples
 alone. Within each resample, the preprocessor (i.e. recipe or formula) is
@@ -103,6 +100,9 @@ Note that switching between \code{parallel_over} strategies is not guaranteed
 to use the same random number generation schemes. However, re-tuning a
 model using the same \code{parallel_over} strategy is guaranteed to be
 reproducible between runs.}
+
+\item{allow_par}{A logical to allow parallel processing (if a parallel
+backend is registered).}
 }
 \value{
 An object of class \code{control_sim_anneal} that echos the argument values.
