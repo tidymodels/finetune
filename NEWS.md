@@ -1,5 +1,11 @@
 # finetune (development version)
 
+* For racing: 
+ - `collect_metrics()` and `collect_predictions()` have a `'complete'` argument that only returns results for model configurations that were fully resampled. 
+ - `select_best()` and `show_best()` now only show results for model configurations that were fully resampled. 
+
+* `tune_race_anova()`, `tune_race_win_loss()`, and `tune_sim_anneal()` no longer error if `control` argument isn't a the corresponding `control_*()` object. Will work as long as the object passed to `control` includes the same elements as the required `control_*()` object.
+
 # finetune 1.0.0
 
 * An informative error is given when there are not enough resamples for racing (#33).

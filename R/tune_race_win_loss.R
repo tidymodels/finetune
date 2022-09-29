@@ -124,6 +124,8 @@ tune_race_win_loss.recipe <- function(object, model, resamples, ..., param_info 
                                       grid = 10, metrics = NULL, control = control_race()) {
   tune::empty_ellipses(...)
 
+  control <- parsnip::condense_control(control, control_race())
+
   tune_race_win_loss(
     model,
     preprocessor = object, resamples = resamples,
@@ -136,6 +138,8 @@ tune_race_win_loss.recipe <- function(object, model, resamples, ..., param_info 
 tune_race_win_loss.formula <- function(formula, model, resamples, ..., param_info = NULL,
                                        grid = 10, metrics = NULL, control = control_race()) {
   tune::empty_ellipses(...)
+
+  control <- parsnip::condense_control(control, control_race())
 
   tune_race_win_loss(
     model,
@@ -158,6 +162,8 @@ tune_race_win_loss.model_spec <- function(object, preprocessor, resamples, ...,
   }
 
   tune::empty_ellipses(...)
+
+  control <- parsnip::condense_control(control, control_race())
 
   wflow <- workflows::add_model(workflows::workflow(), object)
 
@@ -183,6 +189,8 @@ tune_race_win_loss.workflow <- function(object, resamples, ..., param_info = NUL
                                         grid = 10, metrics = NULL,
                                         control = control_race()) {
   tune::empty_ellipses(...)
+
+  control <- parsnip::condense_control(control, control_race())
 
   tune_race_win_loss_workflow(
     object,

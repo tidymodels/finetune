@@ -27,6 +27,9 @@ control_race <-
            pkgs = NULL, save_workflow = FALSE, event_level = "first",
            parallel_over = "everything", backend_options = NULL) {
 
+    # Any added arguments should also be added in superset control functions
+    # in other package
+
     tune::val_class_and_single(verbose,       "logical",   "control_race()")
     tune::val_class_and_single(verbose_elim,  "logical",   "control_race()")
     tune::val_class_and_single(allow_par,     "logical",   "control_race()")

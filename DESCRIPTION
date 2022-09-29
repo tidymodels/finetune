@@ -31,15 +31,17 @@ Imports:
     tidyr,
     tidyselect,
     utils,
-    workflows (>= 0.2.6)
+    workflows (>= 0.2.6),
+    vctrs
 Suggests: 
     BradleyTerry2,
     covr,
     discrim,
+    kknn,
     klaR,
     lme4,
     modeldata,
-    parsnip (>= 0.2.1),
+    parsnip (>= 1.0.1.9000),
     ranger,
     recipes (>= 0.2.0),
     rpart,
@@ -53,3 +55,5 @@ Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1.9000
+Remotes:
+    tidymodels/parsnip
