@@ -41,8 +41,8 @@ control_sim_anneal <-
            save_history = FALSE,
            event_level = "first",
            parallel_over = NULL,
-           allow_par = TRUE) {
-
+           allow_par = TRUE,
+           backend_options = NULL) {
     # Any added arguments should also be added in superset control functions
     # in other package
 

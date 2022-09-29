@@ -25,7 +25,7 @@ control_race <-
            extract = NULL, save_pred = FALSE,
            burn_in = 3, num_ties = 10, alpha = 0.05, randomize = TRUE,
            pkgs = NULL, save_workflow = FALSE, event_level = "first",
-           parallel_over = "everything") {
+           parallel_over = "everything", backend_options = NULL) {
 
     # Any added arguments should also be added in superset control functions
     # in other package
