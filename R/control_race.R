@@ -28,7 +28,8 @@ control_race <-
            parallel_over = "everything", backend_options = NULL) {
 
     # Any added arguments should also be added in superset control functions
-    # in other package
+    # in other package. In other words, if tune_grid adds an option, the same
+    # object should be added here (regardless)
 
     tune::val_class_and_single(verbose,       "logical",   "control_race()")
     tune::val_class_and_single(verbose_elim,  "logical",   "control_race()")
@@ -67,7 +68,8 @@ control_race <-
       pkgs = pkgs,
       save_workflow = save_workflow,
       parallel_over = parallel_over,
-      event_level = event_level
+      event_level = event_level,
+      backend_options = backend_options
     )
 
     class(res) <- c("control_race")
