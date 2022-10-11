@@ -49,7 +49,8 @@ control_sim_anneal <-
            allow_par = TRUE,
            backend_options = NULL) {
     # Any added arguments should also be added in superset control functions
-    # in other package
+    # in other package. In other words, if tune_grid adds an option, the same
+    # object should be added here (regardless)
 
     tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune::val_class_and_single(verbose_iter, "logical", "control_sim_anneal()")
