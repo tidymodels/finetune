@@ -210,6 +210,7 @@ tune_race_anova_workflow <-
 
     control$pkgs <- c(tune::required_pkgs(object), "workflows", "tidyr", "rlang")
 
+    grid_control <- parsnip::condense_control(control, tune::control_grid())
     res <-
       object %>%
       tune::tune_grid(
@@ -217,7 +218,7 @@ tune_race_anova_workflow <-
         param_info = param_info,
         grid = grid,
         metrics = metrics,
-        control = control
+        control = grid_control
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
@@ -264,6 +265,7 @@ tune_race_anova_workflow <-
         log_final <- FALSE
       }
 
+      grid_control <- parsnip::condense_control(control, tune::control_grid())
       tmp_res <-
         object %>%
         tune::tune_grid(
@@ -271,7 +273,7 @@ tune_race_anova_workflow <-
           param_info = param_info,
           grid = new_grid,
           metrics = metrics,
-          control = control
+          control = grid_control
         )
 
       res <- restore_tune(res, tmp_res)

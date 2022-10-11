@@ -63,7 +63,7 @@ test_that("one player is really bad", {
     )
 
   set.seed(121)
-  df_folds <- vfold_cv(df, strata = .data$y)
+  df_folds <- vfold_cv(df, strata = y)
 
   rf_spec <-
     rand_forest(min_n = tune(), trees = 10) %>%
