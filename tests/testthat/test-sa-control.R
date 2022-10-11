@@ -43,3 +43,7 @@ test_that("control_sim_anneal bad arg passing", {
   expect_snapshot_error(control_sim_anneal(pkg = 0:1))
   expect_snapshot_error(control_sim_anneal(extract = 0:1))
 })
+
+test_that("casting control_sim_anneal to control_grid", {
+  expect_snapshot(parsnip::condense_control(control_sim_anneal(), control_grid()))
+})

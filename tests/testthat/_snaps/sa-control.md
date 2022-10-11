@@ -83,3 +83,10 @@
 
     Argument 'extract' should be a function or NULL in `control_sim_anneal()`
 
+# casting control_sim_anneal to control_grid
+
+    Code
+      parsnip::condense_control(control_sim_anneal(), control_grid())
+    Output
+      grid/resamples control object
+

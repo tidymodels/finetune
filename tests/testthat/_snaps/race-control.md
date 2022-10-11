@@ -70,3 +70,10 @@
 
     Argument 'extract' should be a function or NULL in `control_race()`
 
+# casting control_race to control_grid
+
+    Code
+      parsnip::condense_control(control_race(), control_grid())
+    Output
+      grid/resamples control object
+

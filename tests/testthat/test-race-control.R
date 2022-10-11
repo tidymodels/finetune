@@ -33,3 +33,7 @@ test_that("control_race bad arg passing", {
   expect_snapshot_error(control_race(pkg = 0:1))
   expect_snapshot_error(control_race(extract = 0:1))
 })
+
+test_that("casting control_race to control_grid", {
+  expect_snapshot(parsnip::condense_control(control_race(), control_grid()))
+})
