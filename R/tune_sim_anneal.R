@@ -310,7 +310,7 @@ tune_sim_anneal_workflow <-
     # Chech or generate initial results
 
 
-    control_init <- control
+    control_init <- parsnip::condense_control(control, tune::control_grid())
     control_init$save_workflow <- TRUE
     control_init$verbose <- FALSE
     initial <- tune::check_initial(initial, param_info, object, resamples, metrics, control_init)
