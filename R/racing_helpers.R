@@ -115,7 +115,6 @@ test_parameters_bt <- function(x, alpha = 0.05) {
   metric <- metric_data$metric[1]
   maximize <- metric_data$direction[1] == "maximize"
 
-  print(tune::collect_metrics(x, summarize = FALSE))
   res <-
     tune::collect_metrics(x, summarize = FALSE) %>%
     dplyr::filter(.metric == metric)
