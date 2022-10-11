@@ -47,7 +47,7 @@ test_that("top-level win/loss filter interfaces", {
   expect_true(tibble::is_tibble((wl_wlfow)))
   expect_true(sum(names(wl_wlfow) == ".predictions") == 1)
 
-  get_mod <- function(x) tune::pull_workflow_fit(x)
+  get_mod <- function(x) workflows::extract_fit_parsnip(x)
 
   expect_silent({
     set.seed(129)
