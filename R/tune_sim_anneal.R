@@ -312,7 +312,6 @@ tune_sim_anneal_workflow <-
 
     control_init <- control
     control_init$save_workflow <- TRUE
-    control_init$verbose <- FALSE
     initial <- tune::check_initial(initial, param_info, object, resamples, metrics, control_init)
     if (any(dials::has_unknowns(param_info$object))) {
       param_info <- tune::.get_tune_parameters(initial)
@@ -338,7 +337,7 @@ tune_sim_anneal_workflow <-
 
     i <- max(unsummarized$.iter) # In case things fail before iteration.
     iter <- iter + i
-    if (i > 0 && control$verbose) {
+    if (i > 0 && control$verbose_iter) {
       rlang::inform(cols$message$info("There were ", i, " previous iterations"))
     }
 
@@ -354,7 +353,7 @@ tune_sim_anneal_workflow <-
     })
 
     cols <- tune::get_tune_colors()
-    if (control$verbose) {
+    if (control$verbose_iter) {
       rlang::inform(cols$message$info(paste("Optimizing", metrics_name)))
     }
 
