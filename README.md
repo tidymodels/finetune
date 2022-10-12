@@ -24,7 +24,7 @@ search tool for finding good values:
 library(tidymodels)
 library(finetune)
 
-# Syntax very similar to `tune_grid()` or `tune_Bayes()`: 
+# Syntax very similar to `tune_grid()` or `tune_bayes()`: 
 
 ## -----------------------------------------------------------------------------
 
