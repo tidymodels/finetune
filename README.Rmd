@@ -55,12 +55,10 @@ rda_spec <-
 
 ## -----------------------------------------------------------------------------
 
-ctrl <- control_sim_anneal(verbose = TRUE)
-
 set.seed(2)
 sa_res <- 
   rda_spec %>% 
-  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4, control = ctrl)
+  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4)
 show_best(sa_res, metric = "roc_auc", n = 2)
 ```
 

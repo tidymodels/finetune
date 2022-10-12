@@ -1,4 +1,4 @@
-# finetune (development version)
+# finetune 1.0.1
 
 * For racing: 
  - `collect_metrics()` and `collect_predictions()` have a `'complete'` argument that only returns results for model configurations that were fully resampled. 
