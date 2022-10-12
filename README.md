@@ -41,12 +41,10 @@ rda_spec <-
 
 ## -----------------------------------------------------------------------------
 
-ctrl <- control_sim_anneal(verbose = TRUE)
-
 set.seed(2)
 sa_res <- 
   rda_spec %>% 
-  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4, control = ctrl)
+  tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4)
 #> Optimizing roc_auc
 #> Initial best: 0.86480
 #>  1 ♥ new best           roc_auc=0.87327  (+/-0.004592)
@@ -107,12 +105,10 @@ grid_anova <-
 #> ℹ Bootstrap03: All but one parameter combination were eliminated.
 
 show_best(grid_anova, metric = "roc_auc", n = 2)
-#> # A tibble: 2 × 9
-#>   .order frac_common_cov frac_iden…¹ .metric .esti…²  mean     n std_err .config
-#>    <int>           <dbl>       <dbl> <chr>   <chr>   <dbl> <int>   <dbl> <chr>  
-#> 1      9           0.831      0.0207 roc_auc binary  0.901     1      NA Prepro…
-#> 2      8           0.831      0.0207 roc_auc binary  0.893     1      NA Prepro…
-#> # … with abbreviated variable names ¹​frac_identity, ²​.estimator
+#> # A tibble: 1 × 8
+#>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
+#>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>    
+#> 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…
 ```
 
 `tune_race_win_loss()` can also be used. It treats the tuning parameters
@@ -134,12 +130,11 @@ grid_win_loss<-
 #> ℹ Bootstrap08:  1 eliminated;  9 candidates remain.
 
 show_best(grid_win_loss, metric = "roc_auc", n = 2)
-#> # A tibble: 2 × 9
-#>   .order frac_common_cov frac_iden…¹ .metric .esti…²  mean     n std_err .config
-#>    <int>           <dbl>       <dbl> <chr>   <chr>   <dbl> <int>   <dbl> <chr>  
-#> 1      9           0.831      0.0207 roc_auc binary  0.901     1      NA Prepro…
-#> 2      9           0.321      0.0561 roc_auc binary  0.898     1      NA Prepro…
-#> # … with abbreviated variable names ¹​frac_identity, ²​.estimator
+#> # A tibble: 2 × 8
+#>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
+#>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>    
+#> 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…
+#> 2           0.119        0.0470 roc_auc binary     0.879    10 0.00387 Preproce…
 ```
 
 ## Contributing
@@ -148,18 +143,18 @@ This project is released with a [Contributor Code of
 Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
 
--   For questions and discussions about tidymodels packages, modeling,
-    and machine learning, please [post on RStudio
-    Community](https://community.rstudio.com/new-topic?category_id=15&tags=tidymodels,question).
+- For questions and discussions about tidymodels packages, modeling, and
+  machine learning, please [post on RStudio
+  Community](https://community.rstudio.com/new-topic?category_id=15&tags=tidymodels,question).
 
--   If you think you have encountered a bug, please [submit an
-    issue](https://github.com/tidymodels/usemodels/issues).
+- If you think you have encountered a bug, please [submit an
+  issue](https://github.com/tidymodels/usemodels/issues).
 
--   Either way, learn how to create and share a
-    [reprex](https://reprex.tidyverse.org/articles/articles/learn-reprex.html)
-    (a minimal, reproducible example), to clearly communicate about your
-    code.
+- Either way, learn how to create and share a
+  [reprex](https://reprex.tidyverse.org/articles/articles/learn-reprex.html)
+  (a minimal, reproducible example), to clearly communicate about your
+  code.
 
--   Check out further details on [contributing guidelines for tidymodels
-    packages](https://www.tidymodels.org/contribute/) and [how to get
-    help](https://www.tidymodels.org/help/).
+- Check out further details on [contributing guidelines for tidymodels
+  packages](https://www.tidymodels.org/contribute/) and [how to get
+  help](https://www.tidymodels.org/help/).
