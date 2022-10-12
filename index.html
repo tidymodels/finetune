@@ -47,7 +47,7 @@
     
     <a class="navbar-brand me-2" href="index.html">finetune</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/finetune" class="external-link">finetune</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Syntax very similar to `tune_grid()` or `tune_Bayes()`: </span></span>
+<span><span class="co"># Syntax very similar to `tune_grid()` or `tune_bayes()`: </span></span>
 <span></span>
 <span><span class="co">## -----------------------------------------------------------------------------</span></span>
 <span></span>
@@ -112,12 +112,10 @@
 <span></span>
 <span><span class="co">## -----------------------------------------------------------------------------</span></span>
 <span></span>
-<span><span class="va">ctrl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/control_sim_anneal.html">control_sim_anneal</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">sa_res</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="va">rda_spec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="reference/tune_sim_anneal.html">tune_sim_anneal</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, iter <span class="op">=</span> <span class="fl">20</span>, initial <span class="op">=</span> <span class="fl">4</span>, control <span class="op">=</span> <span class="va">ctrl</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="reference/tune_sim_anneal.html">tune_sim_anneal</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">~</span> <span class="va">.</span>, resamples <span class="op">=</span> <span class="va">rs</span>, iter <span class="op">=</span> <span class="fl">20</span>, initial <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Optimizing roc_auc</span></span>
 <span><span class="co">#&gt; Initial best: 0.86480</span></span>
 <span><span class="co">#&gt;  1 ♥ new best           roc_auc=0.87327  (+/-0.004592)</span></span>
@@ -169,12 +167,10 @@
 <span><span class="co">#&gt; ℹ Bootstrap03: All but one parameter combination were eliminated.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best</a></span><span class="op">(</span><span class="va">grid_anova</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 2 × 9</span></span>
-<span><span class="co">#&gt;   .order frac_common_cov frac_iden…¹ .metric .esti…²  mean     n std_err .config</span></span>
-<span><span class="co">#&gt;    &lt;int&gt;           &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt; 1      9           0.831      0.0207 roc_auc binary  0.901     1      NA Prepro…</span></span>
-<span><span class="co">#&gt; 2      8           0.831      0.0207 roc_auc binary  0.893     1      NA Prepro…</span></span>
-<span><span class="co">#&gt; # … with abbreviated variable names ¹​frac_identity, ²​.estimator</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 1 × 8</span></span>
+<span><span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span></span>
+<span><span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span></span>
+<span><span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span></span></code></pre></div>
 <p><code><a href="reference/tune_race_win_loss.html">tune_race_win_loss()</a></code> can also be used. It treats the tuning parameters as sports teams in a tournament and computed win/loss statistics.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
@@ -192,12 +188,11 @@
 <span><span class="co">#&gt; ℹ Bootstrap08:  1 eliminated;  9 candidates remain.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best</a></span><span class="op">(</span><span class="va">grid_win_loss</span>, metric <span class="op">=</span> <span class="st">"roc_auc"</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 2 × 9</span></span>
-<span><span class="co">#&gt;   .order frac_common_cov frac_iden…¹ .metric .esti…²  mean     n std_err .config</span></span>
-<span><span class="co">#&gt;    &lt;int&gt;           &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt; 1      9           0.831      0.0207 roc_auc binary  0.901     1      NA Prepro…</span></span>
-<span><span class="co">#&gt; 2      9           0.321      0.0561 roc_auc binary  0.898     1      NA Prepro…</span></span>
-<span><span class="co">#&gt; # … with abbreviated variable names ¹​frac_identity, ²​.estimator</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 2 × 8</span></span>
+<span><span class="co">#&gt;   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  </span></span>
+<span><span class="co">#&gt;             &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;    </span></span>
+<span><span class="co">#&gt; 1           0.831        0.0207 roc_auc binary     0.881    10 0.00386 Preproce…</span></span>
+<span><span class="co">#&gt; 2           0.119        0.0470 roc_auc binary     0.879    10 0.00387 Preproce…</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
