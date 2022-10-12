@@ -288,8 +288,8 @@ acceptance_prob <- function(current, new, iter, maximize = TRUE, coef = 2 / 100)
   exp(pct_diff * coef * iter)
 }
 
-log_sa_progress <- function(control = list(verbose = TRUE), x, metric, max_iter, maximize = TRUE, digits = 5) {
-  if (!control$verbose) {
+log_sa_progress <- function(control = list(verbose_iter = TRUE), x, metric, max_iter, maximize = TRUE, digits = 5) {
+  if (!control$verbose_iter) {
     return(invisible(NULL))
   }
   is_initial <- all(x$results == "initial")

@@ -24,7 +24,7 @@ test_that("recipe interface", {
     res <- rec_wflow %>%
       tune_sim_anneal(cell_folds,
                       iter = 2,
-                      control = control_sim_anneal(verbose = FALSE)
+                      control = control_sim_anneal(verbose = FALSE, verbose_iter = FALSE)
       )
   })
 
@@ -36,12 +36,12 @@ test_that("recipe interface", {
 
 test_that("variable interface", {
   skip_on_cran()
-  expect_silent({
+  expect_snapshot({
     set.seed(1)
     res <- var_wflow %>%
       tune_sim_anneal(cell_folds,
                       iter = 2,
-                      control = control_sim_anneal(verbose = FALSE)
+                      control = control_sim_anneal(verbose = TRUE, verbose_iter = TRUE)
       )
   })
   expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
@@ -50,7 +50,7 @@ test_that("variable interface", {
   # Check to see if iterations are picked up when an iterative object is used
   # as the initial object
 
-  expect_silent({
+  expect_snapshot({
     set.seed(1)
     new_res <- var_wflow %>%
       tune_sim_anneal(cell_folds,
@@ -67,7 +67,7 @@ test_that("variable interface", {
   grid_res <- var_wflow %>%
     tune_grid(cell_folds, grid = 2)
 
-  expect_silent({
+  expect_snapshot({
     set.seed(1)
     new_new_res <- var_wflow %>%
       tune_sim_anneal(cell_folds,
@@ -140,12 +140,13 @@ test_that("set event-level", {
   # ------------------------------------------------------------------------------
   # high sensitivity and low specificity
 
+
   set.seed(3)
   cart_res_first <-
     cart_spec %>%
     tune_sim_anneal(class ~ .,
                     rs,
-                    control = control_sim_anneal(event_level = "first", verbose = FALSE),
+                    control = control_sim_anneal(event_level = "first", verbose_iter = FALSE),
                     metrics = stats)
 
   results_first <-
@@ -166,7 +167,7 @@ test_that("set event-level", {
     cart_spec %>%
     tune_sim_anneal(class ~ .,
                     rs,
-                    control = control_sim_anneal(event_level = "second", verbose = FALSE),
+                    control = control_sim_anneal(event_level = "second", verbose_iter = FALSE),
                     metrics = stats)
 
   results_second <-

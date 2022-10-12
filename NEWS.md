@@ -6,6 +6,9 @@
 
 * `tune_race_anova()`, `tune_race_win_loss()`, and `tune_sim_anneal()` no longer error if `control` argument isn't a the corresponding `control_*()` object. Will work as long as the object passed to `control` includes the same elements as the required `control_*()` object.
 
+* The `control_sim_anneal()` got a new argument `verbose_iter` that is used to control the verbosity of the iterative calculations. This change means that the `verbose` argument is being passed to `tune_grid()` to control its verbosity.
+
+
 # finetune 1.0.0
 
 * An informative error is given when there are not enough resamples for racing (#33).
