@@ -52,7 +52,8 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">control_sim_anneal</span><span class="op">(</span></span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose_iter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  no_improve <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  restart <span class="op">=</span> <span class="fl">8L</span>,</span>
 <span>  radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.15</span><span class="op">)</span>,</span>
@@ -80,6 +81,13 @@ R process. When using most parallel backends, this argument typically will
 not result in any logging. If using a dark IDE theme, some logging messages
 might be hard to see; try setting the <code>tidymodels.dark</code> option with
 <code>options(tidymodels.dark = TRUE)</code> to print lighter colors.</p></dd>
+
+
+<dt>verbose_iter</dt>
+<dd><p>A logical for logging results of the search
+process. Defaults to FALSE. If using a dark IDE theme, some logging
+messages might be hard to see; try setting the <code>tidymodels.dark</code> option
+with <code>options(tidymodels.dark = TRUE)</code> to print lighter colors.</p></dd>
 
 
 <dt>no_improve</dt>
