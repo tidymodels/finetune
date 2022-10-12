@@ -5,7 +5,8 @@
 \title{Control aspects of the simulated annealing search process}
 \usage{
 control_sim_anneal(
-  verbose = TRUE,
+  verbose = FALSE,
+  verbose_iter = TRUE,
   no_improve = Inf,
   restart = 8L,
   radius = c(0.05, 0.15),
@@ -30,6 +31,11 @@ R process. When using most parallel backends, this argument typically will
 not result in any logging. If using a dark IDE theme, some logging messages
 might be hard to see; try setting the \code{tidymodels.dark} option with
 \code{options(tidymodels.dark = TRUE)} to print lighter colors.}
+
+\item{verbose_iter}{A logical for logging results of the search
+process. Defaults to FALSE. If using a dark IDE theme, some logging
+messages might be hard to see; try setting the \code{tidymodels.dark} option
+with \code{options(tidymodels.dark = TRUE)} to print lighter colors.}
 
 \item{no_improve}{The integer cutoff for the number of iterations without
 better results.}

@@ -14,11 +14,11 @@ test_that("control_race works with condense_control", {
 test_that("control_sim_anneal works with condense_control", {
   expect_equal(
     parsnip::condense_control(control_sim_anneal(), control_grid()),
-    control_grid(verbose = TRUE)
+    control_grid(verbose = FALSE)
   )
 
   expect_equal(
     parsnip::condense_control(control_sim_anneal(), control_resamples()),
-    control_resamples(verbose = TRUE)
+    control_resamples(verbose = FALSE)
   )
 })
