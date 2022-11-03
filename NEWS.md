@@ -1,5 +1,7 @@
 # finetune (development version)
 
+* Corrects `.config` output with `save_pred = TRUE` in `tune_sim_anneal()`. The function previously outputted a constant `Model1_Preprocessor1` in the `.predictions` slot, and now provides `.config` values that align with those in `.metrics` (#57).
+
 # finetune 1.0.1
 
 * For racing: 
