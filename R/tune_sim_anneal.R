@@ -329,7 +329,7 @@ tune_sim_anneal_workflow <-
         rset_info = rset_info,
         workflow = object
       ) %>%
-      update_config(prefix = "initial")
+      update_config(prefix = "initial", save_pred = control$save_pred)
 
     mean_stats <- tune::estimate_tune_results(unsummarized)
 
@@ -409,7 +409,7 @@ tune_sim_anneal_workflow <-
           control = control_init
         ) %>%
         dplyr::mutate(.iter = i) %>%
-        update_config(config = paste0("Iter", i))
+        update_config(config = paste0("Iter", i), save_pred = control$save_pred)
 
       result_history <-
         result_history %>%

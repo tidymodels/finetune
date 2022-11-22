@@ -383,19 +383,33 @@ get_outcome_names <- function(x, rs) {
   res
 }
 
-update_config <- function(x, prefix = NULL, config = "new") {
+update_config <- function(x, prefix = NULL, config = "new", save_pred) {
   if (!is.null(prefix)) {
     x$.metrics <-
       purrr::map(
         x$.metrics,
         ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config))
       )
+    if (save_pred) {
+      x$.predictions <-
+        purrr::map(
+          x$.predictions,
+          ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config))
+        )
+    }
   } else {
     x$.metrics <-
       purrr::map(
         x$.metrics,
         ~ dplyr::mutate(.x, .config = config)
       )
+    if (save_pred) {
+      x$.predictions <-
+        purrr::map(
+          x$.predictions,
+          ~ dplyr::mutate(.x, .config = config)
+        )
+    }
   }
   x
 }
