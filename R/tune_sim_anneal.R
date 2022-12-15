@@ -241,6 +241,8 @@ tune_sim_anneal.model_spec <- function(object,
     wflow <- workflows::add_formula(wflow, preprocessor)
   }
 
+  tune::initialize_catalog(control = control)
+
   tune_sim_anneal_workflow(
     wflow,
     resamples = resamples, iter = iter,
@@ -265,6 +267,8 @@ tune_sim_anneal.workflow <-
 
     control <- parsnip::condense_control(control, control_sim_anneal())
 
+    tune::initialize_catalog(control = control)
+
     tune_sim_anneal_workflow(
       object,
       resamples = resamples, iter = iter,
@@ -281,8 +285,6 @@ tune_sim_anneal_workflow <-
            initial = 5, control = control_sim_anneal()) {
     start_time <- proc.time()[3]
     cols <- tune::get_tune_colors()
-
-    tune::initialize_catalog(control = control)
 
     # ------------------------------------------------------------------------------
     # Check various inputs
