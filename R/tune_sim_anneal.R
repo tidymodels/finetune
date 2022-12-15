@@ -356,7 +356,7 @@ tune_sim_anneal_workflow <-
 
     cols <- tune::get_tune_colors()
     if (control$verbose_iter) {
-      rlang::inform(cols$message$info(paste("Optimizing", metrics_name)))
+      cli::cli_bullets(cols$message$info(paste("Optimizing", metrics_name)))
     }
 
     ## -----------------------------------------------------------------------------

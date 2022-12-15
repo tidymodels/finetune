@@ -334,7 +334,7 @@ log_sa_progress <- function(control = list(verbose_iter = TRUE), x, metric, max_
     msg <- paste0("Initial best: ", sprintf(dig, signif(initial_res, digits = digits)))
   }
 
-  rlang::inform(cols$message$info(msg))
+  cli::cli_bullets(cols$message$info(msg))
 }
 
 format_event <- function(x) {

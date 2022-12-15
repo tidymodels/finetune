@@ -7,6 +7,7 @@
     Message <rlang_message>
       i Racing will maximize the roc_auc metric.
       i Resamples are analyzed in a random order.
+    Message <cliMessage>
       i Fold3, Repeat1: 2 eliminated; 2 candidates remain.
       i Fold2, Repeat2: All but one parameter combination were eliminated.
 

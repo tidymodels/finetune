@@ -435,7 +435,7 @@ log_racing <- function(control, x, splits, grid_size, metric) {
     tune_cols$message$info(
       paste0(cli::symbol$info, " ", labs, msg)
     )
-  rlang::inform(msg)
+  cli::cli_bullets(msg)
 }
 
 
