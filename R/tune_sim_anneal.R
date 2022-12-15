@@ -282,6 +282,8 @@ tune_sim_anneal_workflow <-
     start_time <- proc.time()[3]
     cols <- tune::get_tune_colors()
 
+    tune::initialize_catalog(control = control)
+
     # ------------------------------------------------------------------------------
     # Check various inputs
 
