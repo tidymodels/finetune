@@ -56,4 +56,4 @@ Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1.9000
 Remotes:
-    tidymodels/tune
+    tidymodels/tune#60
