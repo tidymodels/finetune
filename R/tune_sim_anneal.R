@@ -241,6 +241,8 @@ tune_sim_anneal.model_spec <- function(object,
     wflow <- workflows::add_formula(wflow, preprocessor)
   }
 
+  tune::initialize_catalog(control = control)
+
   tune_sim_anneal_workflow(
     wflow,
     resamples = resamples, iter = iter,
@@ -264,6 +266,8 @@ tune_sim_anneal.workflow <-
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_sim_anneal())
+
+    tune::initialize_catalog(control = control)
 
     tune_sim_anneal_workflow(
       object,
@@ -354,7 +358,7 @@ tune_sim_anneal_workflow <-
 
     cols <- tune::get_tune_colors()
     if (control$verbose_iter) {
-      rlang::inform(cols$message$info(paste("Optimizing", metrics_name)))
+      cli::cli_bullets(cols$message$info(paste("Optimizing", metrics_name)))
     }
 
     ## -----------------------------------------------------------------------------
