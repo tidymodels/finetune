@@ -295,6 +295,8 @@ tune_race_anova_workflow <-
       }
     }
 
+    .stash_last_result(res)
+
     res
   }
 

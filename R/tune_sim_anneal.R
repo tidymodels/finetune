@@ -353,6 +353,7 @@ tune_sim_anneal_workflow <-
         unsummarized, param_info,
         metrics, y_names, rset_info, object
       )
+      .stash_last_result(out)
       return(out)
     })
 
@@ -498,6 +499,9 @@ tune_sim_anneal_workflow <-
         dplyr::arrange(.iter, .config)
       save(result_history, file = file.path(tempdir(), "sa_history.RData"))
     }
+
+    .stash_last_result(unsummarized)
+
     # Note; this line is probably not executed due to on.exit():
     unsummarized
   }
