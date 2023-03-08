@@ -20,8 +20,10 @@ a warning is issued).}
 
 \item{...}{For \code{\link[tune:select_by_one_std_err]{select_by_one_std_err()}} and \code{\link[tune:select_by_pct_loss]{select_by_pct_loss()}}, this
 argument is passed directly to \code{\link[dplyr:arrange]{dplyr::arrange()}} so that the user can sort
-the models from \emph{most simple to most complex}. See the examples below. At
-least one term is required for these two functions.}
+the models from \emph{most simple to most complex}. That is, for a parameter \code{p},
+pass the unquoted expression \code{p} if smaller values of \code{p} indicate a simpler
+model, or \code{desc(p)} if larger values indicate a simpler model. At
+least one term is required for these two functions. See the examples below.}
 }
 \description{
 \code{\link[=show_best]{show_best()}} displays the top sub-models and their performance estimates.
