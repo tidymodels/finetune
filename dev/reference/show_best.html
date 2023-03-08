@@ -77,8 +77,10 @@ a warning is issued).</p></dd>
 <dt>...</dt>
 <dd><p>For <code><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">select_by_one_std_err()</a></code> and <code><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">select_by_pct_loss()</a></code>, this
 argument is passed directly to <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">dplyr::arrange()</a></code> so that the user can sort
-the models from <em>most simple to most complex</em>. See the examples below. At
-least one term is required for these two functions.</p></dd>
+the models from <em>most simple to most complex</em>. That is, for a parameter <code>p</code>,
+pass the unquoted expression <code>p</code> if smaller values of <code>p</code> indicate a simpler
+model, or <code>desc(p)</code> if larger values indicate a simpler model. At
+least one term is required for these two functions. See the examples below.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -96,7 +98,7 @@ different resamples is likely to lead to inappropriate results.</p>
    </div>
   <footer><div class="container">
   <div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://github.com/topepo" class="external-link">Max Kuhn</a>, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
+  <p></p><p>Developed by <a href="https://github.com/topepo" class="external-link">Max Kuhn</a>, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
