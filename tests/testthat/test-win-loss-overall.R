@@ -13,6 +13,7 @@ test_that("formula interface", {
 
   expect_equal(class(res), c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == 10) # this run has no elmimination
+  expect_equal(res, .Last.tune.result)
 })
 
 # ------------------------------------------------------------------------------
@@ -29,6 +30,7 @@ test_that("recipe interface", {
   })
   expect_equal(class(res), c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) < 10)
+  expect_equal(res, .Last.tune.result)
 })
 
 # ------------------------------------------------------------------------------
@@ -45,6 +47,7 @@ test_that("variable interface", {
   })
   expect_equal(class(res), c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == 10) # no elimination
+  expect_equal(res, .Last.tune.result)
 })
 
 # ------------------------------------------------------------------------------

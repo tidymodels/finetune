@@ -301,5 +301,6 @@ tune_race_win_loss_workflow <-
       }
     }
 
+    .stash_last_result(res)
     res
   }

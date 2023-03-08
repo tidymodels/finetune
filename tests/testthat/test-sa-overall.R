@@ -10,6 +10,7 @@ test_that("formula interface", {
   })
   expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == 6)
+  expect_equal(res, .Last.tune.result)
 })
 
 # ------------------------------------------------------------------------------
@@ -30,6 +31,7 @@ test_that("recipe interface", {
 
   expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == 6)
+  expect_equal(res, .Last.tune.result)
 })
 
 # ------------------------------------------------------------------------------
@@ -46,6 +48,7 @@ test_that("variable interface", {
   })
   expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
   expect_true(nrow(collect_metrics(res)) == 6)
+  expect_equal(res, .Last.tune.result)
 
   # Check to see if iterations are picked up when an iterative object is used
   # as the initial object
@@ -61,6 +64,7 @@ test_that("variable interface", {
   expect_true(nrow(collect_metrics(new_res)) == 10)
   expect_true(max(new_res$.iter) == 4)
   expect_true(sum(grepl("^initial", collect_metrics(new_res)$.config)) == 6)
+  expect_equal(new_res, .Last.tune.result)
 
   # but not for non-iterative objects
   set.seed(1)
@@ -78,6 +82,7 @@ test_that("variable interface", {
   expect_true(nrow(collect_metrics(new_new_res)) == 8)
   expect_true(max(new_new_res$.iter) == 2)
   expect_true(sum(grepl("^initial", collect_metrics(new_new_res)$.config)) == 4)
+  expect_equal(new_new_res, .Last.tune.result)
 })
 
 
