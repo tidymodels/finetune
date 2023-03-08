@@ -21,11 +21,22 @@ knitr::opts_chunk$set(
 [![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
-`finetune` contains some extra functions for model tuning that extend what is currently in the `tune` package. 
+`finetune` contains some extra functions for model tuning that extend what is currently in the `tune` package. You can install the CRAN version of the package with the following code:
 
-Very rough version of the package right now but it works fairly well. There are two main sets of tools. 
+```{r, eval = FALSE}
+install.packages("finetune")
+```
 
-Tuning via _simulated annealing_ optimization is another iterative search tool for finding good values: 
+To install the development version of the package, run:
+
+```{r, eval = FALSE}
+# install.packages("pak")
+pak::pak("tidymodels/finetune")
+```
+
+There are two main sets of tools in the package: _simulated annealing_ and _racing_. 
+
+Tuning via _simulated annealing_ optimization is an iterative search tool for finding good values: 
 
 ```{r load, include=FALSE}
 library(tidymodels)
@@ -62,7 +73,7 @@ sa_res <-
 show_best(sa_res, metric = "roc_auc", n = 2)
 ```
 
-The second set of methods are for "racing". We start off by doing a small set of resamples for all of the grid points, then statistically testing to see which ones should be dropped or investigated more. The two methods here are based on those should in [Kuhn (2014)](https://arxiv.org/abs/1405.6974). 
+The second set of methods are for _racing_. We start off by doing a small set of resamples for all of the grid points, then statistically testing to see which ones should be dropped or investigated more. The two methods here are based on those should in [Kuhn (2014)](https://arxiv.org/abs/1405.6974). 
 
 For example, using an ANOVA-type analysis to filter out parameter combinations:
 
