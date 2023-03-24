@@ -259,7 +259,8 @@ score_season <- function(x, dat, maximize = FALSE) {
         dplyr::mutate(pair = dplyr::row_number()) %>%
         dplyr::select(.config = p1, pair),
       dat,
-      by = ".config"
+      by = ".config",
+      relationship = "many-to-many"
     ) %>%
     dplyr::select(player_1 = .config, metric_1 = .estimate, pair, dplyr::starts_with("id"))
 
@@ -269,12 +270,13 @@ score_season <- function(x, dat, maximize = FALSE) {
         dplyr::mutate(pair = dplyr::row_number()) %>%
         dplyr::select(.config = p2, pair),
       dat,
-      by = ".config"
+      by = ".config",
+      relationship = "many-to-many"
     ) %>%
     dplyr::select(player_2 = .config, metric_2 = .estimate, pair, dplyr::starts_with("id"))
 
   game_results <-
-    dplyr::full_join(player_1, player_2, by = c("id", "pair")) %>%
+    dplyr::full_join(player_1, player_2, by = c("id", "pair"), relationship = "many-to-many") %>%
     dplyr::mutate(
       wins_1 = purrr::map2_dbl(metric_1, metric_2, score_match, maximize = maximize),
       wins_2 = purrr::map2_dbl(metric_2, metric_1, score_match, maximize = maximize)
