@@ -6,9 +6,9 @@
     Message <cliMessage>
       Optimizing roc_auc
       Initial best: 0.85161
-      1 ( ) accept suboptimal roc_auc=0.84064 (+/-0.01096)
-      2 ( ) accept suboptimal roc_auc=0.83789 (+/-0.01086)
-      3 ( ) accept suboptimal roc_auc=0.83261 (+/-0.0109)
+      1 ( ) accept suboptimal  roc_auc=0.84064 (+/-0.01096)
+      2 ( ) accept suboptimal  roc_auc=0.83789 (+/-0.01086)
+      3 ( ) accept suboptimal  roc_auc=0.83261 (+/-0.0109)
 
 ---
 
@@ -18,9 +18,9 @@
     Message <cliMessage>
       Optimizing roc_auc
       Initial best: 0.85192
-      1 ( ) accept suboptimal roc_auc=0.848 (+/-0.01072)
-      2 ( ) accept suboptimal roc_auc=0.84678 (+/-0.01067)
-      3 ( ) accept suboptimal roc_auc=0.84534 (+/-0.01097)
+      1 ( ) accept suboptimal  roc_auc=0.848 (+/-0.01072)
+      2 ( ) accept suboptimal  roc_auc=0.84678 (+/-0.01067)
+      3 ( ) accept suboptimal  roc_auc=0.84534 (+/-0.01097)
 
 ---
 
@@ -30,9 +30,9 @@
     Message <cliMessage>
       Optimizing roc_auc
       Initial best: 0.87657
-      1 ( ) accept suboptimal roc_auc=0.87345 (+/-0.008739)
-      2 ( ) accept suboptimal roc_auc=0.87124 (+/-0.008458)
-      3 ( ) accept suboptimal roc_auc=0.86909 (+/-0.008582)
+      1 ( ) accept suboptimal  roc_auc=0.87345 (+/-0.008739)
+      2 ( ) accept suboptimal  roc_auc=0.87124 (+/-0.008458)
+      3 ( ) accept suboptimal  roc_auc=0.86909 (+/-0.008582)
 
 ---
 
@@ -42,7 +42,7 @@
     Message <cliMessage>
       Optimizing roc_auc
       Initial best: 0.87657
-      1 ( ) accept suboptimal roc_auc=0.87345 (+/-0.008739)
-      2 ( ) accept suboptimal roc_auc=0.87124 (+/-0.008458)
-      3 ( ) accept suboptimal roc_auc=0.86909 (+/-0.008582)
+      1 ( ) accept suboptimal  roc_auc=0.87345 (+/-0.008739)
+      2 ( ) accept suboptimal  roc_auc=0.87124 (+/-0.008458)
+      3 ( ) accept suboptimal  roc_auc=0.86909 (+/-0.008582)
 
