@@ -23,7 +23,7 @@ Depends:
 Imports: 
     cli,
     dials (>= 0.1.0),
-    dplyr,
+    dplyr (>= 1.1.1),
     ggplot2,
     parsnip (>= 1.0.2),
     purrr,
