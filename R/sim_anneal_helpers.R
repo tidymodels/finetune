@@ -349,6 +349,7 @@ format_event <- function(x) {
   ) %>%
     dplyr::mutate(
       new = format(orig, justify = "left"),
+      new = gsub(" ", "\u00a0", new, fixed = TRUE),
       result = paste(symb, new)
     )
   color_event(result_key$result[result_key$orig == x])
