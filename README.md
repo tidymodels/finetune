@@ -57,13 +57,6 @@ set.seed(2)
 sa_res <- 
   rda_spec %>% 
   tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4)
-#> Warning: There was 1 warning in `mutate()`.
-#> ℹ In argument: `object = purrr::map(call_info, eval_call_info)`.
-#> Caused by warning:
-#> ! The `default` argument of `new_quant_param()` is deprecated as of dials
-#>   1.0.1.
-#> ℹ The deprecated feature was likely used in the discrim package.
-#>   Please report the issue at <https://github.com/tidymodels/discrim/issues>.
 #> Optimizing roc_auc
 #> Initial best: 0.86480
 #> 1 ♥ new best           roc_auc=0.87327 (+/-0.004592)
