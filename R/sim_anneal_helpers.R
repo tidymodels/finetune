@@ -179,11 +179,10 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
 
 ## -----------------------------------------------------------------------------
 
-update_history <- function(history, x, iter) {
+update_history <- function(history, x, iter, eval_time) {
   analysis_metric <- tune::.get_tune_metric_names(x)[1]
   res <-
-    tune::show_best(x, metric = analysis_metric) %>%
-    # dplyr::select(.metric, mean, n, std_err) %>%
+    tune::show_best(x, metric = analysis_metric, eval_time = eval_time) %>%
     dplyr::mutate(
       .config = paste0("iter", iter),
       .iter = iter,
@@ -251,11 +250,15 @@ sa_decide <- function(x, parent, metric, maximize, coef) {
   x
 }
 
-initialize_history <- function(x, ...) {
+initialize_history <- function(x, eval_time = NULL, ...) {
   # check to see if there is existing history
   res <-
     tune::collect_metrics(x) %>%
     dplyr::filter(.metric == tune::.get_tune_metric_names(x)[1])
+  if (!is.na(eval_time) && any(names(res) == ".eval_time")) {
+    res <- res %>% dplyr::filter(.eval_time == eval_time)
+  }
+
   if (!any(names(res) == ".iter")) {
     res$.iter <- 0
   }

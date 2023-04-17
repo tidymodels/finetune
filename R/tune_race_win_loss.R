@@ -227,7 +227,8 @@ tune_race_win_loss_workflow <-
         param_info = param_info,
         grid = grid,
         metrics = metrics,
-        control = grid_control
+        control = grid_control,
+        eval_time = metrics_time
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
@@ -282,7 +283,8 @@ tune_race_win_loss_workflow <-
           param_info = param_info,
           grid = new_grid,
           metrics = metrics,
-          control = grid_control
+          control = grid_control,
+          eval_time = metrics_time
         )
       res <- restore_tune(res, tmp_res)
 

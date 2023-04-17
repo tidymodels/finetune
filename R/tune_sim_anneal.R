@@ -176,7 +176,8 @@ tune_sim_anneal.recipe <- function(object,
                                    param_info = NULL,
                                    metrics = NULL,
                                    initial = 1,
-                                   control = control_sim_anneal()) {
+                                   control = control_sim_anneal(),
+                                   eval_time = NULL) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_sim_anneal())
@@ -185,7 +186,8 @@ tune_sim_anneal.recipe <- function(object,
     model,
     preprocessor = object, resamples = resamples,
     iter = iter, param_info = param_info,
-    metrics = metrics, initial = initial, control = control
+    metrics = metrics, initial = initial, control = control,
+    eval_time = eval_time
   )
 }
 
@@ -198,7 +200,8 @@ tune_sim_anneal.formula <- function(formula,
                                     param_info = NULL,
                                     metrics = NULL,
                                     initial = 1,
-                                    control = control_sim_anneal()) {
+                                    control = control_sim_anneal(),
+                                    eval_time = NULL) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_sim_anneal())
@@ -207,7 +210,8 @@ tune_sim_anneal.formula <- function(formula,
     model,
     preprocessor = formula, resamples = resamples,
     iter = iter, param_info = param_info,
-    metrics = metrics, initial = initial, control = control
+    metrics = metrics, initial = initial, control = control,
+    eval_time = eval_time
   )
 }
 
@@ -221,7 +225,8 @@ tune_sim_anneal.model_spec <- function(object,
                                        param_info = NULL,
                                        metrics = NULL,
                                        initial = 1,
-                                       control = control_sim_anneal()) {
+                                       control = control_sim_anneal(),
+                                       eval_time = NULL) {
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
     rlang::abort(paste(
       "To tune a model spec, you must preprocess",
@@ -247,7 +252,8 @@ tune_sim_anneal.model_spec <- function(object,
     wflow,
     resamples = resamples, iter = iter,
     param_info = param_info, metrics = metrics,
-    initial = initial, control = control, ...
+    initial = initial, control = control, eval_time = eval_time,
+    ...
   )
 }
 
@@ -262,7 +268,8 @@ tune_sim_anneal.workflow <-
            param_info = NULL,
            metrics = NULL,
            initial = 1,
-           control = control_sim_anneal()) {
+           control = control_sim_anneal(),
+           eval_time = NULL) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_sim_anneal())
@@ -273,7 +280,8 @@ tune_sim_anneal.workflow <-
       object,
       resamples = resamples, iter = iter,
       param_info = param_info, metrics = metrics,
-      initial = initial, control = control, ...
+      initial = initial, control = control, eval_time = eval_time,
+      ...
     )
   }
 
@@ -282,7 +290,7 @@ tune_sim_anneal.workflow <-
 
 tune_sim_anneal_workflow <-
   function(object, resamples, iter = 10, param_info = NULL, metrics = NULL,
-           initial = 5, control = control_sim_anneal()) {
+           initial = 5, control = control_sim_anneal(), eval_time = NULL) {
     start_time <- proc.time()[3]
     cols <- tune::get_tune_colors()
 
@@ -294,6 +302,7 @@ tune_sim_anneal_workflow <-
 
     metrics <- tune::check_metrics(metrics, object)
     metrics_name <- names(attr(metrics, "metrics"))[1]
+    metrics_time <- eval_time[1]
     maximize <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
 
     if (is.null(param_info)) {
@@ -311,12 +320,21 @@ tune_sim_anneal_workflow <-
     tune::check_workflow(object, check_dials = !is.null(param_info), pset = param_info)
 
     # ------------------------------------------------------------------------------
-    # Chech or generate initial results
+    # Check or generate initial results
 
 
     control_init <- parsnip::condense_control(control, tune::control_grid())
     control_init$save_workflow <- TRUE
-    initial <- tune::check_initial(initial, param_info, object, resamples, metrics, control_init)
+    initial <-
+      tune::check_initial(
+        initial,
+        pset = param_info,
+        wflow = object,
+        resamples = resamples,
+        metrics = metrics,
+        ctrl = control_init,
+        eval_time = eval_time
+      )
     if (any(dials::has_unknowns(param_info$object))) {
       param_info <- tune::.get_tune_parameters(initial)
     }
@@ -364,10 +382,9 @@ tune_sim_anneal_workflow <-
 
     ## -----------------------------------------------------------------------------
 
-    result_history <- initialize_history(unsummarized)
-
+    result_history <- initialize_history(unsummarized, metrics_time)
     best_param <-
-      tune::select_best(unsummarized, metric = metrics_name) %>%
+      tune::select_best(unsummarized, metric = metrics_name, eval_time = metrics_time) %>%
       dplyr::mutate(.parent = NA_character_)
     grid_history <- best_param
     current_param <- best_param
@@ -411,14 +428,15 @@ tune_sim_anneal_workflow <-
           resamples = resamples,
           grid = new_grid %>% dplyr::select(-.config, -.parent),
           metrics = metrics,
-          control = control_init
+          control = control_init,
+          eval_time = metrics_time
         ) %>%
         dplyr::mutate(.iter = i) %>%
         update_config(config = paste0("Iter", i), save_pred = control$save_pred)
 
       result_history <-
         result_history %>%
-        update_history(res, i) %>%
+        update_history(res, i, eval_time = metrics_time) %>%
         sa_decide(
           parent = new_grid$.parent,
           metric = metrics_name,

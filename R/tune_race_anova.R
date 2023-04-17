@@ -107,95 +107,99 @@ tune_race_anova.default <- function(object, ...) {
 }
 
 #' @export
-tune_race_anova.recipe <- function(object, model, resamples, ..., param_info = NULL,
-                                   grid = 10, metrics = NULL,
-                                   control = control_race()) {
-  tune::empty_ellipses(...)
+tune_race_anova.recipe <-
+  function(object, model, resamples, ..., param_info = NULL, grid = 10,
+           metrics = NULL, control = control_race(), eval_time = eval_time) {
+    tune::empty_ellipses(...)
 
-  control <- parsnip::condense_control(control, control_race())
+    control <- parsnip::condense_control(control, control_race())
 
-  tune_race_anova(
-    model,
-    preprocessor = object, resamples = resamples,
-    param_info = param_info, grid = grid,
-    metrics = metrics, control = control
-  )
-}
+    tune_race_anova(
+      model,
+      preprocessor = object, resamples = resamples,
+      param_info = param_info, grid = grid,
+      metrics = metrics, control = control,
+      eval_time = eval_time
+    )
+  }
 
 #' @export
-tune_race_anova.formula <- function(formula, model, resamples, ..., param_info = NULL,
-                                    grid = 10, metrics = NULL,
-                                    control = control_race()) {
-  tune::empty_ellipses(...)
+tune_race_anova.formula <-
+  function(formula, model, resamples, ..., param_info = NULL, grid = 10,
+           metrics = NULL, control = control_race(), eval_time = eval_time) {
+    tune::empty_ellipses(...)
 
-  control <- parsnip::condense_control(control, control_race())
+    control <- parsnip::condense_control(control, control_race())
 
-  tune_race_anova(
-    model,
-    preprocessor = formula, resamples = resamples,
-    param_info = param_info, grid = grid,
-    metrics = metrics, control = control
-  )
-}
+    tune_race_anova(
+      model,
+      preprocessor = formula, resamples = resamples,
+      param_info = param_info, grid = grid,
+      metrics = metrics, control = control,
+      eval_time = eval_time
+    )
+  }
 
 #' @export
 #' @rdname tune_race_anova
-tune_race_anova.model_spec <- function(object, preprocessor, resamples, ...,
-                                       param_info = NULL, grid = 10, metrics = NULL,
-                                       control = control_race()) {
-  if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-    rlang::abort(paste(
-      "To tune a model spec, you must preprocess",
-      "with a formula, recipe, or variable specification"
-    ))
+tune_race_anova.model_spec <-
+  function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
+           metrics = NULL, control = control_race(), eval_time = eval_time) {
+    if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
+      rlang::abort(paste(
+        "To tune a model spec, you must preprocess",
+        "with a formula, recipe, or variable specification"
+      ))
+    }
+
+    tune::empty_ellipses(...)
+
+    control <- parsnip::condense_control(control, control_race())
+
+    wflow <- workflows::add_model(workflows::workflow(), object)
+
+    if (tune::is_recipe(preprocessor)) {
+      wflow <- workflows::add_recipe(wflow, preprocessor)
+    } else if (rlang::is_formula(preprocessor)) {
+      wflow <- workflows::add_formula(wflow, preprocessor)
+    }
+
+    tune_race_anova_workflow(
+      wflow,
+      resamples = resamples,
+      grid = grid,
+      metrics = metrics,
+      param_info = param_info,
+      control = control,
+      eval_time = eval_time
+    )
   }
-
-  tune::empty_ellipses(...)
-
-  control <- parsnip::condense_control(control, control_race())
-
-  wflow <- workflows::add_model(workflows::workflow(), object)
-
-  if (tune::is_recipe(preprocessor)) {
-    wflow <- workflows::add_recipe(wflow, preprocessor)
-  } else if (rlang::is_formula(preprocessor)) {
-    wflow <- workflows::add_formula(wflow, preprocessor)
-  }
-
-  tune_race_anova_workflow(
-    wflow,
-    resamples = resamples,
-    grid = grid,
-    metrics = metrics,
-    param_info = param_info,
-    control = control
-  )
-}
 
 #' @export
 #' @rdname tune_race_anova
-tune_race_anova.workflow <- function(object, resamples, ..., param_info = NULL,
-                                     grid = 10, metrics = NULL,
-                                     control = control_race()) {
-  tune::empty_ellipses(...)
+tune_race_anova.workflow <-
+  function(object, resamples, ..., param_info = NULL, grid = 10, metrics = NULL,
+           control = control_race(), eval_time = eval_time) {
+    tune::empty_ellipses(...)
 
-  control <- parsnip::condense_control(control, control_race())
+    control <- parsnip::condense_control(control, control_race())
 
-  tune_race_anova_workflow(
-    object,
-    resamples = resamples,
-    grid = grid,
-    metrics = metrics,
-    param_info = param_info,
-    control = control
-  )
-}
+    tune_race_anova_workflow(
+      object,
+      resamples = resamples,
+      grid = grid,
+      metrics = metrics,
+      param_info = param_info,
+      control = control,
+      eval_time = eval_time
+    )
+  }
 
 ## -----------------------------------------------------------------------------
 
 tune_race_anova_workflow <-
   function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
-           control = control_race()) {
+           control = control_race(), eval_time = eval_time) {
     rlang::check_installed("lme4")
 
     tune::initialize_catalog(control = control)
@@ -220,13 +224,15 @@ tune_race_anova_workflow <-
         param_info = param_info,
         grid = grid,
         metrics = metrics,
-        control = grid_control
+        control = grid_control,
+        eval_time = eval_time
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
     metrics <- tune::.get_tune_metrics(res)
     analysis_metric <- names(attr(metrics, "metrics"))[1]
     analysis_max <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
+    metrics_time <- eval_time[1]
 
     cols <- tune::get_tune_colors()
     if (control$verbose_elim) {
@@ -235,6 +241,7 @@ tune_race_anova_workflow <-
           "Racing will", ifelse(analysis_max, "maximize", "minimize"),
           "the", analysis_metric, "metric."
         )
+      # TODO at time X
       rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
       if (control$randomize) {
         msg <- "Resamples are analyzed in a random order."
@@ -275,7 +282,8 @@ tune_race_anova_workflow <-
           param_info = param_info,
           grid = new_grid,
           metrics = metrics,
-          control = grid_control
+          control = grid_control,
+          eval_time = eval_time
         )
 
       res <- restore_tune(res, tmp_res)

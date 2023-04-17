@@ -40,6 +40,7 @@ refactor_by_mean <- function(res, maximize = TRUE) {
   configs
 }
 
+# TODO add eval_time
 test_parameters_gls <- function(x, alpha = 0.05) {
   if (all(purrr::map_lgl(x$.metrics, is.null))) {
     rlang::abort("There were no valid metrics for the ANOVA model.")
@@ -109,6 +110,7 @@ test_parameters_gls <- function(x, alpha = 0.05) {
 ## -----------------------------------------------------------------------------
 # Racing via discrete competitions
 
+# TODO eval_time
 test_parameters_bt <- function(x, alpha = 0.05) {
   param_names <- tune::.get_tune_parameter_names(x)
   metric_data <- metric_tibble(x)
@@ -440,7 +442,7 @@ log_racing <- function(control, x, splits, grid_size, metric) {
   cli::cli_bullets(msg)
 }
 
-
+# TODO add eval_time
 tie_breaker <- function(res, control) {
   param_names <- tune::.get_tune_parameter_names(res)
   metrics <- tune::.get_tune_metrics(res)
@@ -669,10 +671,10 @@ collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, 
 #' resampled). Comparing performance metrics for configurations averaged with
 #' different resamples is likely to lead to inappropriate results.
 #' @export
-show_best.tune_race <- function(x, metric = NULL, n = 5, ...) {
+show_best.tune_race <- function(x, metric = NULL, n = 5, eval_time = NULL, ...) {
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
-  res <- NextMethod(metric = metric, n = Inf, ...)
+  res <- NextMethod(metric = metric, n = Inf, eval_time = eval_time, ...)
   res$.ranked <- 1:nrow(res)
   res <- dplyr::inner_join(res, final_configs, by = ".config")
   res$.ranked <- NULL
