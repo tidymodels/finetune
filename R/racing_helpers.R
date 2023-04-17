@@ -41,7 +41,7 @@ refactor_by_mean <- function(res, maximize = TRUE) {
 }
 
 # TODO add eval_time
-test_parameters_gls <- function(x, alpha = 0.05) {
+test_parameters_gls <- function(x, alpha = 0.05, eval_time = NULL) {
   if (all(purrr::map_lgl(x$.metrics, is.null))) {
     rlang::abort("There were no valid metrics for the ANOVA model.")
   }
@@ -53,6 +53,10 @@ test_parameters_gls <- function(x, alpha = 0.05) {
   res <-
     tune::collect_metrics(x, summarize = FALSE) %>%
     dplyr::filter(.metric == metric)
+
+  if (!is.null(eval_time)) {
+    res <- dplyr::filter(res, .eval_time == eval_time)
+  }
 
   key <-
     res %>%
@@ -111,7 +115,7 @@ test_parameters_gls <- function(x, alpha = 0.05) {
 # Racing via discrete competitions
 
 # TODO eval_time
-test_parameters_bt <- function(x, alpha = 0.05) {
+test_parameters_bt <- function(x, alpha = 0.05, eval_time = NULL) {
   param_names <- tune::.get_tune_parameter_names(x)
   metric_data <- metric_tibble(x)
   metric <- metric_data$metric[1]
@@ -120,6 +124,10 @@ test_parameters_bt <- function(x, alpha = 0.05) {
   res <-
     tune::collect_metrics(x, summarize = FALSE) %>%
     dplyr::filter(.metric == metric)
+
+  if (!is.null(eval_time)) {
+    res <- dplyr::filter(res, .eval_time == eval_time)
+  }
 
   key <-
     res %>%
@@ -175,7 +183,6 @@ test_parameters_bt <- function(x, alpha = 0.05) {
     ) %>%
     dplyr::bind_rows(make_best_results(best_team))
 
-
   ## TODO For both racing methods, make this a function with the configs as
   ## arguments.
   if (length(season_data$eliminated) > 0) {
@@ -194,6 +201,7 @@ make_config_pairs <- function(x) {
   id_combin <- t(utils::combn(ids, 2))
   colnames(id_combin) <- c("p1", "p2")
   id_combin <- tibble::as_tibble(id_combin)
+  id_combin
 }
 
 score_match <- function(x, y, maximize) {
@@ -476,11 +484,20 @@ tie_breaker <- function(res, control) {
 }
 
 check_results <- function(dat, rm_zv = TRUE, rm_dup = FALSE) {
-  ids <- grep("^id", names(dat))
+  ids <- grep("^id", names(dat), value = TRUE)
+
+  if (any(names(dat) == ".eval_time")) {
+    dat$.eval_time <- NULL
+  }
+
   x <-
     dat %>%
     dplyr::select(!!!ids, .estimate, .config) %>%
-    tidyr::pivot_wider(id_cols = c(dplyr::all_of(ids)), names_from = c(.config), values_from = c(.estimate))
+    tidyr::pivot_wider(
+      id_cols = c(dplyr::all_of(ids)),
+      names_from = .config,
+      values_from = .estimate
+    )
 
   exclude <- character(0)
 

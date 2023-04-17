@@ -109,7 +109,7 @@ tune_race_anova.default <- function(object, ...) {
 #' @export
 tune_race_anova.recipe <-
   function(object, model, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = eval_time) {
+           metrics = NULL, control = control_race(), eval_time = NULL) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -126,7 +126,7 @@ tune_race_anova.recipe <-
 #' @export
 tune_race_anova.formula <-
   function(formula, model, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = eval_time) {
+           metrics = NULL, control = control_race(), eval_time = NULL) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -144,7 +144,7 @@ tune_race_anova.formula <-
 #' @rdname tune_race_anova
 tune_race_anova.model_spec <-
   function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = eval_time) {
+           metrics = NULL, control = control_race(), eval_time = NULL) {
     if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
       rlang::abort(paste(
         "To tune a model spec, you must preprocess",
@@ -179,7 +179,7 @@ tune_race_anova.model_spec <-
 #' @rdname tune_race_anova
 tune_race_anova.workflow <-
   function(object, resamples, ..., param_info = NULL, grid = 10, metrics = NULL,
-           control = control_race(), eval_time = eval_time) {
+           control = control_race(), eval_time = NULL) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -199,7 +199,7 @@ tune_race_anova.workflow <-
 
 tune_race_anova_workflow <-
   function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
-           control = control_race(), eval_time = eval_time) {
+           control = control_race(), eval_time = NULL) {
     rlang::check_installed("lme4")
 
     tune::initialize_catalog(control = control)
@@ -249,7 +249,7 @@ tune_race_anova_workflow <-
       }
     }
 
-    filters_results <- test_parameters_gls(res, control$alpha)
+    filters_results <- test_parameters_gls(res, control$alpha, metrics_time)
     n_grid <- nrow(filters_results)
 
     log_final <- TRUE
@@ -289,7 +289,7 @@ tune_race_anova_workflow <-
       res <- restore_tune(res, tmp_res)
 
       if (nrow(new_grid) > 1) {
-        filters_results <- test_parameters_gls(res, control$alpha)
+        filters_results <- test_parameters_gls(res, control$alpha, metrics_time)
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
           filters_results <- tie_breaker(res, control)
         }

@@ -120,68 +120,73 @@ tune_race_win_loss.default <- function(object, ...) {
 }
 
 #' @export
-tune_race_win_loss.recipe <- function(object, model, resamples, ..., param_info = NULL,
-                                      grid = 10, metrics = NULL, control = control_race()) {
-  tune::empty_ellipses(...)
+tune_race_win_loss.recipe <-
+  function(object, model, resamples, ..., param_info = NULL, grid = 10,
+           metrics = NULL, control = control_race(), eval_time = NULL) {
+    tune::empty_ellipses(...)
 
-  control <- parsnip::condense_control(control, control_race())
+    control <- parsnip::condense_control(control, control_race())
 
-  tune_race_win_loss(
-    model,
-    preprocessor = object, resamples = resamples,
-    param_info = param_info, grid = grid,
-    metrics = metrics, control = control
-  )
-}
+    tune_race_win_loss(
+      model,
+      preprocessor = object, resamples = resamples,
+      param_info = param_info, grid = grid,
+      metrics = metrics, control = control,
+      eval_time = eval_time
+    )
+  }
 
 #' @export
-tune_race_win_loss.formula <- function(formula, model, resamples, ..., param_info = NULL,
-                                       grid = 10, metrics = NULL, control = control_race()) {
-  tune::empty_ellipses(...)
+tune_race_win_loss.formula <-
+  function(formula, model, resamples, ..., param_info = NULL, grid = 10,
+           metrics = NULL, control = control_race(), eval_time = NULL) {
+    tune::empty_ellipses(...)
 
-  control <- parsnip::condense_control(control, control_race())
+    control <- parsnip::condense_control(control, control_race())
 
-  tune_race_win_loss(
-    model,
-    preprocessor = formula, resamples = resamples,
-    param_info = param_info, grid = grid,
-    metrics = metrics, control = control
-  )
-}
+    tune_race_win_loss(
+      model,
+      preprocessor = formula, resamples = resamples,
+      param_info = param_info, grid = grid,
+      metrics = metrics, control = control,
+      eval_time = eval_time
+    )
+  }
 
 #' @export
 #' @rdname tune_race_win_loss
-tune_race_win_loss.model_spec <- function(object, preprocessor, resamples, ...,
-                                          param_info = NULL, grid = 10, metrics = NULL,
-                                          control = control_race()) {
-  if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-    rlang::abort(paste(
-      "To tune a model spec, you must preprocess",
-      "with a formula, recipe, or variable specification"
-    ))
+tune_race_win_loss.model_spec <-
+  function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
+           metrics = NULL, control = control_race(), eval_time = NULL) {
+    if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
+      rlang::abort(paste(
+        "To tune a model spec, you must preprocess",
+        "with a formula, recipe, or variable specification"
+      ))
+    }
+
+    tune::empty_ellipses(...)
+
+    control <- parsnip::condense_control(control, control_race())
+
+    wflow <- workflows::add_model(workflows::workflow(), object)
+
+    if (tune::is_recipe(preprocessor)) {
+      wflow <- workflows::add_recipe(wflow, preprocessor)
+    } else if (rlang::is_formula(preprocessor)) {
+      wflow <- workflows::add_formula(wflow, preprocessor)
+    }
+
+    tune_race_win_loss_workflow(
+      wflow,
+      resamples = resamples,
+      grid = grid,
+      metrics = metrics,
+      param_info = param_info,
+      control = control,
+      eval_time = eval_time
+    )
   }
-
-  tune::empty_ellipses(...)
-
-  control <- parsnip::condense_control(control, control_race())
-
-  wflow <- workflows::add_model(workflows::workflow(), object)
-
-  if (tune::is_recipe(preprocessor)) {
-    wflow <- workflows::add_recipe(wflow, preprocessor)
-  } else if (rlang::is_formula(preprocessor)) {
-    wflow <- workflows::add_formula(wflow, preprocessor)
-  }
-
-  tune_race_win_loss_workflow(
-    wflow,
-    resamples = resamples,
-    grid = grid,
-    metrics = metrics,
-    param_info = param_info,
-    control = control
-  )
-}
 
 #' @export
 #' @rdname tune_race_win_loss
@@ -198,7 +203,8 @@ tune_race_win_loss.workflow <- function(object, resamples, ..., param_info = NUL
     grid = grid,
     metrics = metrics,
     param_info = param_info,
-    control = control
+    control = control,
+    eval_time = eval_time
   )
 }
 
@@ -206,7 +212,7 @@ tune_race_win_loss.workflow <- function(object, resamples, ..., param_info = NUL
 
 tune_race_win_loss_workflow <-
   function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
-           control = control_race()) {
+           control = control_race(), eval_time = NULL) {
     rlang::check_installed("BradleyTerry2")
 
     B <- nrow(resamples)
@@ -228,13 +234,14 @@ tune_race_win_loss_workflow <-
         grid = grid,
         metrics = metrics,
         control = grid_control,
-        eval_time = metrics_time
+        eval_time = eval_time
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
     metrics <- tune::.get_tune_metrics(res)
     analysis_metric <- names(attr(metrics, "metrics"))[1]
     analysis_max <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
+    metrics_time <- eval_time[1]
 
     cols <- tune::get_tune_colors()
     if (control$verbose_elim) {
@@ -250,7 +257,7 @@ tune_race_win_loss_workflow <-
       }
     }
 
-    filters_results <- test_parameters_bt(res, control$alpha)
+    filters_results <- test_parameters_bt(res, control$alpha, metrics_time)
     n_grid <- nrow(filters_results)
 
     log_final <- TRUE
@@ -284,12 +291,12 @@ tune_race_win_loss_workflow <-
           grid = new_grid,
           metrics = metrics,
           control = grid_control,
-          eval_time = metrics_time
+          eval_time = eval_time
         )
       res <- restore_tune(res, tmp_res)
 
       if (nrow(new_grid) > 1) {
-        filters_results <- test_parameters_bt(res, control$alpha)
+        filters_results <- test_parameters_bt(res, control$alpha, metrics_time)
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
           filters_results <- tie_breaker(res, control)
         }
