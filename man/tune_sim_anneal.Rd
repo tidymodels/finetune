@@ -17,7 +17,8 @@ tune_sim_anneal(object, ...)
   param_info = NULL,
   metrics = NULL,
   initial = 1,
-  control = control_sim_anneal()
+  control = control_sim_anneal(),
+  eval_time = NULL
 )
 
 \method{tune_sim_anneal}{workflow}(
@@ -28,7 +29,8 @@ tune_sim_anneal(object, ...)
   param_info = NULL,
   metrics = NULL,
   initial = 1,
-  control = control_sim_anneal()
+  control = control_sim_anneal(),
+  eval_time = NULL
 )
 }
 \arguments{

@@ -16,7 +16,8 @@ tune_race_win_loss(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race()
+  control = control_race(),
+  eval_time = NULL
 )
 
 \method{tune_race_win_loss}{workflow}(

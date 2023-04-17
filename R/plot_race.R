@@ -7,11 +7,25 @@
 #' @export
 plot_race <- function(x) {
   metric <- tune::.get_tune_metric_names(x)[1]
+  ex_mtrc <- collect_metrics(x)
+
+  if (any(names(ex_mtrc) == ".eval_time")) {
+    eval_time <- min(ex_mtrc$.eval_time, na.rm = TRUE)
+  } else {
+    eval_time <- NULL
+  }
+
   rs <-
     x %>%
     dplyr::select(id, .order, .metrics) %>%
     tidyr::unnest(cols = .metrics) %>%
     dplyr::filter(.metric == metric)
+
+  if(!is.null(eval_time) && any(names(rs) == ".eval_time")) {
+    rs <- dplyr::filter(rs, .eval_time == eval_time)
+  }
+
+
   .order <- sort(unique(rs$.order))
   purrr::map_dfr(.order, ~ stage_results(.x, rs)) %>%
     ggplot2::ggplot(ggplot2::aes(x = stage, y = mean, group = .config, col = .config)) +

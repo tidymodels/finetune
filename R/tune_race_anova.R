@@ -230,18 +230,30 @@ tune_race_anova_workflow <-
 
     param_names <- tune::.get_tune_parameter_names(res)
     metrics <- tune::.get_tune_metrics(res)
-    analysis_metric <- names(attr(metrics, "metrics"))[1]
-    analysis_max <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
-    metrics_time <- eval_time[1]
+    metric_info <- tibble::as_tibble(metrics)
+    analysis_metric <-metric_info$metric[1]
+    analysis_max <- metric_info$direction[1] == "maximize"
+    is_dyn <- metric_info$direction[1] == "dynamic_survival_metric"
+    if (is_dyn) {
+      metrics_time <- eval_time[1]
+    } else {
+      metrics_time <- NULL
+    }
 
     cols <- tune::get_tune_colors()
     if (control$verbose_elim) {
       msg <-
         paste(
           "Racing will", ifelse(analysis_max, "maximize", "minimize"),
-          "the", analysis_metric, "metric."
+          "the", analysis_metric, "metric"
         )
-      # TODO at time X
+
+      if (!is.null(metrics_time)) {
+        msg <- paste(msg, "at time", format(metrics_time, digits = 3))
+      } else {
+        msg <- paste0(msg, ".")
+      }
+
       rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
       if (control$randomize) {
         msg <- "Resamples are analyzed in a random order."

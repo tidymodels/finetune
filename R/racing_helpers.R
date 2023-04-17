@@ -40,7 +40,6 @@ refactor_by_mean <- function(res, maximize = TRUE) {
   configs
 }
 
-# TODO add eval_time
 test_parameters_gls <- function(x, alpha = 0.05, eval_time = NULL) {
   if (all(purrr::map_lgl(x$.metrics, is.null))) {
     rlang::abort("There were no valid metrics for the ANOVA model.")
@@ -54,7 +53,7 @@ test_parameters_gls <- function(x, alpha = 0.05, eval_time = NULL) {
     tune::collect_metrics(x, summarize = FALSE) %>%
     dplyr::filter(.metric == metric)
 
-  if (!is.null(eval_time)) {
+  if (!is.null(eval_time) && any(names(res) == ".eval_time")) {
     res <- dplyr::filter(res, .eval_time == eval_time)
   }
 
@@ -114,7 +113,6 @@ test_parameters_gls <- function(x, alpha = 0.05, eval_time = NULL) {
 ## -----------------------------------------------------------------------------
 # Racing via discrete competitions
 
-# TODO eval_time
 test_parameters_bt <- function(x, alpha = 0.05, eval_time = NULL) {
   param_names <- tune::.get_tune_parameter_names(x)
   metric_data <- metric_tibble(x)
@@ -125,7 +123,7 @@ test_parameters_bt <- function(x, alpha = 0.05, eval_time = NULL) {
     tune::collect_metrics(x, summarize = FALSE) %>%
     dplyr::filter(.metric == metric)
 
-  if (!is.null(eval_time)) {
+  if (!is.null(eval_time) && any(names(res) == ".eval_time")) {
     res <- dplyr::filter(res, .eval_time == eval_time)
   }
 
@@ -450,16 +448,22 @@ log_racing <- function(control, x, splits, grid_size, metric) {
   cli::cli_bullets(msg)
 }
 
-# TODO add eval_time
 tie_breaker <- function(res, control) {
   param_names <- tune::.get_tune_parameter_names(res)
   metrics <- tune::.get_tune_metrics(res)
   analysis_metric <- names(attr(metrics, "metrics"))[1]
   analysis_max <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
+  metrics_time <- eval_time[1]
+
   x <-
     res %>%
     tune::collect_metrics() %>%
     dplyr::filter(.metric == analysis_metric)
+
+  if (!is.null(metrics_time)) {
+    x <- dplyr::filter(x, .eval_time == metrics_time)
+  }
+
   all_config <- x$.config
   max_rs <- max(x$n)
   finalists <- x[x$n == max_rs, ]
