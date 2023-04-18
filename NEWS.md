@@ -1,4 +1,6 @@
-# finetune (development version)
+# finetune 1.1.0
+
+* Various minor changes to keep up with developments in the tune and dplyr packages (#60) (#62) (#67) (#68). 
 
 * Corrects `.config` output with `save_pred = TRUE` in `tune_sim_anneal()`. The function previously outputted a constant `Model1_Preprocessor1` in the `.predictions` slot, and now provides `.config` values that align with those in `.metrics` (#57).
 
