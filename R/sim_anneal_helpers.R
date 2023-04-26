@@ -275,6 +275,9 @@ initialize_history <- function(x, eval_time = NULL, ...) {
 
 
 percent_diff <- function(current, new, maximize = TRUE) {
+  if (isTRUE(all.equal(current, new))) {
+    return(0.0)
+  }
   if (maximize) {
     pct_diff <- (new - current) / current
   } else {
