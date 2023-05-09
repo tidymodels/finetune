@@ -448,7 +448,7 @@ log_racing <- function(control, x, splits, grid_size, metric) {
   cli::cli_bullets(msg)
 }
 
-tie_breaker <- function(res, control) {
+tie_breaker <- function(res, control, eval_time = NULL) {
   param_names <- tune::.get_tune_parameter_names(res)
   metrics <- tune::.get_tune_metrics(res)
   analysis_metric <- names(attr(metrics, "metrics"))[1]

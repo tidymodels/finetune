@@ -21,7 +21,11 @@
 #' [tune_race_anova()]) or a positive integer. If the initial object was a
 #' sequential search method, the simulated annealing iterations start after the
 #' last iteration of the initial results.
-#' @param control The results of `control_sim_anneal()`.
+#' @param control The results of [control_sim_anneal()].
+#' @param eval_time A numeric vector of time points where dynamic event time
+#' metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+#' values should be non-negative and should probably be no greater then the
+#' largest event time in the training set.
 #' @param ... Not currently used.
 #' @details
 #' Simulated annealing is a global optimization method. For model tuning, it

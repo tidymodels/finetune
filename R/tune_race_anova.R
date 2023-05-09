@@ -22,6 +22,10 @@
 #' @param metrics A [yardstick::metric_set()] or `NULL`.
 #' @param control An object used to modify the tuning process. See
 #'  [control_race()] for more details.
+#' @param eval_time A numeric vector of time points where dynamic event time
+#' metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+#' values should be non-negative and should probably be no greater then the
+#' largest event time in the training set.
 #' @param ... Not currently used.
 #' @references
 #' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
@@ -31,7 +35,7 @@
 #'
 #' Racing methods are efficient approaches to grid search. Initially, the
 #'  function evaluates all tuning parameters on a small initial set of
-#'  resamples. The `burn_in` argument of `control_race()` sets the number of
+#'  resamples. The `burn_in` argument of [control_race()] sets the number of
 #'  initial resamples.
 #'
 #' The performance statistics from these resamples are analyzed to determine
@@ -46,7 +50,7 @@
 #' This function determines statistical significance using a repeated measures ANOVA
 #'  model where the performance statistic (e.g., RMSE, accuracy, etc.) is the
 #'  outcome data and the random effect is due to resamples. The
-#'  `control_race()` function contains are parameter for the significance cutoff
+#'  [control_race()] function contains are parameter for the significance cutoff
 #'  applied to the ANOVA results as well as other relevant arguments.
 #'
 #' There is benefit to using racing methods in conjunction with parallel
@@ -303,7 +307,7 @@ tune_race_anova_workflow <-
       if (nrow(new_grid) > 1) {
         filters_results <- test_parameters_gls(res, control$alpha, metrics_time)
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
-          filters_results <- tie_breaker(res, control)
+          filters_results <- tie_breaker(res, control, eval_time = eval_time)
         }
       } else {
         # Depending on the value of control$parallel_over we don't need to do

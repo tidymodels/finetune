@@ -9,20 +9,7 @@
 #'  statistics are calculated and a logistic regression model is used to measure
 #'  how likely each combination is to win overall.
 #'
-#' @param object A `parsnip` model specification or a [workflows::workflow()].
-#' @param preprocessor A traditional model formula or a recipe created using
-#'   [recipes::recipe()].
-#' @param resamples An `rset()` object that has multiple resamples (i.e., is not
-#'  a validation set).
-#' @param param_info A [dials::parameters()] object or `NULL`. If none is given,
-#' a parameters set is derived from other arguments. Passing this argument can
-#' be useful when parameter ranges need to be customized.
-#' @param grid A data frame of tuning combinations or a positive integer. The
-#'  data frame should have columns for each parameter being tuned and rows for
-#'  tuning parameter candidates. An integer denotes the number of candidate
-#'  parameter sets to be created automatically.
-#' @param metrics A [yardstick::metric_set()] or `NULL`.
-#' @param control An object used to modify the tuning process.
+#' @inheritParams tune_race_anova
 #' @references
 #' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
 #' Models." \url{https://arxiv.org/abs/1405.6974}.
@@ -31,7 +18,7 @@
 #'
 #' Racing methods are efficient approaches to grid search. Initially, the
 #'  function evaluates all tuning parameters on a small initial set of
-#'  resamples. The `burn_in` argument of `control_race()` sets the number of
+#'  resamples. The `burn_in` argument of [control_race()] sets the number of
 #'  initial resamples.
 #'
 #' The performance statistics from the current set of resamples are converted
@@ -63,7 +50,7 @@
 #'  statistical analysis is updated. More candidate parameters may be excluded
 #'  with each new resample that is processed.
 #'
-#' The `control_race()` function contains are parameter for the significance cutoff
+#' The [control_race()] function contains are parameter for the significance cutoff
 #'  applied to the Bradley-Terry model results as well as other relevant arguments.
 #' @examples
 #' \donttest{
@@ -192,7 +179,7 @@ tune_race_win_loss.model_spec <-
 #' @rdname tune_race_win_loss
 tune_race_win_loss.workflow <- function(object, resamples, ..., param_info = NULL,
                                         grid = 10, metrics = NULL,
-                                        control = control_race()) {
+                                        control = control_race(), eval_time = NULL) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_race())
