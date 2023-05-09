@@ -27,7 +27,8 @@ tune_race_win_loss(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race()
+  control = control_race(),
+  eval_time = NULL
 )
 }
 \arguments{
@@ -38,7 +39,7 @@ The technical details of this method are described in Kuhn (2014).
 
 Racing methods are efficient approaches to grid search. Initially, the
 function evaluates all tuning parameters on a small initial set of
-resamples. The \code{burn_in} argument of \code{control_race()} sets the number of
+resamples. The \code{burn_in} argument of \code{\link[=control_race]{control_race()}} sets the number of
 initial resamples.
 
 The performance statistics from the current set of resamples are converted
@@ -69,11 +70,11 @@ The next resample is used with the remaining parameter combinations and the
 statistical analysis is updated. More candidate parameters may be excluded
 with each new resample that is processed.
 
-The \code{control_race()} function contains are parameter for the significance cutoff
+The \code{\link[=control_race]{control_race()}} function contains are parameter for the significance cutoff
 applied to the Bradley-Terry model results as well as other relevant arguments.}
 
 \item{preprocessor}{A traditional model formula or a recipe created using
-\code{\link[recipes:recipe]{recipes::recipe()}}.}
+\code{\link[recipes:recipe]{recipes::recipe()}}. This is only required when \code{object} is not a workflow.}
 
 \item{resamples}{An \code{rset()} object that has multiple resamples (i.e., is not
 a validation set).}
@@ -89,7 +90,13 @@ parameter sets to be created automatically.}
 
 \item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} or \code{NULL}.}
 
-\item{control}{An object used to modify the tuning process.}
+\item{control}{An object used to modify the tuning process. See
+\code{\link[=control_race]{control_race()}} for more details.}
+
+\item{eval_time}{A numeric vector of time points where dynamic event time
+metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+values should be non-negative and should probably be no greater then the
+largest event time in the training set.}
 }
 \value{
 An object with primary class \code{tune_race} in the same standard format

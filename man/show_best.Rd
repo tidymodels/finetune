@@ -18,6 +18,10 @@ a warning is issued).}
 
 \item{n}{An integer for the maximum number of top results/rows to return.}
 
+\item{eval_time}{A numeric vector of time points where dynamic event time
+metrics should be chosen (e.g., the time-dependent ROC curve, etc). The
+values should be consistent with the values used to create \code{x}.}
+
 \item{...}{For \code{\link[tune:select_by_one_std_err]{select_by_one_std_err()}} and \code{\link[tune:select_by_pct_loss]{select_by_pct_loss()}}, this
 argument is passed directly to \code{\link[dplyr:arrange]{dplyr::arrange()}} so that the user can sort
 the models from \emph{most simple to most complex}. That is, for a parameter \code{p},

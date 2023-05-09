@@ -55,6 +55,11 @@ parameter sets to be created automatically.}
 
 \item{control}{An object used to modify the tuning process. See
 \code{\link[=control_race]{control_race()}} for more details.}
+
+\item{eval_time}{A numeric vector of time points where dynamic event time
+metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+values should be non-negative and should probably be no greater then the
+largest event time in the training set.}
 }
 \value{
 An object with primary class \code{tune_race} in the same standard format
@@ -73,7 +78,7 @@ The technical details of this method are described in Kuhn (2014).
 
 Racing methods are efficient approaches to grid search. Initially, the
 function evaluates all tuning parameters on a small initial set of
-resamples. The \code{burn_in} argument of \code{control_race()} sets the number of
+resamples. The \code{burn_in} argument of \code{\link[=control_race]{control_race()}} sets the number of
 initial resamples.
 
 The performance statistics from these resamples are analyzed to determine
@@ -88,7 +93,7 @@ with each new resample that is processed.
 This function determines statistical significance using a repeated measures ANOVA
 model where the performance statistic (e.g., RMSE, accuracy, etc.) is the
 outcome data and the random effect is due to resamples. The
-\code{control_race()} function contains are parameter for the significance cutoff
+\code{\link[=control_race]{control_race()}} function contains are parameter for the significance cutoff
 applied to the ANOVA results as well as other relevant arguments.
 
 There is benefit to using racing methods in conjunction with parallel
