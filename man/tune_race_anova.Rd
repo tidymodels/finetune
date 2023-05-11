@@ -16,7 +16,8 @@ tune_race_anova(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race()
+  control = control_race(),
+  eval_time = NULL
 )
 
 \method{tune_race_anova}{workflow}(
@@ -26,7 +27,8 @@ tune_race_anova(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race()
+  control = control_race(),
+  eval_time = NULL
 )
 }
 \arguments{
@@ -53,6 +55,11 @@ parameter sets to be created automatically.}
 
 \item{control}{An object used to modify the tuning process. See
 \code{\link[=control_race]{control_race()}} for more details.}
+
+\item{eval_time}{A numeric vector of time points where dynamic event time
+metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+values must be non-negative and should probably be no greater than the
+largest event time in the training set (See Details below).}
 }
 \value{
 An object with primary class \code{tune_race} in the same standard format
@@ -71,7 +78,7 @@ The technical details of this method are described in Kuhn (2014).
 
 Racing methods are efficient approaches to grid search. Initially, the
 function evaluates all tuning parameters on a small initial set of
-resamples. The \code{burn_in} argument of \code{control_race()} sets the number of
+resamples. The \code{burn_in} argument of \code{\link[=control_race]{control_race()}} sets the number of
 initial resamples.
 
 The performance statistics from these resamples are analyzed to determine
@@ -86,12 +93,22 @@ with each new resample that is processed.
 This function determines statistical significance using a repeated measures ANOVA
 model where the performance statistic (e.g., RMSE, accuracy, etc.) is the
 outcome data and the random effect is due to resamples. The
-\code{control_race()} function contains are parameter for the significance cutoff
+\code{\link[=control_race]{control_race()}} function contains are parameter for the significance cutoff
 applied to the ANOVA results as well as other relevant arguments.
 
 There is benefit to using racing methods in conjunction with parallel
 processing. The following section shows a benchmark of results for one
 dataset and model.
+\subsection{Censored regression models}{
+
+With dynamic performance metrics (e.g. Brier or ROC curves), performance is
+calculated for every value of \code{eval_time} but the \emph{first} evaluation time
+given by the user (e.g., \code{eval_time[1]}) is analyzed during racing.
+
+Also, values of \code{eval_time} should be less than the largest observed event
+time in the training data. For many non-parametric models, the results beyond
+the largest time corresponding to an event are constant (or \code{NA}).
+}
 
 \subsection{Benchmarking results}{
 

@@ -16,7 +16,8 @@ tune_race_win_loss(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race()
+  control = control_race(),
+  eval_time = NULL
 )
 
 \method{tune_race_win_loss}{workflow}(
@@ -26,18 +27,60 @@ tune_race_win_loss(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race()
+  control = control_race(),
+  eval_time = NULL
 )
 }
 \arguments{
 \item{object}{A \code{parsnip} model specification or a \code{\link[workflows:workflow]{workflows::workflow()}}.}
 
-\item{...}{Not currently used.
+\item{...}{Not currently used.}
+
+\item{preprocessor}{A traditional model formula or a recipe created using
+\code{\link[recipes:recipe]{recipes::recipe()}}. This is only required when \code{object} is not a workflow.}
+
+\item{resamples}{An \code{rset()} object that has multiple resamples (i.e., is not
+a validation set).}
+
+\item{param_info}{A \code{\link[dials:parameters]{dials::parameters()}} object or \code{NULL}. If none is given,
+a parameters set is derived from other arguments. Passing this argument can
+be useful when parameter ranges need to be customized.}
+
+\item{grid}{A data frame of tuning combinations or a positive integer. The
+data frame should have columns for each parameter being tuned and rows for
+tuning parameter candidates. An integer denotes the number of candidate
+parameter sets to be created automatically.}
+
+\item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} or \code{NULL}.}
+
+\item{control}{An object used to modify the tuning process. See
+\code{\link[=control_race]{control_race()}} for more details.}
+
+\item{eval_time}{A numeric vector of time points where dynamic event time
+metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+values must be non-negative and should probably be no greater than the
+largest event time in the training set (See Details below).}
+}
+\value{
+An object with primary class \code{tune_race} in the same standard format
+as objects produced by \code{\link[tune:tune_grid]{tune::tune_grid()}}.
+}
+\description{
+\code{\link[=tune_race_win_loss]{tune_race_win_loss()}} computes a set of performance metrics (e.g. accuracy or RMSE)
+for a pre-defined set of tuning parameters that correspond to a model or
+recipe across one or more resamples of the data. After an initial number of
+resamples have been evaluated, the process eliminates tuning parameter
+combinations that are unlikely to be the best results using a statistical
+model. For each pairwise combinations of tuning parameters, win/loss
+statistics are calculated and a logistic regression model is used to measure
+how likely each combination is to win overall.
+}
+\details{
 The technical details of this method are described in Kuhn (2014).
 
 Racing methods are efficient approaches to grid search. Initially, the
 function evaluates all tuning parameters on a small initial set of
-resamples. The \code{burn_in} argument of \code{control_race()} sets the number of
+resamples. The \code{burn_in} argument of \code{\link[=control_race]{control_race()}} sets the number of
 initial resamples.
 
 The performance statistics from the current set of resamples are converted
@@ -68,41 +111,18 @@ The next resample is used with the remaining parameter combinations and the
 statistical analysis is updated. More candidate parameters may be excluded
 with each new resample that is processed.
 
-The \code{control_race()} function contains are parameter for the significance cutoff
-applied to the Bradley-Terry model results as well as other relevant arguments.}
+The \code{\link[=control_race]{control_race()}} function contains are parameter for the significance cutoff
+applied to the Bradley-Terry model results as well as other relevant arguments.
+\subsection{Censored regression models}{
 
-\item{preprocessor}{A traditional model formula or a recipe created using
-\code{\link[recipes:recipe]{recipes::recipe()}}.}
+With dynamic performance metrics (e.g. Brier or ROC curves), performance is
+calculated for every value of \code{eval_time} but the \emph{first} evaluation time
+given by the user (e.g., \code{eval_time[1]}) is analyzed during racing.
 
-\item{resamples}{An \code{rset()} object that has multiple resamples (i.e., is not
-a validation set).}
-
-\item{param_info}{A \code{\link[dials:parameters]{dials::parameters()}} object or \code{NULL}. If none is given,
-a parameters set is derived from other arguments. Passing this argument can
-be useful when parameter ranges need to be customized.}
-
-\item{grid}{A data frame of tuning combinations or a positive integer. The
-data frame should have columns for each parameter being tuned and rows for
-tuning parameter candidates. An integer denotes the number of candidate
-parameter sets to be created automatically.}
-
-\item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} or \code{NULL}.}
-
-\item{control}{An object used to modify the tuning process.}
+Also, values of \code{eval_time} should be less than the largest observed event
+time in the training data. For many non-parametric models, the results beyond
+the largest time corresponding to an event are constant (or \code{NA}).
 }
-\value{
-An object with primary class \code{tune_race} in the same standard format
-as objects produced by \code{\link[tune:tune_grid]{tune::tune_grid()}}.
-}
-\description{
-\code{\link[=tune_race_win_loss]{tune_race_win_loss()}} computes a set of performance metrics (e.g. accuracy or RMSE)
-for a pre-defined set of tuning parameters that correspond to a model or
-recipe across one or more resamples of the data. After an initial number of
-resamples have been evaluated, the process eliminates tuning parameter
-combinations that are unlikely to be the best results using a statistical
-model. For each pairwise combinations of tuning parameters, win/loss
-statistics are calculated and a logistic regression model is used to measure
-how likely each combination is to win overall.
 }
 \examples{
 \donttest{

@@ -4,7 +4,7 @@
 \alias{show_best.tune_race}
 \title{Investigate best tuning parameters}
 \usage{
-\method{show_best}{tune_race}(x, metric = NULL, n = 5, ...)
+\method{show_best}{tune_race}(x, metric = NULL, n = 5, eval_time = NULL, ...)
 }
 \arguments{
 \item{x}{The results of \code{\link[tune:tune_grid]{tune_grid()}} or \code{\link[tune:tune_bayes]{tune_bayes()}}.}
@@ -17,6 +17,10 @@ multiple metric and none are given, the first in the metric set is used (and
 a warning is issued).}
 
 \item{n}{An integer for the maximum number of top results/rows to return.}
+
+\item{eval_time}{A numeric vector of time points where dynamic event time
+metrics should be chosen (e.g., the time-dependent ROC curve, etc). The
+values should be consistent with the values used to create \code{x}.}
 
 \item{...}{For \code{\link[tune:select_by_one_std_err]{select_by_one_std_err()}} and \code{\link[tune:select_by_pct_loss]{select_by_pct_loss()}}, this
 argument is passed directly to \code{\link[dplyr:arrange]{dplyr::arrange()}} so that the user can sort
