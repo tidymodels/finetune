@@ -161,7 +161,7 @@ given by the user (e.g., \code{eval_time[1]}) is used to guide the optimization.
 
 Also, values of \code{eval_time} should be less than the largest observed event
 time in the training data. For many non-parametric models, the results beyond
-the largest time corresponding to an event is constant.
+the largest time corresponding to an event are constant (or \code{NA}).
 }
 }
 \examples{

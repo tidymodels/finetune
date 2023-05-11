@@ -62,7 +62,7 @@
 #'
 #' Also, values of `eval_time` should be less than the largest observed event
 #' time in the training data. For many non-parametric models, the results beyond
-#' the largest time corresponding to an event is constant.
+#' the largest time corresponding to an event are constant (or `NA`).
 #'
 #' @examples
 #' \donttest{
