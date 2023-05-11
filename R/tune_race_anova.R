@@ -24,8 +24,8 @@
 #'  [control_race()] for more details.
 #' @param eval_time A numeric vector of time points where dynamic event time
 #' metrics should be computed (e.g. the time-dependent ROC curve, etc). The
-#' values should be non-negative and should probably be no greater then the
-#' largest event time in the training set.
+#' values must be non-negative and should probably be no greater than the
+#' largest event time in the training set (See Details below).
 #' @param ... Not currently used.
 #' @references
 #' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
@@ -56,6 +56,17 @@
 #' There is benefit to using racing methods in conjunction with parallel
 #'  processing. The following section shows a benchmark of results for one
 #'  dataset and model.
+#'
+#' ## Censored regression models
+#'
+#' With dynamic performance metrics (e.g. Brier or ROC curves), performance is
+#' calculated for every value of `eval_time` but the _first_ evaluation time
+#' given by the user (e.g., `eval_time[1]`) is analyzed during racing.
+#'
+#' Also, values of `eval_time` should be less than the largest observed event
+#' time in the training data. For many non-parametric models, the results beyond
+#' the largest time corresponding to an event is constant.
+#'
 #' @return An object with primary class `tune_race` in the same standard format
 #' as objects produced by [tune::tune_grid()].
 #' @includeRmd  man/rmd/anova-benchmark.md details

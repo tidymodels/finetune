@@ -14,6 +14,7 @@
 #' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
 #' Models." \url{https://arxiv.org/abs/1405.6974}.
 #' @param ... Not currently used.
+#' @details
 #' The technical details of this method are described in Kuhn (2014).
 #'
 #' Racing methods are efficient approaches to grid search. Initially, the
@@ -52,6 +53,17 @@
 #'
 #' The [control_race()] function contains are parameter for the significance cutoff
 #'  applied to the Bradley-Terry model results as well as other relevant arguments.
+#'
+#' ## Censored regression models
+#'
+#' With dynamic performance metrics (e.g. Brier or ROC curves), performance is
+#' calculated for every value of `eval_time` but the _first_ evaluation time
+#' given by the user (e.g., `eval_time[1]`) is analyzed during racing.
+#'
+#' Also, values of `eval_time` should be less than the largest observed event
+#' time in the training data. For many non-parametric models, the results beyond
+#' the largest time corresponding to an event is constant.
+#'
 #' @examples
 #' \donttest{
 #' library(parsnip)

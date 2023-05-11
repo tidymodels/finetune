@@ -58,8 +58,8 @@ parameter sets to be created automatically.}
 
 \item{eval_time}{A numeric vector of time points where dynamic event time
 metrics should be computed (e.g. the time-dependent ROC curve, etc). The
-values should be non-negative and should probably be no greater then the
-largest event time in the training set.}
+values must be non-negative and should probably be no greater than the
+largest event time in the training set (See Details below).}
 }
 \value{
 An object with primary class \code{tune_race} in the same standard format
@@ -99,6 +99,16 @@ applied to the ANOVA results as well as other relevant arguments.
 There is benefit to using racing methods in conjunction with parallel
 processing. The following section shows a benchmark of results for one
 dataset and model.
+\subsection{Censored regression models}{
+
+With dynamic performance metrics (e.g. Brier or ROC curves), performance is
+calculated for every value of \code{eval_time} but the \emph{first} evaluation time
+given by the user (e.g., \code{eval_time[1]}) is analyzed during racing.
+
+Also, values of \code{eval_time} should be less than the largest observed event
+time in the training data. For many non-parametric models, the results beyond
+the largest time corresponding to an event is constant.
+}
 
 \subsection{Benchmarking results}{
 
