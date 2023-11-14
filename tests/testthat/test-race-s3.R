@@ -1,5 +1,8 @@
 
 test_that("racing S3 methods", {
+  skip_if_not_installed("Matrix", "1.6-2")
+  skip_if_not_installed("lme4", "1.1-35.1")
+
   library(purrr)
   library(dplyr)
   library(parsnip)

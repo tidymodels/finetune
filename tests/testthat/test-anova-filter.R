@@ -4,6 +4,8 @@
 test_that("anova filtering and logging", {
   # Skip for < 4.0 due to random number differences
   skip_if(getRversion() < "4.0.0")
+  skip_if_not_installed("Matrix", "1.6-2")
+  skip_if_not_installed("lme4", "1.1-35.1")
 
   set.seed(2332)
   folds <- vfold_cv(mtcars, v = 5, repeats = 2)
