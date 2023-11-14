@@ -265,9 +265,8 @@ tune_race_anova_workflow <-
 
       if (!is.null(metrics_time)) {
         msg <- paste(msg, "at time", format(metrics_time, digits = 3))
-      } else {
-        msg <- paste0(msg, ".")
       }
+      msg <- paste0(msg, ".")
 
       rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
       if (control$randomize) {
