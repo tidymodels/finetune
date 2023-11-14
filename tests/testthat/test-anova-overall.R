@@ -1,6 +1,9 @@
 
 test_that("formula interface", {
   skip_on_cran()
+  skip_if_not_installed("Matrix", "1.6-2")
+  skip_if_not_installed("lme4", "1.1-35.1")
+
   expect_snapshot({
     set.seed(1)
     res <- f_wflow %>%
@@ -18,6 +21,8 @@ test_that("formula interface", {
 
 test_that("recipe interface", {
   skip_on_cran()
+  skip_if_not_installed("Matrix", "1.6-2")
+  skip_if_not_installed("lme4", "1.1-35.1")
   expect_silent({
     set.seed(1)
     res <- rec_wflow %>%
@@ -35,6 +40,9 @@ test_that("recipe interface", {
 
 test_that("variable interface", {
   skip_on_cran()
+  skip_if_not_installed("Matrix", "1.6-2")
+  skip_if_not_installed("lme4", "1.1-35.1")
+
   expect_silent({
     set.seed(1)
     res <- var_wflow %>%
@@ -52,6 +60,8 @@ test_that("variable interface", {
 
 
 test_that("too few resamples", {
+  skip_if_not_installed("Matrix", "1.6-2")
+  skip_if_not_installed("lme4", "1.1-35.1")
 
   rs <- rsample::vfold_cv(modeldata::cells, v = 2)
   expect_snapshot_error(

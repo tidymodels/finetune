@@ -50,7 +50,7 @@
 
     Code
       control_sim_anneal(no_improve = 2, restart = 6)
-    Message <cliMessage>
+    Message
       ! Parameter restart is scheduled after 6 poor iterations but the search will stop after 2.
     Output
       Simulated annealing control object
