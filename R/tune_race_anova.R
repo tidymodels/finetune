@@ -248,7 +248,7 @@ tune_race_anova_workflow <-
     metric_info <- tibble::as_tibble(metrics)
     analysis_metric <-metric_info$metric[1]
     analysis_max <- metric_info$direction[1] == "maximize"
-    is_dyn <- metric_info$direction[1] == "dynamic_survival_metric"
+    is_dyn <- metric_info$class[1] == "dynamic_survival_metric"
     if (is_dyn) {
       metrics_time <- eval_time[1]
     } else {
@@ -265,9 +265,8 @@ tune_race_anova_workflow <-
 
       if (!is.null(metrics_time)) {
         msg <- paste(msg, "at time", format(metrics_time, digits = 3))
-      } else {
-        msg <- paste0(msg, ".")
       }
+      msg <- paste0(msg, ".")
 
       rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
       if (control$randomize) {
