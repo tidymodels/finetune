@@ -178,7 +178,7 @@ tune_sim_anneal.default <- function(object, ...) {
     "The first argument to [tune_sim_anneal()] should be either ",
     "a model or workflow."
   )
-  rlang::abort(msg)
+  cli::cli_abort(msg)
 }
 
 #' @export
@@ -242,7 +242,7 @@ tune_sim_anneal.model_spec <- function(object,
                                        control = control_sim_anneal(),
                                        eval_time = NULL) {
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-    rlang::abort(paste(
+    cli::cli_abort(paste(
       "To tune a model spec, you must preprocess",
       "with a formula, recipe, or variable specification"
     ))
@@ -374,7 +374,7 @@ tune_sim_anneal_workflow <-
     i <- max(unsummarized$.iter) # In case things fail before iteration.
     iter <- iter + i
     if (i > 0 && control$verbose_iter) {
-      rlang::inform(cols$message$info("There were ", i, " previous iterations"))
+      cli::cli_inform(cols$message$info("There were ", i, " previous iterations"))
     }
 
     on.exit({
@@ -515,7 +515,7 @@ tune_sim_anneal_workflow <-
       )
 
       if (count_improve >= control$no_improve) {
-        rlang::inform(
+        cli::cli_inform(
           cols$message$danger(
             paste0("Stopping; no best in ", control$no_improve, " iterations.")
           )
