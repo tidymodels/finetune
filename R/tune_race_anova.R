@@ -118,7 +118,7 @@ tune_race_anova.default <- function(object, ...) {
     "The first argument to [tune_race_anova()] should be either ",
     "a model or workflow."
   )
-  rlang::abort(msg)
+  cli::cli_abort(msg)
 }
 
 #' @export
@@ -161,7 +161,7 @@ tune_race_anova.model_spec <-
   function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
            metrics = NULL, control = control_race(), eval_time = NULL) {
     if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-      rlang::abort(paste(
+      cli::cli_abort(paste(
         "To tune a model spec, you must preprocess",
         "with a formula, recipe, or variable specification"
       ))
@@ -245,35 +245,11 @@ tune_race_anova_workflow <-
 
     param_names <- tune::.get_tune_parameter_names(res)
     metrics <- tune::.get_tune_metrics(res)
-    metric_info <- tibble::as_tibble(metrics)
-    analysis_metric <-metric_info$metric[1]
-    analysis_max <- metric_info$direction[1] == "maximize"
-    is_dyn <- metric_info$class[1] == "dynamic_survival_metric"
-    if (is_dyn) {
-      metrics_time <- eval_time[1]
-    } else {
-      metrics_time <- NULL
-    }
 
-    cols <- tune::get_tune_colors()
-    if (control$verbose_elim) {
-      msg <-
-        paste(
-          "Racing will", ifelse(analysis_max, "maximize", "minimize"),
-          "the", analysis_metric, "metric"
-        )
+    racing_obj_log(res, metrics, control, eval_time)
 
-      if (!is.null(metrics_time)) {
-        msg <- paste(msg, "at time", format(metrics_time, digits = 3))
-      }
-      msg <- paste0(msg, ".")
-
-      rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
-      if (control$randomize) {
-        msg <- "Resamples are analyzed in a random order."
-        rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
-      }
-    }
+    analysis_metric <- names(attr(metrics, "metrics"))[1]
+    metrics_time <- eval_time[1]
 
     filters_results <- test_parameters_gls(res, control$alpha, metrics_time)
     n_grid <- nrow(filters_results)
@@ -336,7 +312,7 @@ tune_race_anova_workflow <-
 
 check_num_resamples <- function(B, min_rs) {
   if (B <= min_rs) {
-    rlang::abort(
+    cli::cli_abort(
       paste0("The number of resamples (", B, ") needs to be more than the ",
              "number of burn-in resamples (", min_rs, ") set by the control ",
              "function `control_race()`."),

@@ -115,7 +115,7 @@ tune_race_win_loss.default <- function(object, ...) {
     "The first argument to [tune_race_win_loss()] should be either ",
     "a model or workflow."
   )
-  rlang::abort(msg)
+  cli::cli_abort(msg)
 }
 
 #' @export
@@ -158,7 +158,7 @@ tune_race_win_loss.model_spec <-
   function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
            metrics = NULL, control = control_race(), eval_time = NULL) {
     if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-      rlang::abort(paste(
+      cli::cli_abort(paste(
         "To tune a model spec, you must preprocess",
         "with a formula, recipe, or variable specification"
       ))
@@ -237,24 +237,12 @@ tune_race_win_loss_workflow <-
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
-    metrics <- tune::.get_tune_metrics(res)
-    analysis_metric <- names(attr(metrics, "metrics"))[1]
-    analysis_max <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
-    metrics_time <- eval_time[1]
 
-    cols <- tune::get_tune_colors()
-    if (control$verbose_elim) {
-      msg <-
-        paste(
-          "Racing will", ifelse(analysis_max, "maximize", "minimize"),
-          "the", analysis_metric, "metric."
-        )
-      rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
-      if (control$randomize) {
-        msg <- "Resamples are analyzed in a random order."
-        rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
-      }
-    }
+    metrics <- tune::.get_tune_metrics(res)
+    racing_obj_log(res, metrics, control, eval_time)
+
+    analysis_metric <- names(attr(metrics, "metrics"))[1]
+    metrics_time <- eval_time[1]
 
     filters_results <- test_parameters_bt(res, control$alpha, metrics_time)
     n_grid <- nrow(filters_results)
