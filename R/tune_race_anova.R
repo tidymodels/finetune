@@ -161,10 +161,10 @@ tune_race_anova.model_spec <-
   function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
            metrics = NULL, control = control_race(), eval_time = NULL) {
     if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-      cli::cli_abort(paste(
-        "To tune a model spec, you must preprocess",
-        "with a formula, recipe, or variable specification"
-      ))
+      cli::cli_abort(
+        "To tune a model spec, you must preprocess with a formula, recipe, \\
+        or variable specification."
+      )
     }
 
     tune::empty_ellipses(...)

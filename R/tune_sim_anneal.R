@@ -175,7 +175,7 @@ tune_sim_anneal <- function(object, ...) {
 #' @export
 tune_sim_anneal.default <- function(object, ...) {
   msg <- paste0(
-    "The first argument to [tune_sim_anneal()] should be either ",
+    "The first argument to {.fn tune_sim_anneal} should be either ",
     "a model or workflow."
   )
   cli::cli_abort(msg)
@@ -242,10 +242,10 @@ tune_sim_anneal.model_spec <- function(object,
                                        control = control_sim_anneal(),
                                        eval_time = NULL) {
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-    cli::cli_abort(paste(
-      "To tune a model spec, you must preprocess",
-      "with a formula, recipe, or variable specification"
-    ))
+      cli::cli_abort(
+        "To tune a model spec, you must preprocess with a formula, recipe, \\
+        or variable specification"
+      )
   }
 
   tune::empty_ellipses(...)

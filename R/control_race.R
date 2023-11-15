@@ -48,11 +48,11 @@ control_race <-
     }
 
     if (alpha <= 0 | alpha >= 1) {
-      cli::cli_abort("'alpha' should be on (0, 1)")
+      cli::cli_abort("{.arg alpha} should be on (0, 1).")
     }
 
     if (burn_in < 2) {
-      cli::cli_abort("'burn_in' should be at least two.")
+      cli::cli_abort("{.arg burn_in} should be at least two.")
     }
 
     res <- list(
