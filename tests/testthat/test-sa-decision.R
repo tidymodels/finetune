@@ -20,6 +20,7 @@ test_that("simulated annealing decisions", {
         parameters = cart_param,
         outcomes = cart_outcomes,
         metrics = cart_metrics,
+        eval_time = NULL,
         rset_info = cart_rset_info
       )
     iter_new_hist <- finetune:::update_history(iter_hist, iter_res, iter_val)
