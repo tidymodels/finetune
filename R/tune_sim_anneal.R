@@ -361,6 +361,7 @@ tune_sim_anneal_workflow <-
       tune::new_iteration_results(
         parameters = param_info,
         metrics = metrics,
+        eval_time = eval_time,
         outcomes = y_names,
         rset_info = rset_info,
         workflow = object
@@ -381,10 +382,17 @@ tune_sim_anneal_workflow <-
       if (i < iter) {
         cli::cli_alert_danger("Optimization stopped prematurely; returning current results.")
       }
-      out <- tune::new_iteration_results(
-        unsummarized, param_info,
-        metrics, y_names, rset_info, object
-      )
+      out <-
+        tune::new_iteration_results(
+          unsummarized,
+          parameters = param_info,
+          metrics = metrics,
+          eval_time = eval_time,
+          outcomes = y_names,
+          rset_info = rset_info,
+          workflow = object
+        )
+
       .stash_last_result(out)
       return(out)
     })
@@ -499,6 +507,7 @@ tune_sim_anneal_workflow <-
         tune::new_iteration_results(
           parameters = param_info,
           metrics = metrics,
+          eval_time = eval_time,
           outcomes = y_names,
           rset_info = rset_info,
           workflow = object

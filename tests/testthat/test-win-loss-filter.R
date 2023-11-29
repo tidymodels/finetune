@@ -29,6 +29,7 @@ test_that("top-level win/loss filter interfaces", {
   expect_true(inherits(wl_mod, "tune_race"))
   expect_true(inherits(wl_mod, "tune_results"))
   expect_true(tibble::is_tibble((wl_mod)))
+  expect_null(.get_tune_eval_times(wl_mod))
 
   expect_silent({
     set.seed(129)
