@@ -244,31 +244,31 @@ tune_race_anova_workflow <-
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
+
     metrics <- tune::.get_tune_metrics(res)
-    metric_info <- tibble::as_tibble(metrics)
-    analysis_metric <-metric_info$metric[1]
-    analysis_max <- metric_info$direction[1] == "maximize"
-    is_dyn <- metric_info$class[1] == "dynamic_survival_metric"
-    if (is_dyn) {
-      metrics_time <- eval_time[1]
-    } else {
-      metrics_time <- NULL
-    }
+    metrics <- tune::check_metrics_arg(metrics, object, call = call)
+    opt_metric <- tune::first_metric(metrics)
+    metrics_name <- opt_metric$metric
+    maximize <- opt_metric$direction == "maximize"
+
+    eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
+    metrics_time <- tune::first_eval_time(metrics, metrics_name, eval_time)
+
 
     cols <- tune::get_tune_colors()
     if (control$verbose_elim) {
       msg <-
         paste(
-          "Racing will", ifelse(analysis_max, "maximize", "minimize"),
-          "the", analysis_metric, "metric"
+          "Racing will", ifelse(maximize, "maximize", "minimize"),
+          "the", metrics_name, "metric"
         )
 
       if (!is.null(metrics_time)) {
         msg <- paste(msg, "at time", format(metrics_time, digits = 3))
       }
       msg <- paste0(msg, ".")
-
       rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
+
       if (control$randomize) {
         msg <- "Resamples are analyzed in a random order."
         rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
@@ -291,11 +291,11 @@ tune_race_anova_workflow <-
 
       if (nrow(new_grid) > 1) {
         tmp_resamples <- restore_rset(resamples, rs)
-        log_racing(control, filters_results, res$splits, n_grid, analysis_metric)
+        log_racing(control, filters_results, res$splits, n_grid, metrics_name)
       } else {
         tmp_resamples <- restore_rset(resamples, rs:B)
         if (log_final) {
-          log_racing(control, filters_results, res$splits, n_grid, analysis_metric)
+          log_racing(control, filters_results, res$splits, n_grid, metrics_name)
         }
         log_final <- FALSE
       }

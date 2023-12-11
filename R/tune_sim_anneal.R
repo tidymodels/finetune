@@ -314,10 +314,13 @@ tune_sim_anneal_workflow <-
     tune::check_rset(resamples)
     rset_info <- tune::pull_rset_attributes(resamples)
 
-    metrics <- tune::check_metrics(metrics, object)
-    metrics_name <- names(attr(metrics, "metrics"))[1]
-    metrics_time <- eval_time[1]
-    maximize <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
+    metrics <- tune::check_metrics_arg(metrics, object, call = call)
+    opt_metric <- tune::first_metric(metrics)
+    metrics_name <- opt_metric$metric
+    maximize <- opt_metric$direction == "maximize"
+
+    eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
+    metrics_time <- tune::first_eval_time(metrics, metrics_name, eval_time)
 
     if (is.null(param_info)) {
       param_info <- extract_parameter_set_dials(object)
@@ -397,10 +400,14 @@ tune_sim_anneal_workflow <-
       return(out)
     })
 
-    cols <- tune::get_tune_colors()
     if (control$verbose_iter) {
-      cli::cli_bullets(cols$message$info(paste("Optimizing", metrics_name)))
+      msg <- paste("Optimizing", metrics_name)
+      if (!is.null(metrics_time)) {
+        msg <- paste(msg, "at evaluation time", format(metrics_time, digits = 3))
+      }
+      cli::cli_bullets(msg)
     }
+
 
     ## -----------------------------------------------------------------------------
 
@@ -451,7 +458,7 @@ tune_sim_anneal_workflow <-
           grid = new_grid %>% dplyr::select(-.config, -.parent),
           metrics = metrics,
           control = control_init,
-          eval_time = metrics_time
+          eval_time = eval_time
         ) %>%
         dplyr::mutate(.iter = i) %>%
         update_config(config = paste0("Iter", i), save_pred = control$save_pred)

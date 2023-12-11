@@ -693,8 +693,23 @@ collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, 
 #' different resamples is likely to lead to inappropriate results.
 #' @export
 show_best.tune_race <- function(x, metric = NULL, n = 5, eval_time = NULL, ...) {
+
+  if (!is.null(metric)) {
+    # What was used to judge the race and how are they being sorted now?
+    metrics <- tune::.get_tune_metrics(x)
+    opt_metric <- tune::first_metric(metrics)
+    opt_metric_name <- opt_metric$metric
+    if (metric[1] != opt_metric_name) {
+      cli::cli_warn("Metric {.val {opt_metric_name}} was used to evaluate model
+                   candidates in the race but {.val {metric}} has been chosen
+                   to rank the candidates. These results may not agree with the
+                   race.")
+    }
+  }
+
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
+
   res <- NextMethod(metric = metric, n = Inf, eval_time = eval_time, ...)
   res$.ranked <- 1:nrow(res)
   res <- dplyr::inner_join(res, final_configs, by = ".config")
