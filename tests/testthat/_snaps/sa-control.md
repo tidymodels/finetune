@@ -32,7 +32,7 @@
 
 ---
 
-    'no_improve' should be > 1
+    `no_improve` should be > 1.
 
 ---
 
@@ -44,7 +44,7 @@
 
 ---
 
-    'restart' should be > 1
+    `restart` should be > 1.
 
 ---
 
@@ -57,7 +57,7 @@
 
 ---
 
-    Argument 'radius' should be two numeric values.
+    Argument `radius` should be two numeric values.
 
 ---
 
