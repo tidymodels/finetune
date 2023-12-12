@@ -312,7 +312,7 @@ tune_race_anova_workflow <-
           eval_time = eval_time
         )
 
-      res <- restore_tune(res, tmp_res)
+      res <- restore_tune(res, tmp_res, metrics_time)
 
       if (nrow(new_grid) > 1) {
         filters_results <- test_parameters_gls(res, control$alpha, metrics_time)

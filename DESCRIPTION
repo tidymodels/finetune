@@ -19,7 +19,7 @@ URL: https://github.com/tidymodels/finetune,
 BugReports: https://github.com/tidymodels/finetune/issues
 Depends: 
     R (>= 3.5),
-    tune (>= 1.1.2.9003)
+    tune (>= 1.1.2.9004)
 Imports: 
     cli,
     dials (>= 0.1.0),

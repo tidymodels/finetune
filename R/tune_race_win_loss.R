@@ -304,7 +304,7 @@ tune_race_win_loss_workflow <-
           control = grid_control,
           eval_time = eval_time
         )
-      res <- restore_tune(res, tmp_res)
+      res <- restore_tune(res, tmp_res, metrics_time)
 
       if (nrow(new_grid) > 1) {
         filters_results <- test_parameters_bt(res, control$alpha, metrics_time)

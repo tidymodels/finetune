@@ -387,7 +387,7 @@ harmonize_configs <- function(x, key) {
   x
 }
 
-restore_tune <- function(x, y) {
+restore_tune <- function(x, y, eval_time_target = NULL) {
   # With a smaller number of parameter combinations, the .config values may have
   # changed. We'll use the full set of parameters in `x` to adjust what is in
   # `y`.
@@ -399,6 +399,7 @@ restore_tune <- function(x, y) {
 
   att <- attributes(x)
   att$row.names <- 1:(nrow(x) + nrow(y))
+  att$eval_time_target <- eval_time_target
   att$class <- c("tune_race", "tune_results", class(tibble::tibble()))
 
 
