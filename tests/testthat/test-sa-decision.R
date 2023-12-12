@@ -21,9 +21,10 @@ test_that("simulated annealing decisions", {
         outcomes = cart_outcomes,
         metrics = cart_metrics,
         eval_time = NULL,
+        eval_time_target = NULL,
         rset_info = cart_rset_info
       )
-    iter_new_hist <- finetune:::update_history(iter_hist, iter_res, iter_val)
+    iter_new_hist <- finetune:::update_history(iter_hist, iter_res, iter_val, NULL)
     iter_new_hist$random[1:nrow(iter_new_hist)] <- cart_history$random[1:nrow(iter_new_hist)]
 
     expect_equal(

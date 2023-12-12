@@ -88,7 +88,7 @@ test_that("one player is really bad", {
     control = ctrl
   )
 
-  # TODO Needs to be fixed in tune package
-  expect_true(nrow(show_best(tuning_results)) > 0)
+  expect_snapshot(best_res <- show_best(tuning_results))
+  expect_true(nrow(best_res) == 1)
 
 })

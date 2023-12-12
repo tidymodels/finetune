@@ -11,3 +11,11 @@
       i Fold2, Repeat2: 0 eliminated; 5 candidates remain.
       i Fold3, Repeat2: 0 eliminated; 5 candidates remain.
 
+# one player is really bad
+
+    Code
+      best_res <- show_best(tuning_results)
+    Condition
+      Warning in `show_best()`:
+      No value of `metric` was given; "roc_auc" will be used.
+

@@ -1,5 +1,7 @@
 # finetune (development version)
 
+* Updates based on the new version of tune, primarily for survival analysis models. 
+
 # finetune 1.1.0
 
 * Various minor changes to keep up with developments in the tune and dplyr packages (#60) (#62) (#67) (#68). 
