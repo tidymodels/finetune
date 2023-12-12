@@ -118,7 +118,7 @@ tune_race_anova.default <- function(object, ...) {
     "The first argument to [tune_race_anova()] should be either ",
     "a model or workflow."
   )
-  rlang::abort(msg)
+  cli::cli_abort(msg)
 }
 
 #' @export
@@ -161,10 +161,10 @@ tune_race_anova.model_spec <-
   function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
            metrics = NULL, control = control_race(), eval_time = NULL) {
     if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-      rlang::abort(paste(
-        "To tune a model spec, you must preprocess",
-        "with a formula, recipe, or variable specification"
-      ))
+      cli::cli_abort(
+        "To tune a model spec, you must preprocess with a formula, recipe, \\
+        or variable specification."
+      )
     }
 
     tune::empty_ellipses(...)
@@ -254,26 +254,7 @@ tune_race_anova_workflow <-
     eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
     metrics_time <- tune::first_eval_time(metrics, metrics_name, eval_time)
 
-
-    cols <- tune::get_tune_colors()
-    if (control$verbose_elim) {
-      msg <-
-        paste(
-          "Racing will", ifelse(maximize, "maximize", "minimize"),
-          "the", metrics_name, "metric"
-        )
-
-      if (!is.null(metrics_time)) {
-        msg <- paste(msg, "at time", format(metrics_time, digits = 3))
-      }
-      msg <- paste0(msg, ".")
-      rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
-
-      if (control$randomize) {
-        msg <- "Resamples are analyzed in a random order."
-        rlang::inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
-      }
-    }
+    racing_obj_log(metrics_name, opt_metric$direction, control, metrics_time)
 
     filters_results <- test_parameters_gls(res, control$alpha, metrics_time)
     n_grid <- nrow(filters_results)
@@ -336,7 +317,7 @@ tune_race_anova_workflow <-
 
 check_num_resamples <- function(B, min_rs) {
   if (B <= min_rs) {
-    rlang::abort(
+    cli::cli_abort(
       paste0("The number of resamples (", B, ") needs to be more than the ",
              "number of burn-in resamples (", min_rs, ") set by the control ",
              "function `control_race()`."),

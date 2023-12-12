@@ -71,7 +71,7 @@ control_sim_anneal <-
     }
 
     if (!is.numeric(radius) | !length(radius) == 2) {
-      rlang::abort("Argument 'radius' should be two numeric values.")
+      cli::cli_abort("Argument {.arg radius} should be two numeric values.")
     }
     radius <- sort(radius)
     radius[radius <= 0] <- 0.001
@@ -82,10 +82,10 @@ control_sim_anneal <-
     cooling_coef[cooling_coef <= 0] <- 0.0001
 
     if (no_improve < 2) {
-      rlang::abort("'no_improve' should be > 1")
+      cli::cli_abort("{.arg no_improve} should be > 1.")
     }
     if (restart < 2) {
-      rlang::abort("'restart' should be > 1")
+      cli::cli_abort("{.arg restart} should be > 1.")
     }
     if (!is.infinite(restart) && restart > no_improve) {
       cli::cli_alert_warning(

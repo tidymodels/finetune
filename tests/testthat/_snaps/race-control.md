@@ -40,7 +40,7 @@
 
 ---
 
-    'burn_in' should be at least two.
+    `burn_in` should be at least two.
 
 ---
 
@@ -60,7 +60,7 @@
 
 ---
 
-    'alpha' should be on (0, 1)
+    `alpha` should be on (0, 1).
 
 ---
 

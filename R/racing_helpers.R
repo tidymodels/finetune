@@ -42,7 +42,7 @@ refactor_by_mean <- function(res, maximize = TRUE) {
 
 test_parameters_gls <- function(x, alpha = 0.05, eval_time = NULL) {
   if (all(purrr::map_lgl(x$.metrics, is.null))) {
-    rlang::abort("There were no valid metrics for the ANOVA model.")
+    cli::cli_abort("There were no valid metrics for the ANOVA model.")
   }
   param_names <- tune::.get_tune_parameter_names(x)
   metric_data <- metric_tibble(x)
@@ -475,7 +475,7 @@ tie_breaker <- function(res, control, eval_time = NULL) {
     if (runif(1) < .05) {
       msg <- paste(msg, "Two models enter, one model leaves.")
     }
-    rlang::inform(msg)
+    cli::cli_inform(msg)
   }
   res <-
     dplyr::select(x, .config, !!!param_names) %>%
@@ -732,3 +732,27 @@ subset_finished_race <- function(x) {
   final_configs <- dplyr::select(final_configs, .config)
   final_configs
 }
+
+# ------------------------------------------------------------------------------
+# Log the objective function used for racing
+
+racing_obj_log <- function(analysis_metric, direction, control, metrics_time = NULL) {
+  cols <- tune::get_tune_colors()
+  if (control$verbose_elim) {
+    msg <- paste("Racing will", direction, "the", analysis_metric, "metric")
+
+    if (!is.null(metrics_time)) {
+      msg <- paste(msg, "at time", format(metrics_time, digits = 3))
+    }
+    msg <- paste0(msg, ".")
+
+    cli::cli_inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
+    if (control$randomize) {
+      msg <- "Resamples are analyzed in a random order."
+      cli::cli_inform(cols$message$info(paste0(cli::symbol$info, " ", msg)))
+    }
+  }
+  invisible(NULL)
+}
+
+

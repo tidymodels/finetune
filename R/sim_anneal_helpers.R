@@ -382,7 +382,7 @@ get_outcome_names <- function(x, rs) {
       res <- tidyselect::eval_select(preproc$outcomes, data = dat)
       res <- names(res)
     } else {
-      rlang::abort("Cannot obtain the outcome name(s)")
+      cli::cli_abort("Cannot obtain the outcome name(s)")
     }
   } else {
     res <- outcome_names(x)

@@ -1,6 +1,6 @@
 
 test_that("numerical neighborhood", {
-  library(dials)
+  suppressPackageStartupMessages(library(dials))
 
   num_prm <- dials::parameters(dials::mixture(), dials::threshold())
 
@@ -30,7 +30,7 @@ test_that("numerical neighborhood", {
 })
 
 test_that("numerical neighborhood boundary filters", {
-  library(dials)
+  suppressPackageStartupMessages(library(dials))
   num_prm <- dials::parameters(dials::mixture(), dials::threshold())
 
   vals <- tibble::tibble(mixture = 0.05, threshold = 0.05)
@@ -43,7 +43,7 @@ test_that("numerical neighborhood boundary filters", {
 ## -----------------------------------------------------------------------------
 
 test_that("categorical value switching", {
-  library(dials)
+  suppressPackageStartupMessages(library(dials))
   cat_prm <- parameters(activation(), weight_func())
 
   vals <- tibble::tibble(activation = "relu", weight_func = "biweight")
@@ -73,7 +73,7 @@ test_that("categorical value switching", {
 ## -----------------------------------------------------------------------------
 
 test_that("reverse-unit encoding", {
-  library(dials)
+  suppressPackageStartupMessages(library(dials))
   prm <-
     parameters(batch_size(), Laplace(), activation()) %>%
     update(Laplace = Laplace(c(2, 4)), batch_size = batch_size(c(10, 20)))
