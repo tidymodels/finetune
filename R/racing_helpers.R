@@ -387,6 +387,17 @@ harmonize_configs <- function(x, key) {
   x
 }
 
+# restore_tune() restores certain attributes (esp class) that are lost during
+# racing when rows of the resampling object are filtered.
+# `x` has class `tune_results`. `y` has the same structure but different
+# attributes.
+# About eval_time_target: `x` is from `tune_grid()`, which has no notion of a
+# target evaluation time. https://github.com/tidymodels/tune/pull/782 defaults
+# `eval_time_target` to NULL for grid tuning, resampling, and last fit objects.
+# That's why `eval_time_target` is an argument to this function. It should be
+# non-null for the resulting racing object but the value inherited from `x` is
+# NULL unless we set it.
+
 restore_tune <- function(x, y, eval_time_target = NULL) {
   # With a smaller number of parameter combinations, the .config values may have
   # changed. We'll use the full set of parameters in `x` to adjust what is in
