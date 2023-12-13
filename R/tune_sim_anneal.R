@@ -304,7 +304,8 @@ tune_sim_anneal.workflow <-
 
 tune_sim_anneal_workflow <-
   function(object, resamples, iter = 10, param_info = NULL, metrics = NULL,
-           initial = 5, control = control_sim_anneal(), eval_time = NULL) {
+           initial = 5, control = control_sim_anneal(), eval_time = NULL,
+           call = caller_env()) {
     start_time <- proc.time()[3]
     cols <- tune::get_tune_colors()
 
@@ -314,10 +315,13 @@ tune_sim_anneal_workflow <-
     tune::check_rset(resamples)
     rset_info <- tune::pull_rset_attributes(resamples)
 
-    metrics <- tune::check_metrics(metrics, object)
-    metrics_name <- names(attr(metrics, "metrics"))[1]
-    metrics_time <- eval_time[1]
-    maximize <- attr(attr(metrics, "metrics")[[1]], "direction") == "maximize"
+    metrics <- tune::check_metrics_arg(metrics, object, call = call)
+    opt_metric <- tune::first_metric(metrics)
+    opt_metric_name <- opt_metric$metric
+    maximize <- opt_metric$direction == "maximize"
+
+    eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
+    opt_metric_time <- tune::first_eval_time(metrics, opt_metric_name, eval_time)
 
     if (is.null(param_info)) {
       param_info <- extract_parameter_set_dials(object)
@@ -362,6 +366,7 @@ tune_sim_anneal_workflow <-
         parameters = param_info,
         metrics = metrics,
         eval_time = eval_time,
+        eval_time_target = opt_metric_time,
         outcomes = y_names,
         rset_info = rset_info,
         workflow = object
@@ -388,6 +393,7 @@ tune_sim_anneal_workflow <-
           parameters = param_info,
           metrics = metrics,
           eval_time = eval_time,
+          eval_time_target = opt_metric_time,
           outcomes = y_names,
           rset_info = rset_info,
           workflow = object
@@ -397,16 +403,20 @@ tune_sim_anneal_workflow <-
       return(out)
     })
 
-    cols <- tune::get_tune_colors()
     if (control$verbose_iter) {
-      cli::cli_bullets(cols$message$info(paste("Optimizing", metrics_name)))
+      msg <- paste("Optimizing", opt_metric_name)
+      if (!is.null(opt_metric_time)) {
+        msg <- paste(msg, "at evaluation time", format(opt_metric_time, digits = 3))
+      }
+      cli::cli_bullets(msg)
     }
+
 
     ## -----------------------------------------------------------------------------
 
-    result_history <- initialize_history(unsummarized, metrics_time)
+    result_history <- initialize_history(unsummarized, opt_metric_time)
     best_param <-
-      tune::select_best(unsummarized, metric = metrics_name, eval_time = metrics_time) %>%
+      tune::select_best(unsummarized, metric = opt_metric_name, eval_time = opt_metric_time) %>%
       dplyr::mutate(.parent = NA_character_)
     grid_history <- best_param
     current_param <- best_param
@@ -426,7 +436,7 @@ tune_sim_anneal_workflow <-
       x = result_history,
       max_iter = iter,
       maximize = maximize,
-      metric = metrics_name
+      metric = opt_metric_name
     )
 
     for (i in (existing_iter + 1):iter) {
@@ -451,17 +461,17 @@ tune_sim_anneal_workflow <-
           grid = new_grid %>% dplyr::select(-.config, -.parent),
           metrics = metrics,
           control = control_init,
-          eval_time = metrics_time
+          eval_time = eval_time
         ) %>%
         dplyr::mutate(.iter = i) %>%
         update_config(config = paste0("Iter", i), save_pred = control$save_pred)
 
       result_history <-
         result_history %>%
-        update_history(res, i, eval_time = metrics_time) %>%
+        update_history(res, i, eval_time = opt_metric_time) %>%
         sa_decide(
           parent = new_grid$.parent,
-          metric = metrics_name,
+          metric = opt_metric_name,
           maximize = maximize,
           coef = control$cooling_coef
         )
@@ -508,6 +518,7 @@ tune_sim_anneal_workflow <-
           parameters = param_info,
           metrics = metrics,
           eval_time = eval_time,
+          eval_time_target = opt_metric_time,
           outcomes = y_names,
           rset_info = rset_info,
           workflow = object
@@ -520,7 +531,7 @@ tune_sim_anneal_workflow <-
         x = result_history,
         max_iter = iter,
         maximize = maximize,
-        metric = metrics_name
+        metric = opt_metric_name
       )
 
       if (count_improve >= control$no_improve) {

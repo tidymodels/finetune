@@ -211,7 +211,7 @@ tune_race_win_loss.workflow <- function(object, resamples, ..., param_info = NUL
 
 tune_race_win_loss_workflow <-
   function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
-           control = control_race(), eval_time = NULL) {
+           control = control_race(), eval_time = NULL, call = caller_env()) {
     rlang::check_installed("BradleyTerry2")
 
     B <- nrow(resamples)
@@ -239,12 +239,17 @@ tune_race_win_loss_workflow <-
     param_names <- tune::.get_tune_parameter_names(res)
 
     metrics <- tune::.get_tune_metrics(res)
-    racing_obj_log(res, metrics, control, eval_time)
+    metrics <- tune::check_metrics_arg(metrics, object, call = call)
+    opt_metric <- tune::first_metric(metrics)
+    opt_metric_name <- opt_metric$metric
+    maximize <- opt_metric$direction == "maximize"
 
-    analysis_metric <- names(attr(metrics, "metrics"))[1]
-    metrics_time <- eval_time[1]
+    eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
+    opt_metric_time <- tune::first_eval_time(metrics, opt_metric_name, eval_time)
 
-    filters_results <- test_parameters_bt(res, control$alpha, metrics_time)
+    racing_obj_log(opt_metric_name, opt_metric$direction, control, opt_metric_time)
+
+    filters_results <- test_parameters_bt(res, control$alpha, opt_metric_time)
     n_grid <- nrow(filters_results)
 
     log_final <- TRUE
@@ -260,11 +265,11 @@ tune_race_win_loss_workflow <-
 
       if (nrow(new_grid) > 1) {
         tmp_resamples <- restore_rset(resamples, rs)
-        log_racing(control, filters_results, res$splits, n_grid, analysis_metric)
+        log_racing(control, filters_results, res$splits, n_grid, opt_metric_name)
       } else {
         tmp_resamples <- restore_rset(resamples, rs:B)
         if (log_final) {
-          log_racing(control, filters_results, res$splits, n_grid, analysis_metric)
+          log_racing(control, filters_results, res$splits, n_grid, opt_metric_name)
         }
         log_final <- FALSE
       }
@@ -280,10 +285,10 @@ tune_race_win_loss_workflow <-
           control = grid_control,
           eval_time = eval_time
         )
-      res <- restore_tune(res, tmp_res)
+      res <- restore_tune(res, tmp_res, opt_metric_time)
 
       if (nrow(new_grid) > 1) {
-        filters_results <- test_parameters_bt(res, control$alpha, metrics_time)
+        filters_results <- test_parameters_bt(res, control$alpha, opt_metric_time)
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
           filters_results <- tie_breaker(res, control)
         }

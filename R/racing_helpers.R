@@ -387,7 +387,18 @@ harmonize_configs <- function(x, key) {
   x
 }
 
-restore_tune <- function(x, y) {
+# restore_tune() restores certain attributes (esp class) that are lost during
+# racing when rows of the resampling object are filtered.
+# `x` has class `tune_results`. `y` has the same structure but different
+# attributes.
+# About eval_time_target: `x` is from `tune_grid()`, which has no notion of a
+# target evaluation time. https://github.com/tidymodels/tune/pull/782 defaults
+# `eval_time_target` to NULL for grid tuning, resampling, and last fit objects.
+# That's why `eval_time_target` is an argument to this function. It should be
+# non-null for the resulting racing object but the value inherited from `x` is
+# NULL unless we set it.
+
+restore_tune <- function(x, y, eval_time_target = NULL) {
   # With a smaller number of parameter combinations, the .config values may have
   # changed. We'll use the full set of parameters in `x` to adjust what is in
   # `y`.
@@ -399,6 +410,7 @@ restore_tune <- function(x, y) {
 
   att <- attributes(x)
   att$row.names <- 1:(nrow(x) + nrow(y))
+  att$eval_time_target <- eval_time_target
   att$class <- c("tune_race", "tune_results", class(tibble::tibble()))
 
 
@@ -693,8 +705,23 @@ collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, 
 #' different resamples is likely to lead to inappropriate results.
 #' @export
 show_best.tune_race <- function(x, metric = NULL, n = 5, eval_time = NULL, ...) {
+
+  if (!is.null(metric)) {
+    # What was used to judge the race and how are they being sorted now?
+    metrics <- tune::.get_tune_metrics(x)
+    opt_metric <- tune::first_metric(metrics)
+    opt_metric_name <- opt_metric$metric
+    if (metric[1] != opt_metric_name) {
+      cli::cli_warn("Metric {.val {opt_metric_name}} was used to evaluate model
+                   candidates in the race but {.val {metric}} has been chosen
+                   to rank the candidates. These results may not agree with the
+                   race.")
+    }
+  }
+
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
+
   res <- NextMethod(metric = metric, n = Inf, eval_time = eval_time, ...)
   res$.ranked <- 1:nrow(res)
   res <- dplyr::inner_join(res, final_configs, by = ".config")
@@ -720,27 +747,10 @@ subset_finished_race <- function(x) {
 # ------------------------------------------------------------------------------
 # Log the objective function used for racing
 
-racing_obj_log <- function(x, metrics, control, eval_time = NULL) {
-  metric_info <- tibble::as_tibble(metrics)
-  analysis_metric <- metric_info$metric[1]
-  analysis_max <- metric_info$direction[1] == "maximize"
-  is_dyn <- metric_info$class[1] == "dynamic_survival_metric"
-  if (is_dyn) {
-    metrics_time <- eval_time[1]
-  } else {
-    metrics_time <- NULL
-  }
-
+racing_obj_log <- function(analysis_metric, direction, control, metrics_time = NULL) {
   cols <- tune::get_tune_colors()
   if (control$verbose_elim) {
-    msg <-
-      paste(
-        "Racing will",
-        ifelse(analysis_max, "maximize", "minimize"),
-        "the",
-        analysis_metric,
-        "metric"
-      )
+    msg <- paste("Racing will", direction, "the", analysis_metric, "metric")
 
     if (!is.null(metrics_time)) {
       msg <- paste(msg, "at time", format(metrics_time, digits = 3))
