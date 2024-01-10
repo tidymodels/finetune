@@ -290,7 +290,7 @@ tune_race_win_loss_workflow <-
       if (nrow(new_grid) > 1) {
         filters_results <- test_parameters_bt(res, control$alpha, opt_metric_time)
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
-          filters_results <- tie_breaker(res, control)
+          filters_results <- tie_breaker(res, control, eval_time = opt_metric_time)
         }
       } else {
         # Depending on the value of control$parallel_over we don't need to do
