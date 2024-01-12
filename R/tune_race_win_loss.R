@@ -63,6 +63,7 @@
 #' Also, values of `eval_time` should be less than the largest observed event
 #' time in the training data. For many non-parametric models, the results beyond
 #' the largest time corresponding to an event are constant (or `NA`).
+#' @inheritSection tune::tune_grid Case Weights
 #'
 #' @examples
 #' \donttest{
