@@ -229,6 +229,9 @@ tune_race_anova_workflow <-
     check_num_resamples(B, min_rs)
     tmp_resamples <- restore_rset(resamples, 1:min_rs)
 
+    metrics <- tune::check_metrics_arg(metrics, object, call = call)
+    eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
+
     control$pkgs <- c(tune::required_pkgs(object), "workflows", "tidyr", "rlang")
 
     grid_control <- parsnip::condense_control(control, tune::control_grid())
@@ -245,13 +248,10 @@ tune_race_anova_workflow <-
 
     param_names <- tune::.get_tune_parameter_names(res)
 
-    metrics <- tune::.get_tune_metrics(res)
-    metrics <- tune::check_metrics_arg(metrics, object, call = call)
     opt_metric <- tune::first_metric(metrics)
     opt_metric_name <- opt_metric$metric
     maximize <- opt_metric$direction == "maximize"
 
-    eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
     opt_metric_time <- tune::first_eval_time(metrics, opt_metric_name, eval_time)
 
     racing_obj_log(opt_metric_name, opt_metric$direction, control, opt_metric_time)
