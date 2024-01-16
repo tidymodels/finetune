@@ -218,3 +218,18 @@
       9 ( ) accept suboptimal  roc_auc=0.8623 (+/-0.007265)
       10 <3 new best           roc_auc=0.86273 (+/-0.007569)
 
+# incompatible parameter objects
+
+    Code
+      res <- tune_sim_anneal(car_wflow, param_info = parameter_set_with_smaller_range,
+        resamples = car_folds, initial = tune_res_with_bigger_range, iter = 2)
+    Message
+      Optimizing rmse
+      Initial best: 2284.10000
+    Condition
+      Error in `tune_sim_anneal()`:
+      ! The parameter set used when tuning generating the initial results isn't compatible with the parameter set supplied as `param_info`.
+      i Possible values of parameters in `param_info` should encompass all values evaluated in the initial grid.
+    Message
+      x Optimization stopped prematurely; returning current results.
+

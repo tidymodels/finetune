@@ -144,9 +144,29 @@ random_real_neighbor <- function(current, hist_values, pset, retain = 1,
 
 encode_set_backwards <- function(x, pset, ...) {
   pset <- pset[pset$id %in% names(x), ]
-  new_vals <- purrr::map2(pset$object, x, dials::encode_unit, direction = "backward")
+  new_vals <- mapply(encode_unit_backwards, pset$object, x,
+                     SIMPLIFY = FALSE, USE.NAMES = FALSE)
   names(new_vals) <- names(x)
   tibble::as_tibble(new_vals)
+}
+
+encode_unit_backwards <- function(x, value) {
+  if (!dials::has_unknowns(x)) {
+    compl <- value[!is.na(value)]
+    if (any(compl < 0) | any(compl > 1)) {
+      cli::cli_abort(c(
+        "!" = "The parameter set used when tuning generating the initial \\
+               results isn't compatible with the parameter set supplied \\
+               as {.arg param_info}.",
+        "i" = "Possible values of parameters in {.arg param_info} should \\
+               encompass all values evaluated in the initial grid."
+        ),
+        call = rlang::call2("tune_sim_anneal()")
+      )
+    }
+  }
+
+  dials::encode_unit(x, value, direction = "backward")
 }
 
 sample_by_distance <- function(candidates, existing, retain, pset) {
