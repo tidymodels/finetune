@@ -5,6 +5,7 @@
       res <- f_wflow %>% tune_race_anova(cell_folds, grid = grid_mod, control = control_race(
         verbose_elim = TRUE))
     Message
+      i Evaluating against the initial 3 burn-in resamples.
       i Racing will maximize the roc_auc metric.
       i Resamples are analyzed in a random order.
       i Fold3, Repeat1: 2 eliminated; 2 candidates remain.
