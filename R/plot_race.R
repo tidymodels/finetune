@@ -31,7 +31,14 @@ plot_race <- function(x) {
     ggplot2::ggplot(ggplot2::aes(x = stage, y = mean, group = .config, col = .config)) +
     ggplot2::geom_line(alpha = .5, show.legend = FALSE) +
     ggplot2::xlab("Analysis Stage") +
-    ggplot2::ylab(metric)
+    ggplot2::ylab(metric) +
+    ggplot2::scale_x_continuous(breaks = integer_breaks)
+}
+
+integer_breaks <- function(lims) {
+  breaks <- pretty(lims)
+
+  unique(round(breaks))
 }
 
 stage_results <- function(ind, x) {

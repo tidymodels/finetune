@@ -1,5 +1,7 @@
 # finetune (development version)
 
+* `autoplot()` methods for racing objects will now use integers in x-axis breaks (#75).
+
 * Updates based on the new version of tune, primarily for survival analysis models. 
 
 # finetune 1.1.0
