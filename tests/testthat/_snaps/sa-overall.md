@@ -225,7 +225,7 @@
         resamples = car_folds, initial = tune_res_with_bigger_range, iter = 2)
     Message
       Optimizing rmse
-      Initial best: 2284.10000
+      Initial best: 2312.70000
     Condition
       Error in `tune_sim_anneal()`:
       ! The parameter set used when tuning generating the initial results isn't compatible with the parameter set supplied as `param_info`.

@@ -127,9 +127,9 @@ test_that("incompatible parameter objects", {
   skip_if_not_installed("modeldata")
   skip_if_not_installed("rsample")
 
-
   rf_spec <- parsnip::rand_forest(mode = "regression", mtry = tune::tune())
 
+  set.seed(1)
   grid_with_bigger_range <-
     dials::grid_latin_hypercube(dials::mtry(range = c(1, 16)))
 
@@ -146,9 +146,11 @@ test_that("incompatible parameter objects", {
     grid = grid_with_bigger_range
   )
 
+  set.seed(1)
   parameter_set_with_smaller_range <-
     dials::parameters(dials::mtry(range = c(1, 5)))
 
+  set.seed(1)
   expect_snapshot(error = TRUE, {
     res <-
       tune_sim_anneal(
