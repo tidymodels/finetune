@@ -234,6 +234,16 @@ tune_race_anova_workflow <-
 
     control$pkgs <- c(tune::required_pkgs(object), "workflows", "tidyr", "rlang")
 
+    if (control$verbose_elim) {
+      tune_cols <- tune::get_tune_colors()
+      msg <- tune_cols$message$info(
+        paste0(cli::symbol$info,
+               " Evaluating against the initial {min_rs} burn-in resamples.")
+      )
+
+      cli::cli_inform(msg)
+    }
+
     grid_control <- parsnip::condense_control(control, tune::control_grid())
     res <-
       object %>%
