@@ -151,8 +151,14 @@ test_that("incompatible parameter objects", {
   parameter_set_with_smaller_range <-
     dials::parameters(dials::mtry(range = c(1, 5)))
 
+  scrub_best <- function(lines) {
+    has_best <- grepl("Initial best", lines)
+    lines[has_best] <- ""
+    lines
+  }
+
   set.seed(1)
-  expect_snapshot(error = TRUE, {
+  expect_snapshot(error = TRUE, transform = scrub_best, {
     res <-
       tune_sim_anneal(
         car_wflow,
