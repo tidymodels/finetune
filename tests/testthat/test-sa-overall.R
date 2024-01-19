@@ -140,6 +140,7 @@ test_that("incompatible parameter objects", {
     workflows::add_formula(Price ~ .) %>%
     workflows::add_model(rf_spec)
 
+  set.seed(1)
   tune_res_with_bigger_range <- tune::tune_grid(
     car_wflow,
     resamples = car_folds,
