@@ -705,10 +705,10 @@ collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, 
 #' different resamples is likely to lead to inappropriate results.
 #' @export
 show_best.tune_race <- function(x, metric = NULL, n = 5, eval_time = NULL, ...) {
-
   if (!is.null(metric)) {
     # What was used to judge the race and how are they being sorted now?
     metrics <- tune::.get_tune_metrics(x)
+    tune::check_metric_in_tune_results(tibble::as_tibble(metrics), metric)
     opt_metric <- tune::first_metric(metrics)
     opt_metric_name <- opt_metric$metric
     if (metric[1] != opt_metric_name) {
