@@ -2,7 +2,7 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-01-19T20:45Z
+last_built: 2024-01-22T22:03Z
 urls:
   reference: https://finetune.tidymodels.org/reference
   article: https://finetune.tidymodels.org/articles
