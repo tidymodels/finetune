@@ -1,5 +1,7 @@
 # finetune (development version)
 
+* Fixed bug where packages specified in `control_race(pkgs)` were not actually loaded in `tune_race_anova()` (#74).
+
 * `autoplot()` methods for racing objects will now use integers in x-axis breaks (#75).
 
 * Enabling the `verbose_elim` control option for `tune_race_anova()` will now additionally introduce a message confirming that the function is evaluating against the burn-in resamples.
