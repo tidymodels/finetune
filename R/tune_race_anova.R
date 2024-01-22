@@ -232,7 +232,7 @@ tune_race_anova_workflow <-
     metrics <- tune::check_metrics_arg(metrics, object, call = call)
     eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
 
-    control$pkgs <- c(tune::required_pkgs(object), "workflows", "tidyr", "rlang")
+    control$pkgs <- c(control$pkgs, tune::required_pkgs(object), "workflows", "tidyr", "rlang")
 
     if (control$verbose_elim) {
       tune_cols <- tune::get_tune_colors()
