@@ -228,7 +228,7 @@
       
     Condition
       Error in `tune_sim_anneal()`:
-      ! The parameter set used when tuning generating the initial results isn't compatible with the parameter set supplied as `param_info`.
+      ! The range for parameter mtry used when generating initial results isn't compatible with the range supplied in `param_info`.
       i Possible values of parameters in `param_info` should encompass all values evaluated in the initial grid.
     Message
       x Optimization stopped prematurely; returning current results.
