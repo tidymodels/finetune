@@ -46,7 +46,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="finetune-development-version">finetune (development version)<a class="anchor" aria-label="anchor" href="#finetune-development-version"></a></h2>
-<ul><li><p>Fixed bug where packages specified in <code>control_race(pkgs)</code> were not actually loaded in <code><a href="../reference/tune_race_anova.html">tune_race_anova()</a></code> (<a href="https://github.com/tidymodels/finetune/issues/74" class="external-link">#74</a>).</p></li>
+<ul><li><p>Fixed bug where <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> would fail when supplied parameters needing finalization. The function will now finalize needed parameter ranges internally (<a href="https://github.com/tidymodels/finetune/issues/39" class="external-link">#39</a>).</p></li>
+<li><p>Fixed bug where packages specified in <code>control_race(pkgs)</code> were not actually loaded in <code><a href="../reference/tune_race_anova.html">tune_race_anova()</a></code> (<a href="https://github.com/tidymodels/finetune/issues/74" class="external-link">#74</a>).</p></li>
 <li><p><code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> methods for racing objects will now use integers in x-axis breaks (<a href="https://github.com/tidymodels/finetune/issues/75" class="external-link">#75</a>).</p></li>
 <li><p>Enabling the <code>verbose_elim</code> control option for <code><a href="../reference/tune_race_anova.html">tune_race_anova()</a></code> will now additionally introduce a message confirming that the function is evaluating against the burn-in resamples.</p></li>
 <li><p>Updates based on the new version of tune, primarily for survival analysis models.</p></li>
