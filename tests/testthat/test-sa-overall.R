@@ -101,7 +101,7 @@ test_that("unfinalized parameters", {
   rec_example <- recipe(Class ~ ., data = two_class_dat)
 
   # RF
-  model_rf <- rand_forest(min_n = tune()) %>%
+  model_rf <- rand_forest(mtry = tune()) %>%
     set_mode("classification") %>%
     set_engine("ranger")
 
@@ -117,6 +117,13 @@ test_that("unfinalized parameters", {
     set.seed(40)
     rf_res_finetune <- wf_rf %>%
       tune_sim_anneal(resamples = bt, initial = rf_res)
+  })
+
+  # don't supply an initial grid (#39)
+  expect_snapshot({
+    set.seed(40)
+    rf_res_finetune <- wf_rf %>%
+      tune_sim_anneal(resamples = bt)
   })
 })
 
