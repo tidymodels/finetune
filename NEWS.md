@@ -1,5 +1,7 @@
 # finetune (development version)
 
+* Fixed bug where `tune_sim_anneal()` would fail when supplied parameters needing finalization. The function will now finalize needed parameter ranges internally (#39).
+
 * Fixed bug where packages specified in `control_race(pkgs)` were not actually loaded in `tune_race_anova()` (#74).
 
 * `autoplot()` methods for racing objects will now use integers in x-axis breaks (#75).

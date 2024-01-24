@@ -328,12 +328,12 @@ tune_sim_anneal_workflow <-
     }
 
     # In case mtry or other parameters with missing ranges need finalization
-    # param_info <- tune::check_parameters(
-    #   workflow = object,
-    #   pset = param_info,
-    #   data = resamples$splits[[1]]$data,
-    #   grid_names = param_info$id
-    # )
+    param_info <- tune::check_parameters(
+      wflow = object,
+      pset = param_info,
+      data = resamples$splits[[1]]$data,
+      grid_names = character(0)
+    )
 
     tune::check_workflow(object, check_dials = !is.null(param_info), pset = param_info)
 
