@@ -127,6 +127,56 @@ test_that("unfinalized parameters", {
   })
 })
 
+test_that("incompatible parameter objects", {
+  skip_on_cran()
+
+  skip_if_not_installed("ranger")
+  skip_if_not_installed("modeldata")
+  skip_if_not_installed("rsample")
+
+  rf_spec <- parsnip::rand_forest(mode = "regression", mtry = tune::tune())
+
+  set.seed(1)
+  grid_with_bigger_range <-
+    dials::grid_latin_hypercube(dials::mtry(range = c(1, 16)))
+
+  set.seed(1)
+  car_folds <- rsample::vfold_cv(car_prices, v = 2)
+
+  car_wflow <- workflows::workflow() %>%
+    workflows::add_formula(Price ~ .) %>%
+    workflows::add_model(rf_spec)
+
+  set.seed(1)
+  tune_res_with_bigger_range <- tune::tune_grid(
+    car_wflow,
+    resamples = car_folds,
+    grid = grid_with_bigger_range
+  )
+
+  set.seed(1)
+  parameter_set_with_smaller_range <-
+    dials::parameters(dials::mtry(range = c(1, 5)))
+
+  scrub_best <- function(lines) {
+    has_best <- grepl("Initial best", lines)
+    lines[has_best] <- ""
+    lines
+  }
+
+  set.seed(1)
+  expect_snapshot(error = TRUE, transform = scrub_best, {
+    res <-
+      tune_sim_anneal(
+        car_wflow,
+        param_info = parameter_set_with_smaller_range,
+        resamples = car_folds,
+        initial = tune_res_with_bigger_range,
+        iter = 2
+      )
+  })
+})
+
 test_that("set event-level", {
   # See issue 40
   skip_if_not_installed("rpart")
