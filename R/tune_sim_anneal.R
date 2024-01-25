@@ -321,7 +321,12 @@ tune_sim_anneal_workflow <-
     maximize <- opt_metric$direction == "maximize"
 
     eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
-    opt_metric_time <- tune::first_eval_time(metrics, opt_metric_name, eval_time)
+    opt_metric_time <- tune::first_eval_time(
+        metrics,
+        opt_metric_name,
+        eval_time,
+        call = call
+      )
 
     if (is.null(param_info)) {
       param_info <- extract_parameter_set_dials(object)
