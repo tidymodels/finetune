@@ -246,7 +246,12 @@ tune_race_win_loss_workflow <-
     opt_metric_name <- opt_metric$metric
     maximize <- opt_metric$direction == "maximize"
 
-    opt_metric_time <- tune::first_eval_time(metrics, opt_metric_name, eval_time)
+    opt_metric_time <- tune::first_eval_time(
+      metrics,
+      opt_metric_name,
+      eval_time,
+      call = call
+    )
 
     racing_obj_log(opt_metric_name, opt_metric$direction, control, opt_metric_time)
 
