@@ -120,8 +120,15 @@ tune_race_win_loss.default <- function(object, ...) {
 
 #' @export
 tune_race_win_loss.recipe <-
-  function(object, model, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = NULL) {
+  function(object,
+           model,
+           resamples,
+           ...,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race()) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -137,26 +144,43 @@ tune_race_win_loss.recipe <-
 
 #' @export
 tune_race_win_loss.formula <-
-  function(formula, model, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = NULL) {
+  function(formula,
+           model,
+           resamples,
+           ...,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race()) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
 
     tune_race_win_loss(
       model,
-      preprocessor = formula, resamples = resamples,
-      param_info = param_info, grid = grid,
-      metrics = metrics, control = control,
-      eval_time = eval_time
+      preprocessor = formula,
+      resamples = resamples,
+      param_info = param_info,
+      grid = grid,
+      metrics = metrics,
+      eval_time = eval_time,
+      control = control
     )
   }
 
 #' @export
 #' @rdname tune_race_win_loss
 tune_race_win_loss.model_spec <-
-  function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = NULL) {
+  function(object,
+           preprocessor,
+           resamples,
+           ...,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race()) {
     if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
       cli::cli_abort(
         "To tune a model spec, you must preprocess with a formula, recipe, \\
@@ -181,17 +205,22 @@ tune_race_win_loss.model_spec <-
       resamples = resamples,
       grid = grid,
       metrics = metrics,
+      eval_time = eval_time,
       param_info = param_info,
-      control = control,
-      eval_time = eval_time
+      control = control
     )
   }
 
 #' @export
 #' @rdname tune_race_win_loss
-tune_race_win_loss.workflow <- function(object, resamples, ..., param_info = NULL,
-                                        grid = 10, metrics = NULL,
-                                        control = control_race(), eval_time = NULL) {
+tune_race_win_loss.workflow <- function(object,
+                                        resamples,
+                                        ...,
+                                        param_info = NULL,
+                                        grid = 10,
+                                        metrics = NULL,
+                                        eval_time = NULL,
+                                        control = control_race()) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_race())
@@ -201,17 +230,23 @@ tune_race_win_loss.workflow <- function(object, resamples, ..., param_info = NUL
     resamples = resamples,
     grid = grid,
     metrics = metrics,
+    eval_time = eval_time,
     param_info = param_info,
-    control = control,
-    eval_time = eval_time
+    control = control
   )
 }
 
 ## -----------------------------------------------------------------------------
 
 tune_race_win_loss_workflow <-
-  function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
-           control = control_race(), eval_time = NULL, call = caller_env()) {
+  function(object,
+           resamples,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race(),
+           call = caller_env()) {
     rlang::check_installed("BradleyTerry2")
 
     B <- nrow(resamples)
@@ -235,8 +270,8 @@ tune_race_win_loss_workflow <-
         param_info = param_info,
         grid = grid,
         metrics = metrics,
-        control = grid_control,
-        eval_time = eval_time
+        eval_time = eval_time,
+        control = grid_control
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
@@ -288,8 +323,8 @@ tune_race_win_loss_workflow <-
           param_info = param_info,
           grid = new_grid,
           metrics = metrics,
-          control = grid_control,
-          eval_time = eval_time
+          eval_time = eval_time,
+          control = grid_control
         )
       res <- restore_tune(res, tmp_res, opt_metric_time)
 
