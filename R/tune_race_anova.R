@@ -20,12 +20,12 @@
 #'  tuning parameter candidates. An integer denotes the number of candidate
 #'  parameter sets to be created automatically.
 #' @param metrics A [yardstick::metric_set()] or `NULL`.
-#' @param control An object used to modify the tuning process. See
-#'  [control_race()] for more details.
 #' @param eval_time A numeric vector of time points where dynamic event time
 #' metrics should be computed (e.g. the time-dependent ROC curve, etc). The
 #' values must be non-negative and should probably be no greater than the
 #' largest event time in the training set (See Details below).
+#' @param control An object used to modify the tuning process. See
+#'  [control_race()] for more details.
 #' @param ... Not currently used.
 #' @references
 #' Kuhn, M 2014. "Futility Analysis in the Cross-Validation of Machine Learning
@@ -123,43 +123,70 @@ tune_race_anova.default <- function(object, ...) {
 
 #' @export
 tune_race_anova.recipe <-
-  function(object, model, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = NULL) {
+  function(object,
+           model,
+           resamples,
+           ...,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race()) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
 
     tune_race_anova(
       model,
-      preprocessor = object, resamples = resamples,
-      param_info = param_info, grid = grid,
-      metrics = metrics, control = control,
-      eval_time = eval_time
+      preprocessor = object,
+      resamples = resamples,
+      param_info = param_info,
+      grid = grid,
+      metrics = metrics,
+      eval_time = eval_time,
+      control = control
     )
   }
 
 #' @export
 tune_race_anova.formula <-
-  function(formula, model, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = NULL) {
+  function(formula,
+           model,
+           resamples,
+           ...,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race()) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
 
     tune_race_anova(
       model,
-      preprocessor = formula, resamples = resamples,
-      param_info = param_info, grid = grid,
-      metrics = metrics, control = control,
-      eval_time = eval_time
+      preprocessor = formula,
+      resamples = resamples,
+      param_info = param_info,
+      grid = grid,
+      metrics = metrics,
+      eval_time = eval_time,
+      control = control
     )
   }
 
 #' @export
 #' @rdname tune_race_anova
 tune_race_anova.model_spec <-
-  function(object, preprocessor, resamples, ..., param_info = NULL, grid = 10,
-           metrics = NULL, control = control_race(), eval_time = NULL) {
+  function(object,
+           preprocessor,
+           resamples,
+           ...,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race()) {
     if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
       cli::cli_abort(
         "To tune a model spec, you must preprocess with a formula, recipe, \\
@@ -184,17 +211,23 @@ tune_race_anova.model_spec <-
       resamples = resamples,
       grid = grid,
       metrics = metrics,
+      eval_time = eval_time,
       param_info = param_info,
-      control = control,
-      eval_time = eval_time
+      control = control
     )
   }
 
 #' @export
 #' @rdname tune_race_anova
 tune_race_anova.workflow <-
-  function(object, resamples, ..., param_info = NULL, grid = 10, metrics = NULL,
-           control = control_race(), eval_time = NULL) {
+  function(object,
+           resamples,
+           ...,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race()) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -204,17 +237,23 @@ tune_race_anova.workflow <-
       resamples = resamples,
       grid = grid,
       metrics = metrics,
+      eval_time = eval_time,
       param_info = param_info,
-      control = control,
-      eval_time = eval_time
+      control = control
     )
   }
 
 ## -----------------------------------------------------------------------------
 
 tune_race_anova_workflow <-
-  function(object, resamples, param_info = NULL, grid = 10, metrics = NULL,
-           control = control_race(), eval_time = NULL, call = caller_env()) {
+  function(object,
+           resamples,
+           param_info = NULL,
+           grid = 10,
+           metrics = NULL,
+           eval_time = NULL,
+           control = control_race(),
+           call = caller_env()) {
     rlang::check_installed("lme4")
 
     tune::initialize_catalog(control = control)
@@ -252,8 +291,8 @@ tune_race_anova_workflow <-
         param_info = param_info,
         grid = grid,
         metrics = metrics,
-        control = grid_control,
-        eval_time = eval_time
+        eval_time = eval_time,
+        control = grid_control
       )
 
     param_names <- tune::.get_tune_parameter_names(res)
@@ -304,8 +343,8 @@ tune_race_anova_workflow <-
           param_info = param_info,
           grid = new_grid,
           metrics = metrics,
-          control = grid_control,
-          eval_time = eval_time
+          eval_time = eval_time,
+          control = grid_control
         )
 
       res <- restore_tune(res, tmp_res, opt_metric_time)
