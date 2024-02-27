@@ -15,6 +15,10 @@
 #' @param metrics A [yardstick::metric_set()] object containing information on how
 #' models will be evaluated for performance. The first metric in `metrics` is the
 #' one that will be optimized.
+#' @param eval_time A numeric vector of time points where dynamic event time
+#' metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+#' values must be non-negative and should probably be no greater than the
+#' largest event time in the training set (See Details below).
 #' @param iter The maximum number of search iterations.
 #' @param initial An initial set of results in a tidy format (as would the result
 #' of [tune_grid()], [tune_bayes()], [tune_race_win_loss()], or
@@ -22,10 +26,6 @@
 #' sequential search method, the simulated annealing iterations start after the
 #' last iteration of the initial results.
 #' @param control The results of [control_sim_anneal()].
-#' @param eval_time A numeric vector of time points where dynamic event time
-#' metrics should be computed (e.g. the time-dependent ROC curve, etc). The
-#' values must be non-negative and should probably be no greater than the
-#' largest event time in the training set (See Details below).
 #' @param ... Not currently used.
 #' @details
 #' Simulated annealing is a global optimization method. For model tuning, it
@@ -189,19 +189,23 @@ tune_sim_anneal.recipe <- function(object,
                                    iter = 10,
                                    param_info = NULL,
                                    metrics = NULL,
+                                   eval_time = NULL,
                                    initial = 1,
-                                   control = control_sim_anneal(),
-                                   eval_time = NULL) {
+                                   control = control_sim_anneal()) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_sim_anneal())
 
   tune_sim_anneal(
     model,
-    preprocessor = object, resamples = resamples,
-    iter = iter, param_info = param_info,
-    metrics = metrics, initial = initial, control = control,
-    eval_time = eval_time
+    preprocessor = object,
+    resamples = resamples,
+    iter = iter,
+    param_info = param_info,
+    metrics = metrics,
+    eval_time = eval_time,
+    initial = initial,
+    control = control
   )
 }
 
@@ -213,19 +217,23 @@ tune_sim_anneal.formula <- function(formula,
                                     iter = 10,
                                     param_info = NULL,
                                     metrics = NULL,
+                                    eval_time = NULL,
                                     initial = 1,
-                                    control = control_sim_anneal(),
-                                    eval_time = NULL) {
+                                    control = control_sim_anneal()) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_sim_anneal())
 
   tune_sim_anneal(
     model,
-    preprocessor = formula, resamples = resamples,
-    iter = iter, param_info = param_info,
-    metrics = metrics, initial = initial, control = control,
-    eval_time = eval_time
+    preprocessor = formula,
+    resamples = resamples,
+    iter = iter,
+    param_info = param_info,
+    metrics = metrics,
+    eval_time = eval_time,
+    initial = initial,
+    control = control
   )
 }
 
@@ -238,9 +246,9 @@ tune_sim_anneal.model_spec <- function(object,
                                        iter = 10,
                                        param_info = NULL,
                                        metrics = NULL,
+                                       eval_time = NULL,
                                        initial = 1,
-                                       control = control_sim_anneal(),
-                                       eval_time = NULL) {
+                                       control = control_sim_anneal()) {
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
       cli::cli_abort(
         "To tune a model spec, you must preprocess with a formula, recipe, \\
@@ -264,9 +272,13 @@ tune_sim_anneal.model_spec <- function(object,
 
   tune_sim_anneal_workflow(
     wflow,
-    resamples = resamples, iter = iter,
-    param_info = param_info, metrics = metrics,
-    initial = initial, control = control, eval_time = eval_time,
+    resamples = resamples,
+    iter = iter,
+    param_info = param_info,
+    metrics = metrics,
+    eval_time = eval_time,
+    initial = initial,
+    control = control,
     ...
   )
 }
@@ -281,9 +293,9 @@ tune_sim_anneal.workflow <-
            iter = 10,
            param_info = NULL,
            metrics = NULL,
+           eval_time = NULL,
            initial = 1,
-           control = control_sim_anneal(),
-           eval_time = NULL) {
+           control = control_sim_anneal()) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_sim_anneal())
@@ -292,9 +304,13 @@ tune_sim_anneal.workflow <-
 
     tune_sim_anneal_workflow(
       object,
-      resamples = resamples, iter = iter,
-      param_info = param_info, metrics = metrics,
-      initial = initial, control = control, eval_time = eval_time,
+      resamples = resamples,
+      iter = iter,
+      param_info = param_info,
+      metrics = metrics,
+      eval_time = eval_time,
+      initial = initial,
+      control = control,
       ...
     )
   }
@@ -303,8 +319,13 @@ tune_sim_anneal.workflow <-
 
 
 tune_sim_anneal_workflow <-
-  function(object, resamples, iter = 10, param_info = NULL, metrics = NULL,
-           initial = 5, control = control_sim_anneal(), eval_time = NULL,
+  function(object,
+           resamples, iter = 10,
+           param_info = NULL,
+           metrics = NULL,
+           eval_time = NULL,
+           initial = 5,
+           control = control_sim_anneal(),
            call = caller_env()) {
     start_time <- proc.time()[3]
     cols <- tune::get_tune_colors()
@@ -355,8 +376,8 @@ tune_sim_anneal_workflow <-
         wflow = object,
         resamples = resamples,
         metrics = metrics,
-        ctrl = control_init,
-        eval_time = eval_time
+        eval_time = eval_time,
+        ctrl = control_init
       )
     if (any(dials::has_unknowns(param_info$object))) {
       param_info <- tune::.get_tune_parameters(initial)
@@ -465,8 +486,8 @@ tune_sim_anneal_workflow <-
           resamples = resamples,
           grid = new_grid %>% dplyr::select(-.config, -.parent),
           metrics = metrics,
-          control = control_init,
-          eval_time = eval_time
+          eval_time = eval_time,
+          control = control_init
         ) %>%
         dplyr::mutate(.iter = i) %>%
         update_config(config = paste0("Iter", i), save_pred = control$save_pred)
