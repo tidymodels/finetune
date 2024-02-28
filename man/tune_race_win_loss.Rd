@@ -16,8 +16,8 @@ tune_race_win_loss(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race(),
-  eval_time = NULL
+  eval_time = NULL,
+  control = control_race()
 )
 
 \method{tune_race_win_loss}{workflow}(
@@ -27,8 +27,8 @@ tune_race_win_loss(object, ...)
   param_info = NULL,
   grid = 10,
   metrics = NULL,
-  control = control_race(),
-  eval_time = NULL
+  eval_time = NULL,
+  control = control_race()
 )
 }
 \arguments{
@@ -53,13 +53,13 @@ parameter sets to be created automatically.}
 
 \item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} or \code{NULL}.}
 
-\item{control}{An object used to modify the tuning process. See
-\code{\link[=control_race]{control_race()}} for more details.}
-
 \item{eval_time}{A numeric vector of time points where dynamic event time
 metrics should be computed (e.g. the time-dependent ROC curve, etc). The
 values must be non-negative and should probably be no greater than the
 largest event time in the training set (See Details below).}
+
+\item{control}{An object used to modify the tuning process. See
+\code{\link[=control_race]{control_race()}} for more details.}
 }
 \value{
 An object with primary class \code{tune_race} in the same standard format
