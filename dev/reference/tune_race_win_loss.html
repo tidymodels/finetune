@@ -83,8 +83,8 @@ how likely each combination is to win overall.</p>
 <span>  param_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  grid <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="control_race.html">control_race</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="control_race.html">control_race</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for workflow</span></span>
@@ -95,8 +95,8 @@ how likely each combination is to win overall.</p>
 <span>  param_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  grid <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="control_race.html">control_race</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="control_race.html">control_race</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -137,16 +137,16 @@ parameter sets to be created automatically.</p></dd>
 <dd><p>A <code><a href="https://yardstick.tidymodels.org/reference/metric_set.html" class="external-link">yardstick::metric_set()</a></code> or <code>NULL</code>.</p></dd>
 
 
-<dt>control</dt>
-<dd><p>An object used to modify the tuning process. See
-<code><a href="control_race.html">control_race()</a></code> for more details.</p></dd>
-
-
 <dt>eval_time</dt>
 <dd><p>A numeric vector of time points where dynamic event time
 metrics should be computed (e.g. the time-dependent ROC curve, etc). The
 values must be non-negative and should probably be no greater than the
 largest event time in the training set (See Details below).</p></dd>
+
+
+<dt>control</dt>
+<dd><p>An object used to modify the tuning process. See
+<code><a href="control_race.html">control_race()</a></code> for more details.</p></dd>
 
 </dl></div>
     <div class="section level2">

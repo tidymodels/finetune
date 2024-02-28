@@ -71,9 +71,9 @@ Stein (1986).</p>
 <span>  iter <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  param_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  initial <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="control_sim_anneal.html">control_sim_anneal</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="control_sim_anneal.html">control_sim_anneal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for workflow</span></span>
@@ -84,9 +84,9 @@ Stein (1986).</p>
 <span>  iter <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  param_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  initial <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="control_sim_anneal.html">control_sim_anneal</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="control_sim_anneal.html">control_sim_anneal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -125,6 +125,13 @@ models will be evaluated for performance. The first metric in <code>metrics</cod
 one that will be optimized.</p></dd>
 
 
+<dt>eval_time</dt>
+<dd><p>A numeric vector of time points where dynamic event time
+metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+values must be non-negative and should probably be no greater than the
+largest event time in the training set (See Details below).</p></dd>
+
+
 <dt>initial</dt>
 <dd><p>An initial set of results in a tidy format (as would the result
 of <code><a href="https://tune.tidymodels.org/reference/tune_grid.html" class="external-link">tune_grid()</a></code>, <code><a href="https://tune.tidymodels.org/reference/tune_bayes.html" class="external-link">tune_bayes()</a></code>, <code><a href="tune_race_win_loss.html">tune_race_win_loss()</a></code>, or
@@ -135,13 +142,6 @@ last iteration of the initial results.</p></dd>
 
 <dt>control</dt>
 <dd><p>The results of <code><a href="control_sim_anneal.html">control_sim_anneal()</a></code>.</p></dd>
-
-
-<dt>eval_time</dt>
-<dd><p>A numeric vector of time points where dynamic event time
-metrics should be computed (e.g. the time-dependent ROC curve, etc). The
-values must be non-negative and should probably be no greater than the
-largest event time in the training set (See Details below).</p></dd>
 
 </dl></div>
     <div class="section level2">
