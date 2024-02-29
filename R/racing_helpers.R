@@ -665,10 +665,11 @@ randomize_resamples <- function(x) {
 #' @name collect_predictions
 collect_predictions.tune_race <-
   function(x,
+           ...,
            summarize = FALSE,
            parameters = NULL,
-           all_configs = FALSE,
-           ...) {
+           all_configs = FALSE) {
+    rlang::check_dots_empty()
     x <- dplyr::select(x, -.order)
     res <- collect_predictions(x, summarize = summarize, parameters = parameters)
     if (!all_configs) {
@@ -681,7 +682,8 @@ collect_predictions.tune_race <-
 #' @inheritParams tune::collect_metrics
 #' @export
 #' @rdname collect_predictions
-collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, ...) {
+collect_metrics.tune_race <- function(x, ..., summarize = TRUE, all_configs = FALSE) {
+  rlang::check_dots_empty()
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
   res <- collect_metrics(x, summarize = summarize)

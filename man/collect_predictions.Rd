@@ -8,17 +8,19 @@
 \usage{
 \method{collect_predictions}{tune_race}(
   x,
+  ...,
   summarize = FALSE,
   parameters = NULL,
-  all_configs = FALSE,
-  ...
+  all_configs = FALSE
 )
 
-\method{collect_metrics}{tune_race}(x, summarize = TRUE, all_configs = FALSE, ...)
+\method{collect_metrics}{tune_race}(x, ..., summarize = TRUE, all_configs = FALSE)
 }
 \arguments{
 \item{x}{The results of \code{\link[tune:tune_grid]{tune_grid()}}, \code{\link[tune:tune_bayes]{tune_bayes()}}, \code{\link[tune:fit_resamples]{fit_resamples()}},
 or \code{\link[tune:last_fit]{last_fit()}}. For \code{\link[tune:collect_predictions]{collect_predictions()}}, the control option \code{save_pred = TRUE} should have been used.}
+
+\item{...}{Not currently used.}
 
 \item{summarize}{A logical; should metrics be summarized over resamples
 (\code{TRUE}) or return the values for each individual resample. Note that, if \code{x}
@@ -33,8 +35,6 @@ if \code{tune("my_param")} was used).}
 \item{all_configs}{A logical: should we return the complete set of model
 configurations or just those that made it to the end of the race (the
 default).}
-
-\item{...}{Not currently used.}
 }
 \value{
 A tibble. The column names depend on the results and the mode of the
