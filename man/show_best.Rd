@@ -4,10 +4,24 @@
 \alias{show_best.tune_race}
 \title{Investigate best tuning parameters}
 \usage{
-\method{show_best}{tune_race}(x, metric = NULL, eval_time = NULL, n = 5, ...)
+\method{show_best}{tune_race}(
+  x,
+  ...,
+  metric = NULL,
+  eval_time = NULL,
+  n = 5,
+  call = rlang::current_env()
+)
 }
 \arguments{
 \item{x}{The results of \code{\link[tune:tune_grid]{tune_grid()}} or \code{\link[tune:tune_bayes]{tune_bayes()}}.}
+
+\item{...}{For \code{\link[tune:select_by_one_std_err]{select_by_one_std_err()}} and \code{\link[tune:select_by_pct_loss]{select_by_pct_loss()}}, this
+argument is passed directly to \code{\link[dplyr:arrange]{dplyr::arrange()}} so that the user can sort
+the models from \emph{most simple to most complex}. That is, for a parameter \code{p},
+pass the unquoted expression \code{p} if smaller values of \code{p} indicate a simpler
+model, or \code{desc(p)} if larger values indicate a simpler model. At
+least one term is required for these two functions. See the examples below.}
 
 \item{metric}{A character value for the metric that will be used to sort
 the models. (See
@@ -23,12 +37,7 @@ default will automatically use the first evaluation time used by \code{x}.}
 
 \item{n}{An integer for the maximum number of top results/rows to return.}
 
-\item{...}{For \code{\link[tune:select_by_one_std_err]{select_by_one_std_err()}} and \code{\link[tune:select_by_pct_loss]{select_by_pct_loss()}}, this
-argument is passed directly to \code{\link[dplyr:arrange]{dplyr::arrange()}} so that the user can sort
-the models from \emph{most simple to most complex}. That is, for a parameter \code{p},
-pass the unquoted expression \code{p} if smaller values of \code{p} indicate a simpler
-model, or \code{desc(p)} if larger values indicate a simpler model. At
-least one term is required for these two functions. See the examples below.}
+\item{call}{The call to be shown in errors and warnings.}
 }
 \description{
 \code{\link[=show_best]{show_best()}} displays the top sub-models and their performance estimates.

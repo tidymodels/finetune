@@ -706,7 +706,13 @@ collect_metrics.tune_race <- function(x, ..., summarize = TRUE, all_configs = FA
 #' resampled). Comparing performance metrics for configurations averaged with
 #' different resamples is likely to lead to inappropriate results.
 #' @export
-show_best.tune_race <- function(x, metric = NULL, eval_time = NULL, n = 5, ...) {
+show_best.tune_race <- function(x,
+                                ...,
+                                metric = NULL,
+                                eval_time = NULL,
+                                n = 5,
+                                call = rlang::current_env()) {
+  rlang::check_dots_empty()
   if (!is.null(metric)) {
     # What was used to judge the race and how are they being sorted now?
     metrics <- tune::.get_tune_metrics(x)
@@ -724,7 +730,7 @@ show_best.tune_race <- function(x, metric = NULL, eval_time = NULL, n = 5, ...) 
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
 
-  res <- NextMethod(metric = metric, eval_time = eval_time, n = Inf, ...)
+  res <- NextMethod(metric = metric, eval_time = eval_time, n = Inf, call = call)
   res$.ranked <- 1:nrow(res)
   res <- dplyr::inner_join(res, final_configs, by = ".config")
   res$.ranked <- NULL
