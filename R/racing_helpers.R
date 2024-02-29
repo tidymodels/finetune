@@ -682,11 +682,11 @@ collect_predictions.tune_race <-
 #' @inheritParams tune::collect_metrics
 #' @export
 #' @rdname collect_predictions
-collect_metrics.tune_race <- function(x, ..., summarize = TRUE, all_configs = FALSE) {
+collect_metrics.tune_race <- function(x, ..., summarize = TRUE, type = c("long", "wide"), all_configs = FALSE) {
   rlang::check_dots_empty()
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
-  res <- collect_metrics(x, summarize = summarize)
+  res <- collect_metrics(x, summarize = summarize, type = type)
   if (!all_configs) {
     final_configs <- subset_finished_race(x)
     res <- dplyr::inner_join(res, final_configs, by = ".config")
