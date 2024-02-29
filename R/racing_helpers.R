@@ -670,7 +670,7 @@ collect_predictions.tune_race <-
            all_configs = FALSE,
            ...) {
     x <- dplyr::select(x, -.order)
-    res <- NextMethod(summarize = summarize, parameters = parameters)
+    res <- collect_predictions(x, summarize = summarize, parameters = parameters)
     if (!all_configs) {
       final_configs <- subset_finished_race(x)
       res <- dplyr::inner_join(res, final_configs, by = ".config")
@@ -684,7 +684,7 @@ collect_predictions.tune_race <-
 collect_metrics.tune_race <- function(x, summarize = TRUE, all_configs = FALSE, ...) {
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
-  res <- NextMethod(summarize = summarize, ...)
+  res <- collect_metrics(x, summarize = summarize)
   if (!all_configs) {
     final_configs <- subset_finished_race(x)
     res <- dplyr::inner_join(res, final_configs, by = ".config")
