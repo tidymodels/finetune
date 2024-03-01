@@ -303,8 +303,8 @@ tune_race_anova_workflow <-
 
     opt_metric_time <- tune::first_eval_time(
       metrics,
-      opt_metric_name,
-      eval_time,
+      metric = opt_metric_name,
+      eval_time = eval_time,
       call = call
     )
 

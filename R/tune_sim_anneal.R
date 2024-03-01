@@ -344,8 +344,8 @@ tune_sim_anneal_workflow <-
     eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
     opt_metric_time <- tune::first_eval_time(
         metrics,
-        opt_metric_name,
-        eval_time,
+        metric = opt_metric_name,
+        eval_time = eval_time,
         call = call
       )
 

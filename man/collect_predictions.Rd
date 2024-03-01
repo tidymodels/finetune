@@ -8,17 +8,25 @@
 \usage{
 \method{collect_predictions}{tune_race}(
   x,
+  ...,
   summarize = FALSE,
   parameters = NULL,
-  all_configs = FALSE,
-  ...
+  all_configs = FALSE
 )
 
-\method{collect_metrics}{tune_race}(x, summarize = TRUE, all_configs = FALSE, ...)
+\method{collect_metrics}{tune_race}(
+  x,
+  ...,
+  summarize = TRUE,
+  type = c("long", "wide"),
+  all_configs = FALSE
+)
 }
 \arguments{
 \item{x}{The results of \code{\link[tune:tune_grid]{tune_grid()}}, \code{\link[tune:tune_bayes]{tune_bayes()}}, \code{\link[tune:fit_resamples]{fit_resamples()}},
 or \code{\link[tune:last_fit]{last_fit()}}. For \code{\link[tune:collect_predictions]{collect_predictions()}}, the control option \code{save_pred = TRUE} should have been used.}
+
+\item{...}{Not currently used.}
 
 \item{summarize}{A logical; should metrics be summarized over resamples
 (\code{TRUE}) or return the values for each individual resample. Note that, if \code{x}
@@ -34,7 +42,11 @@ if \code{tune("my_param")} was used).}
 configurations or just those that made it to the end of the race (the
 default).}
 
-\item{...}{Not currently used.}
+\item{type}{One of \code{"long"} (the default) or \code{"wide"}. When \code{type = "long"},
+output has columns \code{.metric} and one of \code{.estimate} or \code{mean}.
+\code{.estimate}/\code{mean} gives the values for the \code{.metric}. When \code{type = "wide"},
+each metric has its own column and the \code{n} and \code{std_err} columns are removed,
+if they exist.}
 }
 \value{
 A tibble. The column names depend on the results and the mode of the

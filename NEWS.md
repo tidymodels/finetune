@@ -10,12 +10,11 @@
 
 * Enabling the `verbose_elim` control option for `tune_race_anova()` will now additionally introduce a message confirming that the function is evaluating against the burn-in resamples.
 
-* Updates based on the new version of tune, primarily for survival analysis models. 
+* Updates based on the new version of tune, primarily for survival analysis models (#104). 
 
 ## Breaking Change
 
-* `show_best.tune_race()` gains an `eval_time` argument for censored regression models. This breaks passing `n` by position (#104).
-
+* Ellipses (...) are now used consistently in the package to require optional arguments to be named. `collect_predictions()`, `collect_metrics()` and `show_best()` methods previously had ellipses at the end of the function signature  that have been moved to follow the last argument without a default value. Optional arguments previously passed by position will now error informatively prompting them to be named (#105).
 
 # finetune 1.1.0
 
