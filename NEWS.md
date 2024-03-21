@@ -1,16 +1,22 @@
-# finetune (development version)
+# finetune 1.2.0
+
+## New Features
+
+* finetune now fully supports models in the "censored regression" mode. These models can be fit, tuned, and evaluated like the regression and classification modes. [tidymodels.org](https://www.tidymodels.org/learn/#category=survival%20analysis) has more information and tutorials on how to work with survival analysis models.
 
 * Improved error message from `tune_sim_anneal()` when values in the supplied `param_info` do not encompass all values evaluated in the `initial` grid. This most often happens when a user mistakenly supplies different parameter sets to the function that generated the initial results and `tune_sim_anneal()`.
-
-* Fixed bug where `tune_sim_anneal()` would fail when supplied parameters needing finalization. The function will now finalize needed parameter ranges internally (#39).
-
-* Fixed bug where packages specified in `control_race(pkgs)` were not actually loaded in `tune_race_anova()` (#74).
 
 * `autoplot()` methods for racing objects will now use integers in x-axis breaks (#75).
 
 * Enabling the `verbose_elim` control option for `tune_race_anova()` will now additionally introduce a message confirming that the function is evaluating against the burn-in resamples.
 
 * Updates based on the new version of tune, primarily for survival analysis models (#104). 
+
+## Bug Fixes
+
+* Fixed bug where `tune_sim_anneal()` would fail when supplied parameters needing finalization. The function will now finalize needed parameter ranges internally (#39).
+
+* Fixed bug where packages specified in `control_race(pkgs)` were not actually loaded in `tune_race_anova()` (#74).
 
 ## Breaking Change
 

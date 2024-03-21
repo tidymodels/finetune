@@ -110,10 +110,13 @@ set.seed(4)
 grid_anova <- 
   rda_spec %>% 
   tune_race_anova(Class ~ ., resamples = rs, grid = grid, control = ctrl)
+#> ℹ Evaluating against the initial 3 burn-in resamples.
 #> ℹ Racing will maximize the roc_auc metric.
 #> ℹ Resamples are analyzed in a random order.
 #> ℹ Bootstrap10: 14 eliminated; 6 candidates remain.
+#> 
 #> ℹ Bootstrap04: 2 eliminated; 4 candidates remain.
+#> 
 #> ℹ Bootstrap03: All but one parameter combination were eliminated.
 
 show_best(grid_anova, metric = "roc_auc", n = 2)
@@ -134,11 +137,17 @@ grid_win_loss<-
 #> ℹ Racing will maximize the roc_auc metric.
 #> ℹ Resamples are analyzed in a random order.
 #> ℹ Bootstrap10: 3 eliminated; 17 candidates remain.
+#> 
 #> ℹ Bootstrap04: 2 eliminated; 15 candidates remain.
+#> 
 #> ℹ Bootstrap03: 2 eliminated; 13 candidates remain.
+#> 
 #> ℹ Bootstrap01: 1 eliminated; 12 candidates remain.
+#> 
 #> ℹ Bootstrap07: 1 eliminated; 11 candidates remain.
+#> 
 #> ℹ Bootstrap05: 1 eliminated; 10 candidates remain.
+#> 
 #> ℹ Bootstrap08: 1 eliminated; 9 candidates remain.
 
 show_best(grid_win_loss, metric = "roc_auc", n = 2)
@@ -157,7 +166,7 @@ By contributing to this project, you agree to abide by its terms.
 
 - For questions and discussions about tidymodels packages, modeling, and
   machine learning, please [post on Posit
-  Community](https://community.rstudio.com/new-topic?category_id=15&tags=tidymodels,question).
+  Community](https://forum.posit.co/new-topic?category_id=15&tags=tidymodels,question).
 
 - If you think you have encountered a bug, please [submit an
   issue](https://github.com/tidymodels/usemodels/issues).
