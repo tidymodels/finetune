@@ -4,7 +4,7 @@ for a pre-defined set of tuning parameters that correspond to a model or
 recipe across one or more resamples of the data. After an initial number of
 resamples have been evaluated, the process eliminates tuning parameter
 combinations that are unlikely to be the best results using a repeated
-measure ANOVA model."><title>Efficient grid search via racing with ANOVA models — tune_race_anova • finetune</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.5/font.css" rel="stylesheet"><link href="../deps/Source_Code_Pro-0.4.5/font.css" rel="stylesheet"><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Efficient grid search via racing with ANOVA models — tune_race_anova"><meta property="og:description" content="tune_race_anova() computes a set of performance metrics (e.g. accuracy or RMSE)
+measure ANOVA model."><title>Efficient grid search via racing with ANOVA models — tune_race_anova • finetune</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.9/font.css" rel="stylesheet"><link href="../deps/Source_Code_Pro-0.4.9/font.css" rel="stylesheet"><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Efficient grid search via racing with ANOVA models — tune_race_anova"><meta property="og:description" content="tune_race_anova() computes a set of performance metrics (e.g. accuracy or RMSE)
 for a pre-defined set of tuning parameters that correspond to a model or
 recipe across one or more resamples of the data. After an initial number of
 resamples have been evaluated, the process eliminates tuning parameter
@@ -20,7 +20,7 @@ measure ANOVA model."><meta property="og:image" content="https://finetune.tidymo
     
     <a class="navbar-brand me-2" href="../index.html">finetune</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,6 +77,7 @@ measure ANOVA model.</p>
 <span>  param_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  grid <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="control_race.html">control_race</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -88,6 +89,7 @@ measure ANOVA model.</p>
 <span>  param_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  grid <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  eval_time <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="control_race.html">control_race</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -129,6 +131,13 @@ parameter sets to be created automatically.</p></dd>
 <dd><p>A <code><a href="https://yardstick.tidymodels.org/reference/metric_set.html" class="external-link">yardstick::metric_set()</a></code> or <code>NULL</code>.</p></dd>
 
 
+<dt>eval_time</dt>
+<dd><p>A numeric vector of time points where dynamic event time
+metrics should be computed (e.g. the time-dependent ROC curve, etc). The
+values must be non-negative and should probably be no greater than the
+largest event time in the training set (See Details below).</p></dd>
+
+
 <dt>control</dt>
 <dd><p>An object used to modify the tuning process. See
 <code><a href="control_race.html">control_race()</a></code> for more details.</p></dd>
@@ -162,7 +171,18 @@ outcome data and the random effect is due to resamples. The
 applied to the ANOVA results as well as other relevant arguments.</p>
 <p>There is benefit to using racing methods in conjunction with parallel
 processing. The following section shows a benchmark of results for one
-dataset and model.</p>
+dataset and model.</p><div class="section">
+<h3 id="censored-regression-models">Censored regression models<a class="anchor" aria-label="anchor" href="#censored-regression-models"></a></h3>
+
+
+<p>With dynamic performance metrics (e.g. Brier or ROC curves), performance is
+calculated for every value of <code>eval_time</code> but the <em>first</em> evaluation time
+given by the user (e.g., <code>eval_time[1]</code>) is analyzed during racing.</p>
+<p>Also, values of <code>eval_time</code> should be less than the largest observed event
+time in the training data. For many non-parametric models, the results beyond
+the largest time corresponding to an event are constant (or <code>NA</code>).</p>
+</div>
+
 <div class="section">
 <h3 id="benchmarking-results">Benchmarking results<a class="anchor" aria-label="anchor" href="#benchmarking-results"></a></h3>
 
@@ -214,8 +234,8 @@ parallel processing:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="va">svm_wflow</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tune.tidymodels.org/reference/tune_grid.html" class="external-link">tune_grid</a></span><span class="op">(</span>resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">svm_grid</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre><p></p></div>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">##    user  system elapsed </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 741.660  19.654 761.357 </span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">##    user  system elapsed </span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="do">## 741.660  19.654 761.357 </span></span></code></pre><p></p></div>
 <p></p><div class="sourceCode r"><pre><code><span><span class="co">## -----------------------------------------------------------------------------</span></span>
 <span><span class="co">## With racing</span></span>
 <span></span>
@@ -223,15 +243,15 @@ parallel processing:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="va">svm_wflow</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span>resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">svm_grid</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre><p></p></div>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">##    user  system elapsed </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 133.143   3.675 136.822 </span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">##    user  system elapsed </span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="do">## 133.143   3.675 136.822 </span></span></code></pre><p></p></div>
 <p>Speed-up of 5.56-fold for racing.</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="co">## -----------------------------------------------------------------------------</span></span>
 <span><span class="co">## Parallel processing setup</span></span>
 <span></span>
 <span><span class="va">cores</span> <span class="op">&lt;-</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span>logical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">cores</span></span></code></pre><p></p></div>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 10</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">## [1] 10</span></span></code></pre><p></p></div>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">makePSOCKcluster</span><span class="op">(</span><span class="va">cores</span><span class="op">)</span></span>
 <span><span class="fu">registerDoParallel</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre><p></p></div>
 <p></p><div class="sourceCode r"><pre><code><span><span class="co">## -----------------------------------------------------------------------------</span></span>
@@ -241,8 +261,8 @@ parallel processing:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="va">svm_wflow</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tune.tidymodels.org/reference/tune_grid.html" class="external-link">tune_grid</a></span><span class="op">(</span>resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">svm_grid</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre><p></p></div>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  user  system elapsed </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1.112   0.190 126.650 </span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">##  user  system elapsed </span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="do">## 1.112   0.190 126.650 </span></span></code></pre><p></p></div>
 <p>Parallel processing with grid search was 6.01-fold faster than
 sequential grid search.</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="co">## -----------------------------------------------------------------------------</span></span>
@@ -252,8 +272,8 @@ sequential grid search.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="va">svm_wflow</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/tune_race_anova.html">tune_race_anova</a></span><span class="op">(</span>resamples <span class="op">=</span> <span class="va">rs</span>, grid <span class="op">=</span> <span class="va">svm_grid</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre><p></p></div>
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  user  system elapsed </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1.908   0.261  21.442 </span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">##  user  system elapsed </span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="do">## 1.908   0.261  21.442 </span></span></code></pre><p></p></div>
 <p>Parallel processing with racing was 35.51-fold faster than sequential
 grid search.</p>
 <p>There is a compounding effect of racing and parallel processing but its
@@ -314,6 +334,7 @@ Models." <a href="https://arxiv.org/abs/1405.6974" class="external-link">https:/
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:dials’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     smoothness</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">ℹ Evaluating against the initial 3 burn-in resamples.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">ℹ Racing will maximize the roc_auc metric.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">ℹ Resamples are analyzed in a random order.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">ℹ Bootstrap05: All but one parameter combination were eliminated.</span></span>
