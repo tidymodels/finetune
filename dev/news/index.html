@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">finetune</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.1.0.9006</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.2.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,14 +46,24 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="finetune-development-version">finetune (development version)<a class="anchor" aria-label="anchor" href="#finetune-development-version"></a></h2>
-<ul><li><p>Improved error message from <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> when values in the supplied <code>param_info</code> do not encompass all values evaluated in the <code>initial</code> grid. This most often happens when a user mistakenly supplies different parameter sets to the function that generated the initial results and <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code>.</p></li>
-<li><p>Fixed bug where <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> would fail when supplied parameters needing finalization. The function will now finalize needed parameter ranges internally (<a href="https://github.com/tidymodels/finetune/issues/39" class="external-link">#39</a>).</p></li>
-<li><p>Fixed bug where packages specified in <code>control_race(pkgs)</code> were not actually loaded in <code><a href="../reference/tune_race_anova.html">tune_race_anova()</a></code> (<a href="https://github.com/tidymodels/finetune/issues/74" class="external-link">#74</a>).</p></li>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.0" id="finetune-120">finetune 1.2.0<a class="anchor" aria-label="anchor" href="#finetune-120"></a></h2><p class="text-muted">CRAN release: 2024-03-21</p>
+<div class="section level3">
+<h3 id="new-features-1-2-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-2-0"></a></h3>
+<ul><li><p>finetune now fully supports models in the “censored regression” mode. These models can be fit, tuned, and evaluated like the regression and classification modes. <a href="https://www.tidymodels.org/learn/#category=survival%20analysis" class="external-link">tidymodels.org</a> has more information and tutorials on how to work with survival analysis models.</p></li>
+<li><p>Improved error message from <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> when values in the supplied <code>param_info</code> do not encompass all values evaluated in the <code>initial</code> grid. This most often happens when a user mistakenly supplies different parameter sets to the function that generated the initial results and <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code>.</p></li>
 <li><p><code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> methods for racing objects will now use integers in x-axis breaks (<a href="https://github.com/tidymodels/finetune/issues/75" class="external-link">#75</a>).</p></li>
 <li><p>Enabling the <code>verbose_elim</code> control option for <code><a href="../reference/tune_race_anova.html">tune_race_anova()</a></code> will now additionally introduce a message confirming that the function is evaluating against the burn-in resamples.</p></li>
 <li><p>Updates based on the new version of tune, primarily for survival analysis models (<a href="https://github.com/tidymodels/finetune/issues/104" class="external-link">#104</a>).</p></li>
-</ul><div class="section level3">
-<h3 id="breaking-change-development-version">Breaking Change<a class="anchor" aria-label="anchor" href="#breaking-change-development-version"></a></h3>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-2-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-2-0"></a></h3>
+<ul><li><p>Fixed bug where <code><a href="../reference/tune_sim_anneal.html">tune_sim_anneal()</a></code> would fail when supplied parameters needing finalization. The function will now finalize needed parameter ranges internally (<a href="https://github.com/tidymodels/finetune/issues/39" class="external-link">#39</a>).</p></li>
+<li><p>Fixed bug where packages specified in <code>control_race(pkgs)</code> were not actually loaded in <code><a href="../reference/tune_race_anova.html">tune_race_anova()</a></code> (<a href="https://github.com/tidymodels/finetune/issues/74" class="external-link">#74</a>).</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="breaking-change-1-2-0">Breaking Change<a class="anchor" aria-label="anchor" href="#breaking-change-1-2-0"></a></h3>
 <ul><li>Ellipses (…) are now used consistently in the package to require optional arguments to be named. <code><a href="../reference/collect_predictions.html">collect_predictions()</a></code>, <code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics()</a></code> and <code><a href="https://tune.tidymodels.org/reference/show_best.html" class="external-link">show_best()</a></code> methods previously had ellipses at the end of the function signature that have been moved to follow the last argument without a default value. Optional arguments previously passed by position will now error informatively prompting them to be named (<a href="https://github.com/tidymodels/finetune/issues/105" class="external-link">#105</a>).</li>
 </ul></div>
 </div>
