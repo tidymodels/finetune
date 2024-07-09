@@ -112,6 +112,10 @@ tune_nested_workflow <- function(workflow, resamples, ..., fn = "tune_grid",
   # TODO how to pass best function? In control? Default to select best with first metric value/eval_time
   res$.selected <- purrr::map(res$result, tune::select_best, metric = mtr_name, eval_time = evl_time)
 
+  if ( !nest_control$save_inner_metrics ) {
+    res$.metrics_inner <- purrr::map(res$result, tune::collect_metrics)
+  }
+
   res$wflow <- purrr::map(res$.selected, ~ tune::finalize_workflow(workflow, .x))
 
   # TODO trim opts to only use fit_resamples arguments
@@ -178,8 +182,8 @@ tune_wrapper <- function(rs, fn, object, opts) {
     names(opt_sym) <- nsm
   }
   # TODO this dputs the whole object to the call; find a way to avoid that
-  cl <- call_modify(cl, !!!opt_sym)
-  eval_tidy(cl, data = opts)
+  cl <- rlang::call_modify(cl, !!!opt_sym)
+  rlang::eval_tidy(cl, data = opts)
 }
 
 # ------------------------------------------------------------------------------
@@ -192,10 +196,13 @@ tune_wrapper <- function(rs, fn, object, opts) {
 #' Control aspects of the nested resampling
 #'
 #' @inheritParams tune::control_bayes
+#' @param save_inner_metrics A logical to save the entire set of resampling
+#' results for the inner results (e.g., the results of [tune::collect_metrics()]).
 #' @export
 control_nested <- function(verbose = FALSE, extract = NULL,
                            save_pred = FALSE,
                            save_workflow = FALSE,
+                           save_inner_metrics = FALSE,
                            event_level = "first",
                            select = NULL,
                            pkgs = NULL, allow_par = TRUE, parallel_over = NULL,
@@ -222,6 +229,7 @@ control_nested <- function(verbose = FALSE, extract = NULL,
     allow_par = allow_par,
     extract = extract,
     save_pred = save_pred,
+    save_inner_metrics = save_inner_metrics,
     select = select,
     pkgs = pkgs,
     save_workflow = save_workflow,

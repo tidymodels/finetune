@@ -9,6 +9,7 @@ control_nested(
   extract = NULL,
   save_pred = FALSE,
   save_workflow = FALSE,
+  save_inner_metrics = FALSE,
   event_level = "first",
   select = NULL,
   pkgs = NULL,
@@ -34,6 +35,9 @@ be saved for each model \emph{evaluated}.}
 
 \item{save_workflow}{A logical for whether the workflow should be appended
 to the output as an attribute.}
+
+\item{save_inner_metrics}{A logical to save the entire set of resampling
+results for the inner results (e.g., the results of \code{\link[tune:collect_predictions]{tune::collect_metrics()}}).}
 
 \item{event_level}{A single string containing either \code{"first"} or \code{"second"}.
 This argument is passed on to yardstick metric functions when any type
