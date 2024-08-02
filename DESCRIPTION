@@ -22,7 +22,7 @@ Depends:
     tune (>= 1.2.0)
 Imports: 
     cli,
-    dials (>= 0.1.0),
+    dials (>= 0.3.0),
     dplyr (>= 1.1.1),
     ggplot2,
     parsnip (>= 1.1.0),
