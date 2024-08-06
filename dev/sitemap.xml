@@ -1,51 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/index.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/collect_predictions.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/control_race.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/control_sim_anneal.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/finetune-package.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/plot_race.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/show_best.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/tune_race_anova.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/tune_race_win_loss.html</loc>
-  </url>
-  <url>
-    <loc>https://finetune.tidymodels.org/dev/reference/tune_sim_anneal.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://finetune.tidymodels.org/dev/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/LICENSE-text.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/LICENSE.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/authors.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/index.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/news/index.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/collect_predictions.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/control_race.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/control_sim_anneal.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/finetune-package.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/index.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/plot_race.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/show_best.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/tune_race_anova.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/tune_race_win_loss.html</loc></url>
+<url><loc>https://finetune.tidymodels.org/dev/reference/tune_sim_anneal.html</loc></url>
 </urlset>
+
