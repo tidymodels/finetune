@@ -89,6 +89,6 @@ test_that("one player is really bad", {
   )
 
   expect_snapshot(best_res <- show_best(tuning_results))
-  expect_true(nrow(best_res) == 1)
+  expect_equal(nrow(best_res), 1)
 
 })
