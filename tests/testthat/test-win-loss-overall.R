@@ -77,7 +77,7 @@ test_that("one player is really bad", {
     add_formula(y ~ .) %>%
     add_model(rf_spec)
 
-  grid <- tibble(min_n = c(1, 400))
+  grid <- tibble(min_n = c(1, 40))
   ctrl <- control_race(burn_in = 2, alpha = .05, randomize = TRUE)
   set.seed(3355)
   tuning_results <- tune_race_win_loss(

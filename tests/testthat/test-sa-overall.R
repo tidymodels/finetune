@@ -138,7 +138,7 @@ test_that("incompatible parameter objects", {
 
   set.seed(1)
   grid_with_bigger_range <-
-    dials::grid_latin_hypercube(dials::mtry(range = c(1, 16)))
+    dials::grid_space_filling(dials::mtry(range = c(1, 16)))
 
   set.seed(1)
   car_folds <- rsample::vfold_cv(car_prices, v = 2)
