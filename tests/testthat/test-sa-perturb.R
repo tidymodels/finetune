@@ -49,10 +49,11 @@ test_that("categorical value switching", {
   vals <- tibble::tibble(activation = "relu", weight_func = "biweight")
   set.seed(1)
   new_vals <-
-    purrr::map_dfr(
+    purrr::map(
       1:1000,
       ~ finetune:::random_discrete_neighbor(vals, cat_prm, prob = 1 / 4, change = FALSE)
-    )
+    ) %>%
+    purrr::list_rbind()
   relu_same <- mean(new_vals$activation == "relu")
   biweight_same <- mean(new_vals$weight_func == "biweight")
 

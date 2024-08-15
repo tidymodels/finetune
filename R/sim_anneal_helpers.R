@@ -79,10 +79,11 @@ random_discrete_neighbor <- function(current, pset, prob, change) {
 
 random_integer_neighbor <- function(current, hist_values, pset, prob, change, retain = 1, tries = 500) {
   candidates <-
-    purrr::map_dfr(
+    purrr::map(
       1:tries,
       ~ random_integer_neighbor_calc(current, pset, prob, change)
-    )
+    ) %>%
+    purrr::list_rbind()
 
   rnd <- tune::encode_set(candidates, pset, as_matrix = TRUE)
   sample_by_distance(rnd, hist_values, retain = retain, pset = pset)
