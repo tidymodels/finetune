@@ -35,7 +35,7 @@ test_that("racing S3 methods", {
   expect_equal(nrow(collect_metrics(anova_race, summarize = FALSE)), 2 * 20)
   expect_equal(
     nrow(collect_metrics(anova_race, summarize = FALSE, all_configs = TRUE)),
-    nrow(map_dfr(anova_race$.metrics, ~ .x))
+    nrow(map(anova_race$.metrics, ~ .x) %>% list_rbind())
   )
 
   # ------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ test_that("racing S3 methods", {
   )
   expect_equal(
     nrow(collect_predictions(anova_race, all_configs = TRUE, summarize = TRUE)),
-    map_dfr(anova_race$.predictions, ~ .x) %>% distinct(.config, .row) %>% nrow()
+    map(anova_race$.predictions, ~ .x) %>% list_rbind() %>% distinct(.config, .row) %>% nrow()
   )
   expect_equal(
     nrow(collect_predictions(anova_race, all_configs = FALSE, summarize = FALSE)),
@@ -55,7 +55,7 @@ test_that("racing S3 methods", {
   )
   expect_equal(
     nrow(collect_predictions(anova_race, all_configs = TRUE, summarize = FALSE)),
-    nrow(map_dfr(anova_race$.predictions, ~ .x))
+    nrow(map(anova_race$.predictions, ~ .x) %>% list_rbind())
   )
 
   # ------------------------------------------------------------------------------
