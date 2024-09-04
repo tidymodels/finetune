@@ -30,14 +30,11 @@ more details). Not required if a single metric exists in \code{x}. If there are
 multiple metric and none are given, the first in the metric set is used (and
 a warning is issued).}
 
-\item{eval_time}{A single numeric time point where dynamic event time
+\item{eval_time}{A numeric vector of time points where dynamic event time
 metrics should be chosen (e.g., the time-dependent ROC curve, etc). The
-values should be consistent with the values used to create \code{x}. The \code{NULL}
-default will automatically use the first evaluation time used by \code{x}.}
+values should be consistent with the values used to create \code{x}.}
 
 \item{n}{An integer for the maximum number of top results/rows to return.}
-
-\item{call}{The call to be shown in errors and warnings.}
 }
 \description{
 \code{\link[=show_best]{show_best()}} displays the top sub-models and their performance estimates.

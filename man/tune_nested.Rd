@@ -26,10 +26,7 @@ tune_nested(object, ...)
 )
 }
 \arguments{
-\item{object}{A \code{parsnip} model specification or an unfitted
-\link[workflows:workflow]{workflow()}. No tuning parameters are allowed; if arguments
-have been marked with \link[hardhat:tune]{tune()}, their values must be
-\link[tune:finalize_model]{finalized}.}
+\item{object}{A \code{parsnip} model specification or a \code{\link[workflows:workflow]{workflows::workflow()}}.}
 
 \item{...}{Other options to pass to the tuning function (e.g., \code{metrics} etc).}
 

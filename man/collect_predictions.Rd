@@ -41,12 +41,6 @@ if \code{tune("my_param")} was used).}
 \item{all_configs}{A logical: should we return the complete set of model
 configurations or just those that made it to the end of the race (the
 default).}
-
-\item{type}{One of \code{"long"} (the default) or \code{"wide"}. When \code{type = "long"},
-output has columns \code{.metric} and one of \code{.estimate} or \code{mean}.
-\code{.estimate}/\code{mean} gives the values for the \code{.metric}. When \code{type = "wide"},
-each metric has its own column and the \code{n} and \code{std_err} columns are removed,
-if they exist.}
 }
 \value{
 A tibble. The column names depend on the results and the mode of the
