@@ -17,6 +17,16 @@ treat_as_integer <- function(x, num_unique = 10) {
 new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.15), flip = 0.1) {
   current <- dplyr::select(current, !!!pset$id)
   param_type <- purrr::map_chr(pset$object, ~ .x$type)
+
+  # Create a large container for candidate points to sample. For each data type,
+  # we make perturbations and add them here
+
+  max_tries <- 500
+  candidates <- current[1:max_tries, ] # <- we deliberately induce missing values
+
+  # ------------------------------------------------------------------------------
+  # Perturb real numbers
+
   if (any(param_type == "double")) {
     dbl_nms <- pset$id[param_type == "double"]
     new_dbl <-
@@ -24,94 +34,92 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
         current %>% dplyr::select(dplyr::all_of(dbl_nms)),
         hist_values = hist_values %>% dplyr::select(dplyr::all_of(dbl_nms)),
         pset %>% dplyr::filter(id %in% dbl_nms),
-        r = radius
+        r = radius,
+        tries = max_tries,
+        retain = max_tries
       )
-    current[, dbl_nms] <- new_dbl
+    n_dbl <- nrow(new_dbl)
+    candidates[1:n_dbl, dbl_nms] <- new_dbl
   }
+
+  # ------------------------------------------------------------------------------
+  # Perturb integers
 
   if (any(param_type == "integer")) {
     int_nms <- pset$id[param_type == "integer"]
-    flip_one <- all(param_type == "integer")
     new_int <-
       random_integer_neighbor(
         current %>% dplyr::select(dplyr::all_of(int_nms)),
-        hist_values = hist_values %>% dplyr::select(dplyr::all_of(int_nms)),
         pset %>% dplyr::filter(id %in% int_nms),
         prob = flip,
-        change = flip_one
+        tries = max_tries,
+        retain = max_tries
       )
-    current[, int_nms] <- new_int
+    n_int <- nrow(new_int)
+    candidates[1:n_int, int_nms] <- new_int
   }
+
+  # ------------------------------------------------------------------------------
+  # Perturb characters
 
   if (any(param_type == "character")) {
     chr_nms <- pset$id[param_type == "character"]
-    flip_one <- all(param_type == "character")
     new_chr <-
       random_discrete_neighbor(
         current %>% dplyr::select(!!!chr_nms),
         pset %>% dplyr::filter(id %in% chr_nms),
         prob = flip,
-        change = flip_one
+        tries = max_tries,
+        retain = max_tries
       )
-    current[, chr_nms] <- new_chr
+    n_chr <- nrow(new_chr)
+    candidates[1:n_chr, chr_nms] <- new_chr
   }
-  current
+
+  # filter for parameters
+  candidates %>% stats::na.exclude() %>% slice_sample(n = 1)
 }
 
-random_discrete_neighbor <- function(current, pset, prob, change) {
+random_discrete_neighbor <- function(current, pset, prob, retain = 1, tries = 500) {
   pnames <- pset$id
-  change_val <- runif(length(pnames)) <= prob
-  if (change & !any(change_val)) {
-    change_val[sample(seq_along(change_val), 1)] <- TRUE
-  }
-  if (any(change_val)) {
-    new_vals <- pnames[change_val]
-    for (i in new_vals) {
-      current_val <- current[[i]]
-      parm_obj <- pset$object[[which(pset$id == i)]]
-      parm_obj$values <- setdiff(parm_obj$values, current_val)
-      current[[i]] <- dials::value_sample(parm_obj, 1)
+  candidates <- current[rep(1, tries),,drop = FALSE]
+  for (i in pnames) {
+    parm_obj <- pset$object[[which(pset$id == i)]]
+    change_rows <- runif(tries) <= prob
+    if (any(change_rows)) {
+      new_values <- dials::value_sample(parm_obj, sum(change_rows))
+      candidates[which(change_rows), i] <- new_values
     }
   }
-  current
+  dplyr::slice_sample(candidates, n = retain)
 }
 
-
-random_integer_neighbor <- function(current, hist_values, pset, prob, change, retain = 1, tries = 500) {
-  candidates <-
-    purrr::map(
-      1:tries,
-      ~ random_integer_neighbor_calc(current, pset, prob, change)
-    ) %>%
-    purrr::list_rbind()
-
-  rnd <- tune::encode_set(candidates, pset, as_matrix = TRUE)
-  sample_by_distance(rnd, hist_values, retain = retain, pset = pset)
-}
-
-random_integer_neighbor_calc <- function(current, pset, prob, change) {
-  change_val <- runif(nrow(pset)) <= prob
-  if (change & !any(change_val)) {
-    change_val[sample(seq_along(change_val), 1)] <- TRUE
-  }
-  if (any(change_val)) {
-    param_change <- pset$id[change_val]
-    for (i in param_change) {
-      prm <- pset$object[[which(pset$id == i)]]
-      prm_rng <- prm$range$upper - prm$range$lower
-      tries <- min(prm_rng + 1, 500)
-      pool <- dials::value_seq(prm, n = tries)
+# Don't really need the historical data; we already constrain the pool
+random_integer_neighbor <- function(current, pset, prob, retain = 1, tries = 500) {
+  pnames <- pset$id
+  candidates <- current[rep(1, tries),,drop = FALSE]
+  for (i in pnames) {
+    change_rows <- runif(tries) <= prob
+    if (any(change_rows)) {
+      parm_obj <- pset$object[[which(pset$id == i)]]
+      prm_rng <- parm_obj$range$upper - parm_obj$range$lower
+      # Make a specific sequence of integers near the current value to
+      # sample from
+      pool <- dials::value_seq(parm_obj, n = 10^5) # <- will auto reset to possible range
       smol_range <- floor(prm_rng / 10) + 1
       val_diff <- abs(current[[i]] - pool)
-      pool <- pool[val_diff <= smol_range & val_diff > 0]
-      if (length(pool) > 1) {
-        current[[i]] <- sample(pool, 1)
-      } else if (length(pool) == 1) {
-        current[[i]] <- pool
+      # protect against all values oob
+      keep_vals <- val_diff <= smol_range & val_diff > 0
+      if (!any(keep_vals)) {
+        pool <- pool[keep_vals]
+        new_values <- sample(pool, sum(change_rows), replace = TRUE)
+      } else {
+        new_values <- dials::value_sample(parm_obj, n = sum(change_rows))
       }
+      candidates[which(change_rows), i] <- new_values
     }
   }
-  current
+  dplyr::slice_sample(candidates, n = retain)
 }
 
 random_real_neighbor <- function(current, hist_values, pset, retain = 1,
@@ -169,6 +177,7 @@ check_backwards_encode <- function(x, value, id) {
   }
 }
 
+# Make sure that we are not very far from the current value
 sample_by_distance <- function(candidates, existing, retain, pset) {
   if (nrow(existing) > 0) {
     existing <- tune::encode_set(existing, pset, as_matrix = TRUE)
