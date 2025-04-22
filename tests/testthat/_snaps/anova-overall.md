@@ -2,7 +2,7 @@
 
     Code
       set.seed(1)
-      res <- f_wflow %>% tune_race_anova(cell_folds, grid = grid_mod, control = control_race(
+      res <- tune_race_anova(f_wflow, cell_folds, grid = grid_mod, control = control_race(
         verbose_elim = TRUE))
     Message
       i Evaluating against the initial 3 burn-in resamples.

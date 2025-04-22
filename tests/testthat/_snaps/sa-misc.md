@@ -2,47 +2,47 @@
 
     Code
       set.seed(1)
-      f_res_1 <- rda_spec %>% tune_sim_anneal(Class ~ ., rs, iter = 3)
+      f_res_1 <- tune_sim_anneal(rda_spec, Class ~ ., rs, iter = 3)
     Message
       Optimizing roc_auc
-      Initial best: 0.85161
-      1 ( ) accept suboptimal  roc_auc=0.84064 (+/-0.01096)
-      2 ( ) accept suboptimal  roc_auc=0.83789 (+/-0.01086)
-      3 ( ) accept suboptimal  roc_auc=0.83261 (+/-0.0109)
+      Initial best: 0.85731
+      1 ( ) accept suboptimal  roc_auc=0.85682 (+/-0.01022)
+      2 ( ) accept suboptimal  roc_auc=0.85238 (+/-0.01078)
+      3 ( ) accept suboptimal  roc_auc=0.85138 (+/-0.0109)
 
 ---
 
     Code
       set.seed(1)
-      f_res_2 <- rda_spec %>% tune_sim_anneal(Class ~ ., rs, iter = 3, param_info = rda_param)
+      f_res_2 <- tune_sim_anneal(rda_spec, Class ~ ., rs, iter = 3, param_info = rda_param)
     Message
       Optimizing roc_auc
-      Initial best: 0.85192
-      1 ( ) accept suboptimal  roc_auc=0.848 (+/-0.01072)
-      2 ( ) accept suboptimal  roc_auc=0.84678 (+/-0.01067)
-      3 ( ) accept suboptimal  roc_auc=0.84534 (+/-0.01097)
+      Initial best: 0.85325
+      1 ( ) accept suboptimal  roc_auc=0.85313 (+/-0.0106)
+      2 ( ) accept suboptimal  roc_auc=0.85181 (+/-0.01065)
+      3 ( ) accept suboptimal  roc_auc=0.85165 (+/-0.01055)
 
 ---
 
     Code
       set.seed(1)
-      f_rec_1 <- rda_spec %>% tune_sim_anneal(rec, rs, iter = 3)
+      f_rec_1 <- tune_sim_anneal(rda_spec, rec, rs, iter = 3)
     Message
       Optimizing roc_auc
-      Initial best: 0.87657
-      1 ( ) accept suboptimal  roc_auc=0.87345 (+/-0.008739)
-      2 ( ) accept suboptimal  roc_auc=0.87124 (+/-0.008458)
-      3 ( ) accept suboptimal  roc_auc=0.86909 (+/-0.008582)
+      Initial best: 0.86616
+      1 ( ) accept suboptimal  roc_auc=0.86399 (+/-0.01081)
+      2 <3 new best           roc_auc=0.86768 (+/-0.009563)
+      3 <3 new best           roc_auc=0.87329 (+/-0.008273)
 
 ---
 
     Code
       set.seed(1)
-      f_wflow_1 <- wflow %>% tune_sim_anneal(rs, iter = 3)
+      f_wflow_1 <- tune_sim_anneal(wflow, rs, iter = 3)
     Message
       Optimizing roc_auc
-      Initial best: 0.87657
-      1 ( ) accept suboptimal  roc_auc=0.87345 (+/-0.008739)
-      2 ( ) accept suboptimal  roc_auc=0.87124 (+/-0.008458)
-      3 ( ) accept suboptimal  roc_auc=0.86909 (+/-0.008582)
+      Initial best: 0.86616
+      1 ( ) accept suboptimal  roc_auc=0.86399 (+/-0.01081)
+      2 <3 new best           roc_auc=0.86768 (+/-0.009563)
+      3 <3 new best           roc_auc=0.87329 (+/-0.008273)
 

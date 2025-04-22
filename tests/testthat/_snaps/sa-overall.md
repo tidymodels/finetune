@@ -2,7 +2,7 @@
 
     Code
       set.seed(1)
-      res <- f_wflow %>% tune_sim_anneal(cell_folds, iter = 2, control = control_sim_anneal(
+      res <- tune_sim_anneal(f_wflow, cell_folds, iter = 2, control = control_sim_anneal(
         verbose = TRUE))
     Message
       
@@ -10,7 +10,7 @@
       v Initialization complete
       
       Optimizing roc_auc
-      Initial best: 0.82520
+      Initial best: 0.73008
       i Fold1, Repeat1: preprocessor 1/1
       v Fold1, Repeat1: preprocessor 1/1
       i Fold1, Repeat1: preprocessor 1/1, model 1/1
@@ -47,7 +47,7 @@
       v Fold3, Repeat2: preprocessor 1/1, model 1/1
       i Fold3, Repeat2: preprocessor 1/1, model 1/1 (extracts)
       i Fold3, Repeat2: preprocessor 1/1, model 1/1 (predictions)
-      1 ( ) accept suboptimal  roc_auc=0.75661 (+/-0.006729)
+      1 ( ) accept suboptimal  roc_auc=0.72145 (+/-0.003605)
       i Fold1, Repeat1: preprocessor 1/1
       v Fold1, Repeat1: preprocessor 1/1
       i Fold1, Repeat1: preprocessor 1/1, model 1/1
@@ -84,13 +84,13 @@
       v Fold3, Repeat2: preprocessor 1/1, model 1/1
       i Fold3, Repeat2: preprocessor 1/1, model 1/1 (extracts)
       i Fold3, Repeat2: preprocessor 1/1, model 1/1 (predictions)
-      2 + better suboptimal  roc_auc=0.79946 (+/-0.008393)
+      2 <3 new best           roc_auc=0.73173 (+/-0.003018)
 
 # variable interface
 
     Code
       set.seed(1)
-      res <- var_wflow %>% tune_sim_anneal(cell_folds, iter = 2, control = control_sim_anneal(
+      res <- tune_sim_anneal(var_wflow, cell_folds, iter = 2, control = control_sim_anneal(
         verbose = TRUE, verbose_iter = TRUE))
     Message
       
@@ -98,7 +98,7 @@
       v Initialization complete
       
       Optimizing roc_auc
-      Initial best: 0.82520
+      Initial best: 0.73008
       i Fold1, Repeat1: preprocessor 1/1
       v Fold1, Repeat1: preprocessor 1/1
       i Fold1, Repeat1: preprocessor 1/1, model 1/1
@@ -135,7 +135,7 @@
       v Fold3, Repeat2: preprocessor 1/1, model 1/1
       i Fold3, Repeat2: preprocessor 1/1, model 1/1 (extracts)
       i Fold3, Repeat2: preprocessor 1/1, model 1/1 (predictions)
-      1 ( ) accept suboptimal  roc_auc=0.75661 (+/-0.006729)
+      1 ( ) accept suboptimal  roc_auc=0.72145 (+/-0.003605)
       i Fold1, Repeat1: preprocessor 1/1
       v Fold1, Repeat1: preprocessor 1/1
       i Fold1, Repeat1: preprocessor 1/1, model 1/1
@@ -172,44 +172,44 @@
       v Fold3, Repeat2: preprocessor 1/1, model 1/1
       i Fold3, Repeat2: preprocessor 1/1, model 1/1 (extracts)
       i Fold3, Repeat2: preprocessor 1/1, model 1/1 (predictions)
-      2 + better suboptimal  roc_auc=0.79946 (+/-0.008393)
+      2 <3 new best           roc_auc=0.73173 (+/-0.003018)
 
 ---
 
     Code
       set.seed(1)
-      new_res <- var_wflow %>% tune_sim_anneal(cell_folds, iter = 2, initial = res,
+      new_res <- tune_sim_anneal(var_wflow, cell_folds, iter = 2, initial = res,
         control = control_sim_anneal(verbose = FALSE))
     Message
       There were 2 previous iterations
       Optimizing roc_auc
-      2 v initial            roc_auc=0.8252 (+/-0.005662)
-      3 <3 new best           roc_auc=0.82851 (+/-0.004901)
-      4 <3 new best           roc_auc=0.83405 (+/-0.004564)
+      2 v initial            roc_auc=0.73173 (+/-0.003018)
+      3 <3 new best           roc_auc=0.74172 (+/-0.008775)
+      4 <3 new best           roc_auc=0.7909 (+/-0.009887)
 
 ---
 
     Code
       set.seed(1)
-      new_new_res <- var_wflow %>% tune_sim_anneal(cell_folds, iter = 2, initial = grid_res,
+      new_new_res <- tune_sim_anneal(var_wflow, cell_folds, iter = 2, initial = grid_res,
         control = control_sim_anneal(verbose = FALSE))
     Message
       Optimizing roc_auc
-      Initial best: 0.83924
-      1 ( ) accept suboptimal  roc_auc=0.83776 (+/-0.007509)
-      2 <3 new best           roc_auc=0.84 (+/-0.00542)
+      Initial best: 0.84497
+      1 <3 new best           roc_auc=0.84531 (+/-0.005563)
+      2 ( ) accept suboptimal  roc_auc=0.83776 (+/-0.007509)
 
 # unfinalized parameters
 
     Code
       set.seed(40)
-      rf_res_finetune <- wf_rf %>% tune_sim_anneal(resamples = bt, initial = rf_res)
+      rf_res_finetune <- tune_sim_anneal(wf_rf, resamples = bt, initial = rf_res)
     Message
       i Creating pre-processing data to finalize unknown parameter: mtry
       Optimizing roc_auc
-      Initial best: 0.84856
+      Initial best: 0.84994
       1 ( ) accept suboptimal  roc_auc=0.84375 (+/-0.007727)
-      2 <3 new best           roc_auc=0.84943 (+/-0.007036)
+      2 + better suboptimal  roc_auc=0.84943 (+/-0.007036)
       3 ( ) accept suboptimal  roc_auc=0.84371 (+/-0.007903)
       4 + better suboptimal  roc_auc=0.84825 (+/-0.008036)
       5 ( ) accept suboptimal  roc_auc=0.84479 (+/-0.00814)
@@ -223,21 +223,21 @@
 
     Code
       set.seed(40)
-      rf_res_finetune <- wf_rf %>% tune_sim_anneal(resamples = bt)
+      rf_res_finetune <- tune_sim_anneal(wf_rf, resamples = bt)
     Message
       i Creating pre-processing data to finalize unknown parameter: mtry
       Optimizing roc_auc
-      Initial best: 0.84829
-      1 ( ) accept suboptimal  roc_auc=0.84326 (+/-0.007765)
-      2 <3 new best           roc_auc=0.84843 (+/-0.007903)
-      3 ( ) accept suboptimal  roc_auc=0.84438 (+/-0.007904)
-      4 <3 new best           roc_auc=0.84881 (+/-0.007951)
-      5 ( ) accept suboptimal  roc_auc=0.84404 (+/-0.007787)
-      6 <3 new best           roc_auc=0.84912 (+/-0.007272)
-      7 ( ) accept suboptimal  roc_auc=0.84333 (+/-0.007685)
-      8 + better suboptimal  roc_auc=0.84867 (+/-0.007152)
-      9 - discard suboptimal roc_auc=0.84525 (+/-0.007793)
-      10 ( ) accept suboptimal  roc_auc=0.84383 (+/-0.00773)
+      Initial best: 0.84418
+      1 <3 new best           roc_auc=0.84839 (+/-0.007753)
+      2 ( ) accept suboptimal  roc_auc=0.84384 (+/-0.008085)
+      3 <3 new best           roc_auc=0.84857 (+/-0.007615)
+      4 ( ) accept suboptimal  roc_auc=0.8435 (+/-0.007746)
+      5 + better suboptimal  roc_auc=0.84804 (+/-0.00774)
+      6 ( ) accept suboptimal  roc_auc=0.84338 (+/-0.007515)
+      7 <3 new best           roc_auc=0.84923 (+/-0.007371)
+      8 ( ) accept suboptimal  roc_auc=0.84389 (+/-0.007938)
+      9 <3 new best           roc_auc=0.84926 (+/-0.007163)
+      10 ( ) accept suboptimal  roc_auc=0.84397 (+/-0.00741)
 
 # incompatible parameter objects
 
