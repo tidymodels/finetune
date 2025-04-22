@@ -138,8 +138,8 @@
 #'   ## -----------------------------------------------------------------------------
 #'
 #'   cart_mod <-
-#'     decision_tree(cost_complexity = tune(), min_n = tune()) %>%
-#'     set_engine("rpart") %>%
+#'     decision_tree(cost_complexity = tune(), min_n = tune()) |>
+#'     set_engine("rpart") |>
 #'     set_mode("classification")
 #'
 #'   ## -----------------------------------------------------------------------------
@@ -147,7 +147,7 @@
 #'   # For reproducibility, set the seed before running.
 #'   set.seed(10)
 #'   sa_search <-
-#'     cart_mod %>%
+#'     cart_mod |>
 #'     tune_sim_anneal(Class ~ ., resamples = bt, iter = 10)
 #'
 #'   autoplot(sa_search, metric = "roc_auc", type = "parameters") +
@@ -159,7 +159,7 @@
 #'
 #'   set.seed(11)
 #'   more_search <-
-#'     cart_mod %>%
+#'     cart_mod |>
 #'     tune_sim_anneal(Class ~ ., resamples = bt, iter = 10, initial = sa_search)
 #'
 #'   autoplot(more_search, metric = "roc_auc", type = "performance") +
@@ -387,7 +387,7 @@ tune_sim_anneal_workflow <-
     # For the above, make changes to tune to get workflow from initial
 
     unsummarized <-
-      initial %>%
+      initial |>
       tune::new_iteration_results(
         parameters = param_info,
         metrics = metrics,
@@ -396,7 +396,7 @@ tune_sim_anneal_workflow <-
         outcomes = y_names,
         rset_info = rset_info,
         workflow = object
-      ) %>%
+      ) |>
       update_config(prefix = "initial", save_pred = control$save_pred)
 
     mean_stats <- tune::estimate_tune_results(unsummarized)
@@ -442,7 +442,7 @@ tune_sim_anneal_workflow <-
 
     result_history <- initialize_history(unsummarized, opt_metric_time)
     best_param <-
-      tune::select_best(unsummarized, metric = opt_metric_name, eval_time = opt_metric_time) %>%
+      tune::select_best(unsummarized, metric = opt_metric_name, eval_time = opt_metric_time) |>
       dplyr::mutate(.parent = NA_character_)
     grid_history <- best_param
     current_param <- best_param
@@ -473,7 +473,7 @@ tune_sim_anneal_workflow <-
           param_info,
           radius = control$radius,
           flip = control$flip
-        ) %>%
+        ) |>
         dplyr::mutate(
           .config = paste0("iter", i),
           .parent = current_parent
@@ -481,20 +481,20 @@ tune_sim_anneal_workflow <-
       grid_history <- dplyr::bind_rows(grid_history, new_grid)
 
       res <-
-        object %>%
+        object |>
         tune::tune_grid(
           resamples = resamples,
-          grid = new_grid %>% dplyr::select(-.config, -.parent),
+          grid = new_grid |> dplyr::select(-.config, -.parent),
           metrics = metrics,
           eval_time = eval_time,
           control = control_init
-        ) %>%
-        dplyr::mutate(.iter = i) %>%
+        ) |>
+        dplyr::mutate(.iter = i) |>
         update_config(config = paste0("Iter", i), save_pred = control$save_pred)
 
       result_history <-
-        result_history %>%
-        update_history(res, i, eval_time = opt_metric_time) %>%
+        result_history |>
+        update_history(res, i, eval_time = opt_metric_time) |>
         sa_decide(
           parent = new_grid$.parent,
           metric = opt_metric_name,
@@ -539,7 +539,7 @@ tune_sim_anneal_workflow <-
       ## -----------------------------------------------------------------------------
 
       unsummarized <-
-        dplyr::bind_rows(unsummarized, res) %>%
+        dplyr::bind_rows(unsummarized, res) |>
         tune::new_iteration_results(
           parameters = param_info,
           metrics = metrics,
@@ -572,8 +572,8 @@ tune_sim_anneal_workflow <-
 
     if (control$save_history) {
       result_history <-
-        result_history %>%
-        dplyr::full_join(grid_history %>% dplyr::select(.config, .parent), by = ".config") %>%
+        result_history |>
+        dplyr::full_join(grid_history |> dplyr::select(.config, .parent), by = ".config") |>
         dplyr::arrange(.iter, .config)
       save(result_history, file = file.path(tempdir(), "sa_history.RData"))
     }

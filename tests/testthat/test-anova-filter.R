@@ -11,18 +11,18 @@ test_that("anova filtering and logging", {
   folds <- vfold_cv(mtcars, v = 5, repeats = 2)
   fold_att <- attributes(folds)
   spec <-
-    decision_tree(cost_complexity = tune(), min_n = tune()) %>%
-    set_engine("rpart") %>%
+    decision_tree(cost_complexity = tune(), min_n = tune()) |>
+    set_engine("rpart") |>
     set_mode("regression")
-  wflow <- workflow() %>%
-    add_model(spec) %>%
+  wflow <- workflow() |>
+    add_model(spec) |>
     add_formula(mpg ~ .)
   grid <- expand.grid(cost_complexity = c(0.001, 0.01), min_n = c(2:5))
 
   ## -----------------------------------------------------------------------------
 
   grid_res <-
-    spec %>% tune_grid(mpg ~ ., folds, grid = grid, metrics = metric_set(rmse))
+    spec |> tune_grid(mpg ~ ., folds, grid = grid, metrics = metric_set(rmse))
   # Pull out rmse values, format them to emulate the racing tests then
   # use lme4 package to create the model results for removing configurations.
 
@@ -56,7 +56,7 @@ test_that("anova filtering and logging", {
 
   expect_error({
     set.seed(129)
-    anova_mod <- spec %>% tune_race_anova(mpg ~ ., folds, grid = grid)
+    anova_mod <- spec |> tune_race_anova(mpg ~ ., folds, grid = grid)
   },
   regexp = NA
   )
@@ -67,7 +67,7 @@ test_that("anova filtering and logging", {
   expect_silent({
     set.seed(129)
     anova_wlfow <-
-      wflow %>%
+      wflow |>
       tune_race_anova(folds,
                       grid = grid,
                       control = control_race(verbose_elim = FALSE, save_pred = TRUE)
@@ -83,7 +83,7 @@ test_that("anova filtering and logging", {
   ## anova formula
 
   for (i in 2:nrow(folds)) {
-    f <- finetune:::lmer_formula(folds %>% slice(1:i), fold_att)
+    f <- finetune:::lmer_formula(folds |> slice(1:i), fold_att)
     if (i < 7) {
       expect_equal(f, .estimate ~ .config + (1 | .all_id), ignore_attr = TRUE)
     } else {
@@ -97,7 +97,7 @@ test_that("anova filtering and logging", {
   car_att <- attributes(car_bt)
 
   for (i in 2:nrow(car_bt)) {
-    f <- finetune:::lmer_formula(car_bt %>% slice(1:i), car_att)
+    f <- finetune:::lmer_formula(car_bt |> slice(1:i), car_att)
     expect_equal(f, .estimate ~ .config + (1 | id), ignore_attr = TRUE)
   }
   expect_equal(environment(f), rlang::base_env())
@@ -125,8 +125,8 @@ test_that("anova filtering and logging", {
   expect_equal(nrow(anova_res), nrow(ames_grid_res))
   expect_equal(anova_res$lower <= 0, anova_res$pass)
   expect_equal(
-    anova_res %>% dplyr::select(!!!param, .config) %>% arrange(.config),
-    ames_grid_res %>% dplyr::select(!!!param, .config) %>% arrange(.config)
+    anova_res |> dplyr::select(!!!param, .config) |> arrange(.config),
+    ames_grid_res |> dplyr::select(!!!param, .config) |> arrange(.config)
   )
 
   expect_snapshot(

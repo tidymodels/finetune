@@ -89,7 +89,7 @@
 #'
 #'   # optimize an regularized discriminant analysis model
 #'   rda_spec <-
-#'     discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
+#'     discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) |>
 #'     set_engine("klaR")
 #'
 #'   ## -----------------------------------------------------------------------------
@@ -97,7 +97,7 @@
 #'   ctrl <- control_race(verbose_elim = TRUE)
 #'   set.seed(11)
 #'   grid_anova <-
-#'     rda_spec %>%
+#'     rda_spec |>
 #'     tune_race_anova(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 #'
 #'   # Shows only the fully resampled parameters
@@ -285,7 +285,7 @@ tune_race_anova_workflow <-
 
     grid_control <- parsnip::condense_control(control, tune::control_grid())
     res <-
-      object %>%
+      object |>
       tune::tune_grid(
         tmp_resamples,
         param_info = param_info,
@@ -320,8 +320,8 @@ tune_race_anova_workflow <-
         num_ties <- num_ties + 1
       }
       new_grid <-
-        filters_results %>%
-        dplyr::filter(pass) %>%
+        filters_results |>
+        dplyr::filter(pass) |>
         dplyr::select(!!!param_names)
 
       if (nrow(new_grid) > 1) {
@@ -337,7 +337,7 @@ tune_race_anova_workflow <-
 
       grid_control <- parsnip::condense_control(control, tune::control_grid())
       tmp_res <-
-        object %>%
+        object |>
         tune::tune_grid(
           tmp_resamples,
           param_info = param_info,

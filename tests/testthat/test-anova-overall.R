@@ -6,7 +6,7 @@ test_that("formula interface", {
 
   expect_snapshot({
     set.seed(1)
-    res <- f_wflow %>%
+    res <- f_wflow |>
       tune_race_anova(cell_folds,
                       grid = grid_mod,
                       control = control_race(verbose_elim = TRUE)
@@ -27,7 +27,7 @@ test_that("recipe interface", {
   skip_if_not_installed("lme4", "1.1-35.1")
   expect_silent({
     set.seed(1)
-    res <- rec_wflow %>%
+    res <- rec_wflow |>
       tune_race_anova(cell_folds,
                       grid = grid_mod_rec,
                       control = control_race(verbose_elim = FALSE)
@@ -47,7 +47,7 @@ test_that("variable interface", {
 
   expect_silent({
     set.seed(1)
-    res <- var_wflow %>%
+    res <- var_wflow |>
       tune_race_anova(cell_folds,
                       grid = grid_mod,
                       control = control_race(verbose_elim = FALSE)
@@ -67,14 +67,14 @@ test_that("too few resamples", {
 
   rs <- rsample::vfold_cv(modeldata::cells, v = 2)
   expect_snapshot_error(
-    f_wflow %>%
+    f_wflow |>
       tune_race_anova(rs,
                       grid = grid_mod,
                       control = control_race(verbose_elim = TRUE)
       )
   )
   expect_snapshot_error(
-    f_wflow %>%
+    f_wflow |>
       tune_race_win_loss(rs,
                          grid = grid_mod,
                          control = control_race(verbose_elim = TRUE)

@@ -61,14 +61,14 @@ rs <- bootstraps(two_class_dat, times = 10) # more resamples usually needed
 # Optimize a regularized discriminant analysis model
 library(discrim)
 rda_spec <-
-  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
+  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) |>
   set_engine("klaR")
 
 ## -----------------------------------------------------------------------------
 
 set.seed(2)
 sa_res <- 
-  rda_spec %>% 
+  rda_spec |> 
   tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4)
 show_best(sa_res, metric = "roc_auc", n = 2)
 ```
@@ -80,15 +80,15 @@ For example, using an ANOVA-type analysis to filter out parameter combinations:
 ```{r race}
 set.seed(3)
 grid <-
-  rda_spec %>%
-  extract_parameter_set_dials() %>%
+  rda_spec |>
+  extract_parameter_set_dials() |>
   grid_max_entropy(size = 20)
 
 ctrl <- control_race(verbose_elim = TRUE)
 
 set.seed(4)
 grid_anova <- 
-  rda_spec %>% 
+  rda_spec |> 
   tune_race_anova(Class ~ ., resamples = rs, grid = grid, control = ctrl)
 
 show_best(grid_anova, metric = "roc_auc", n = 2)
@@ -100,7 +100,7 @@ show_best(grid_anova, metric = "roc_auc", n = 2)
 ```{r race-wl}
 set.seed(4)
 grid_win_loss<- 
-  rda_spec %>% 
+  rda_spec |> 
   tune_race_win_loss(Class ~ ., resamples = rs, grid = grid, control = ctrl)
 
 show_best(grid_win_loss, metric = "roc_auc", n = 2)

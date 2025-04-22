@@ -11,7 +11,7 @@ library(doParallel)
 ## -----------------------------------------------------------------------------
 
 data(cells, package = "modeldata")
-cells <- cells %>% select(-case)
+cells <- cells |> select(-case)
 
 ## -----------------------------------------------------------------------------
 
@@ -25,24 +25,24 @@ We'll only tune the model parameters (i.e., not recipe tuning):
 ## -----------------------------------------------------------------------------
 
 svm_spec <-
-  svm_rbf(cost = tune(), rbf_sigma = tune()) %>%
-  set_engine("kernlab") %>%
+  svm_rbf(cost = tune(), rbf_sigma = tune()) |>
+  set_engine("kernlab") |>
   set_mode("classification")
 
 svm_rec <-
-  recipe(class ~ ., data = cells) %>%
-  step_YeoJohnson(all_predictors()) %>%
+  recipe(class ~ ., data = cells) |>
+  step_YeoJohnson(all_predictors()) |>
   step_normalize(all_predictors())
 
 svm_wflow <-
-  workflow() %>%
-  add_model(svm_spec) %>%
+  workflow() |>
+  add_model(svm_spec) |>
   add_recipe(svm_rec)
 
 set.seed(1)
 svm_grid <-
-  svm_spec %>%
-  parameters() %>%
+  svm_spec |>
+  parameters() |>
   grid_latin_hypercube(size = 25)
 ```
 
@@ -54,7 +54,7 @@ We'll get the times for grid search and ANOVA racing with and without parallel p
 
 system.time({
   set.seed(2)
-  svm_wflow %>% tune_grid(resamples = rs, grid = svm_grid)
+  svm_wflow |> tune_grid(resamples = rs, grid = svm_grid)
 })
 ```
 
@@ -70,7 +70,7 @@ system.time({
 
 system.time({
   set.seed(2)
-  svm_wflow %>% tune_race_anova(resamples = rs, grid = svm_grid)
+  svm_wflow |> tune_race_anova(resamples = rs, grid = svm_grid)
 })
 ```
 
@@ -106,7 +106,7 @@ registerDoParallel(cl)
 
 system.time({
   set.seed(2)
-  svm_wflow %>% tune_grid(resamples = rs, grid = svm_grid)
+  svm_wflow |> tune_grid(resamples = rs, grid = svm_grid)
 })
 ```
 
@@ -124,7 +124,7 @@ Parallel processing with grid search was 6.01-fold faster than sequential grid s
 
 system.time({
   set.seed(2)
-  svm_wflow %>% tune_race_anova(resamples = rs, grid = svm_grid)
+  svm_wflow |> tune_race_anova(resamples = rs, grid = svm_grid)
 })
 ```
 

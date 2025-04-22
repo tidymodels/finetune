@@ -48,14 +48,14 @@ rs <- bootstraps(two_class_dat, times = 10) # more resamples usually needed
 # Optimize a regularized discriminant analysis model
 library(discrim)
 rda_spec <-
-  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) %>%
+  discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) |>
   set_engine("klaR")
 
 ## -----------------------------------------------------------------------------
 
 set.seed(2)
 sa_res <- 
-  rda_spec %>% 
+  rda_spec |> 
   tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4)
 #> Optimizing roc_auc
 #> Initial best: 0.86480
@@ -100,15 +100,15 @@ combinations:
 ``` r
 set.seed(3)
 grid <-
-  rda_spec %>%
-  extract_parameter_set_dials() %>%
+  rda_spec |>
+  extract_parameter_set_dials() |>
   grid_max_entropy(size = 20)
 
 ctrl <- control_race(verbose_elim = TRUE)
 
 set.seed(4)
 grid_anova <- 
-  rda_spec %>% 
+  rda_spec |> 
   tune_race_anova(Class ~ ., resamples = rs, grid = grid, control = ctrl)
 #> ℹ Evaluating against the initial 3 burn-in resamples.
 #> ℹ Racing will maximize the roc_auc metric.
@@ -132,7 +132,7 @@ as sports teams in a tournament and computed win/loss statistics.
 ``` r
 set.seed(4)
 grid_win_loss<- 
-  rda_spec %>% 
+  rda_spec |> 
   tune_race_win_loss(Class ~ ., resamples = rs, grid = grid, control = ctrl)
 #> ℹ Racing will maximize the roc_auc metric.
 #> ℹ Resamples are analyzed in a random order.

@@ -9,7 +9,7 @@ test_that("random integers in range", {
         tibble::tibble(tree_depth = 3),
         parameters, 0.75, FALSE
       )
-    ) %>%
+    ) |>
     purrr::list_rbind()
 
 

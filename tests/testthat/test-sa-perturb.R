@@ -15,7 +15,7 @@ test_that("numerical neighborhood", {
     purrr::map2_dbl(
       new_vals$mixture, new_vals$threshold,
       ~ sqrt((.x - .5)^2 + (.y - .5)^2)
-    ) %>%
+    ) |>
     purrr::map_lgl(~ .x >= rad[1] & .x <= rad[2])
   expect_true(all(correct_r))
 
@@ -52,7 +52,7 @@ test_that("categorical value switching", {
     purrr::map(
       1:1000,
       ~ finetune:::random_discrete_neighbor(vals, cat_prm, prob = 1 / 4, change = FALSE)
-    ) %>%
+    ) |>
     purrr::list_rbind()
   relu_same <- mean(new_vals$activation == "relu")
   biweight_same <- mean(new_vals$weight_func == "biweight")
@@ -76,7 +76,7 @@ test_that("categorical value switching", {
 test_that("reverse-unit encoding", {
   suppressPackageStartupMessages(library(dials))
   prm <-
-    parameters(batch_size(), Laplace(), activation()) %>%
+    parameters(batch_size(), Laplace(), activation()) |>
     update(Laplace = Laplace(c(2, 4)), batch_size = batch_size(c(10, 20)))
   unit_vals <- tibble::tibble(batch_size = .1, Laplace = .4, activation = .7)
   vals <- finetune:::encode_set_backwards(unit_vals, prm)

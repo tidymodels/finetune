@@ -143,7 +143,7 @@ if (rlang::is_installed(c("discrim", "modeldata"))) {
 
   # optimize an regularized discriminant analysis model
   rda_spec <-
-    discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) \%>\%
+    discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) |>
     set_engine("klaR")
 
   ## -----------------------------------------------------------------------------
@@ -152,7 +152,7 @@ if (rlang::is_installed(c("discrim", "modeldata"))) {
 
   set.seed(11)
   grid_wl <-
-    rda_spec \%>\%
+    rda_spec |>
     tune_race_win_loss(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 
   # Shows only the fully resampled parameters

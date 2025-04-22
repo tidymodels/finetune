@@ -12,10 +12,10 @@ cart_rset_info <- attributes(cart_search)$rset_info
 
 test_that("simulated annealing decisions", {
   for (iter_val in 1:max(cart_history$.iter)) {
-    iter_hist <- cart_history %>% filter(.iter < iter_val)
+    iter_hist <- cart_history |> filter(.iter < iter_val)
     iter_res <-
-      cart_search %>%
-      filter(.iter == iter_val) %>%
+      cart_search |>
+      filter(.iter == iter_val) |>
       tune:::new_tune_results(
         parameters = cart_param,
         outcomes = cart_outcomes,
@@ -104,7 +104,7 @@ test_that("logging results", {
   for (i in 1:iters) {
     expect_message(
       finetune:::log_sa_progress(
-        x = cart_history %>% filter(.iter <= i),
+        x = cart_history |> filter(.iter <= i),
         metric = "roc_auc",
         max_iter = i
       ),

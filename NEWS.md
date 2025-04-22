@@ -1,5 +1,7 @@
 # finetune (development version)
 
+* Transition from the magrittr pipe to the base R pipe.
+
 # finetune 1.2.0
 
 ## New Features

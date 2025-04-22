@@ -185,8 +185,8 @@ if (rlang::is_installed("modeldata")) {
   ## -----------------------------------------------------------------------------
 
   cart_mod <-
-    decision_tree(cost_complexity = tune(), min_n = tune()) \%>\%
-    set_engine("rpart") \%>\%
+    decision_tree(cost_complexity = tune(), min_n = tune()) |>
+    set_engine("rpart") |>
     set_mode("classification")
 
   ## -----------------------------------------------------------------------------
@@ -194,7 +194,7 @@ if (rlang::is_installed("modeldata")) {
   # For reproducibility, set the seed before running.
   set.seed(10)
   sa_search <-
-    cart_mod \%>\%
+    cart_mod |>
     tune_sim_anneal(Class ~ ., resamples = bt, iter = 10)
 
   autoplot(sa_search, metric = "roc_auc", type = "parameters") +
@@ -206,7 +206,7 @@ if (rlang::is_installed("modeldata")) {
 
   set.seed(11)
   more_search <-
-    cart_mod \%>\%
+    cart_mod |>
     tune_sim_anneal(Class ~ ., resamples = bt, iter = 10, initial = sa_search)
 
   autoplot(more_search, metric = "roc_auc", type = "performance") +

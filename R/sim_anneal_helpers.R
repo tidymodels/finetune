@@ -21,9 +21,9 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
     dbl_nms <- pset$id[param_type == "double"]
     new_dbl <-
       random_real_neighbor(
-        current %>% dplyr::select(dplyr::all_of(dbl_nms)),
-        hist_values = hist_values %>% dplyr::select(dplyr::all_of(dbl_nms)),
-        pset %>% dplyr::filter(id %in% dbl_nms),
+        current |> dplyr::select(dplyr::all_of(dbl_nms)),
+        hist_values = hist_values |> dplyr::select(dplyr::all_of(dbl_nms)),
+        pset |> dplyr::filter(id %in% dbl_nms),
         r = radius
       )
     current[, dbl_nms] <- new_dbl
@@ -34,9 +34,9 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
     flip_one <- all(param_type == "integer")
     new_int <-
       random_integer_neighbor(
-        current %>% dplyr::select(dplyr::all_of(int_nms)),
-        hist_values = hist_values %>% dplyr::select(dplyr::all_of(int_nms)),
-        pset %>% dplyr::filter(id %in% int_nms),
+        current |> dplyr::select(dplyr::all_of(int_nms)),
+        hist_values = hist_values |> dplyr::select(dplyr::all_of(int_nms)),
+        pset |> dplyr::filter(id %in% int_nms),
         prob = flip,
         change = flip_one
       )
@@ -48,8 +48,8 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
     flip_one <- all(param_type == "character")
     new_chr <-
       random_discrete_neighbor(
-        current %>% dplyr::select(!!!chr_nms),
-        pset %>% dplyr::filter(id %in% chr_nms),
+        current |> dplyr::select(!!!chr_nms),
+        pset |> dplyr::filter(id %in% chr_nms),
         prob = flip,
         change = flip_one
       )
@@ -82,7 +82,7 @@ random_integer_neighbor <- function(current, hist_values, pset, prob, change, re
     purrr::map(
       1:tries,
       ~ random_integer_neighbor_calc(current, pset, prob, change)
-    ) %>%
+    ) |>
     purrr::list_rbind()
 
   rnd <- tune::encode_set(candidates, pset, as_matrix = TRUE)
@@ -202,7 +202,7 @@ sample_by_distance <- function(candidates, existing, retain, pset) {
 update_history <- function(history, x, iter, eval_time) {
   analysis_metric <- tune::.get_tune_metric_names(x)[1]
   res <-
-    tune::show_best(x, metric = analysis_metric, eval_time = eval_time) %>%
+    tune::show_best(x, metric = analysis_metric, eval_time = eval_time) |>
     dplyr::mutate(
       .config = paste0("iter", iter),
       .iter = iter,
@@ -273,10 +273,10 @@ sa_decide <- function(x, parent, metric, maximize, coef) {
 initialize_history <- function(x, eval_time = NULL, ...) {
   # check to see if there is existing history
   res <-
-    tune::collect_metrics(x) %>%
+    tune::collect_metrics(x) |>
     dplyr::filter(.metric == tune::.get_tune_metric_names(x)[1])
   if (!is.na(eval_time) && any(names(res) == ".eval_time")) {
-    res <- res %>% dplyr::filter(.eval_time == eval_time)
+    res <- res |> dplyr::filter(.eval_time == eval_time)
   }
 
   if (!any(names(res) == ".iter")) {
@@ -284,7 +284,7 @@ initialize_history <- function(x, eval_time = NULL, ...) {
   }
 
   res <-
-    res %>%
+    res |>
     dplyr::mutate(
       random = NA_real_,
       accept = NA_real_,
@@ -372,7 +372,7 @@ format_event <- function(x) {
     "discard suboptimal", cli::symbol$line,
     "accept suboptimal",  cli::symbol$circle,
     "restart from best",  cli::symbol$cross
-  ) %>%
+  ) |>
     dplyr::mutate(
       new = format(orig, justify = "left"),
       new = gsub(" ", "\u00a0", new, fixed = TRUE),

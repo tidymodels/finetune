@@ -15,40 +15,40 @@ suppressPackageStartupMessages(library(modeldata))
 # ------------------------------------------------------------------------------
 
 data(cells, package = "modeldata")
-cells <- modeldata::cells %>% dplyr::select(class, contains("ch_1"))
+cells <- modeldata::cells |> dplyr::select(class, contains("ch_1"))
 set.seed(33)
 cell_folds <- rsample::vfold_cv(cells, v = 3, repeats = 2)
 
 ## -----------------------------------------------------------------------------
 
 cart_spec <-
-  parsnip::decision_tree(cost_complexity = parsnip::tune(), min_n = parsnip::tune()) %>%
-  parsnip::set_mode("classification") %>%
+  parsnip::decision_tree(cost_complexity = parsnip::tune(), min_n = parsnip::tune()) |>
+  parsnip::set_mode("classification") |>
   parsnip::set_engine("rpart")
 
 cart_rec <-
-  recipes::recipe(class ~ ., data = cells) %>%
-  recipes::step_normalize(recipes::all_predictors()) %>%
+  recipes::recipe(class ~ ., data = cells) |>
+  recipes::step_normalize(recipes::all_predictors()) |>
   recipes::step_pca(recipes::all_predictors(), num_comp = parsnip::tune())
 
 ## -----------------------------------------------------------------------------
 
 rec_wflow <-
   cell_knn <-
-  workflows::workflow() %>%
-  workflows::add_model(cart_spec) %>%
+  workflows::workflow() |>
+  workflows::add_model(cart_spec) |>
   workflows::add_recipe(cart_rec)
 
 f_wflow <-
   cell_knn <-
-  workflows::workflow() %>%
-  workflows::add_model(cart_spec) %>%
+  workflows::workflow() |>
+  workflows::add_model(cart_spec) |>
   workflows::add_formula(class ~ .)
 
 var_wflow <-
   cell_knn <-
-  workflows::workflow() %>%
-  workflows::add_model(cart_spec) %>%
+  workflows::workflow() |>
+  workflows::add_model(cart_spec) |>
   workflows::add_variables(class, dplyr::everything())
 
 

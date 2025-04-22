@@ -10,7 +10,7 @@ NULL
 #' @importFrom stats qt runif coef confint lm reorder rnorm setNames dist
 #' @importFrom utils globalVariables
 #' @importFrom rlang syms caller_env
-#' @importFrom dplyr %>% distinct
+#' @importFrom dplyr distinct
 #' @importFrom utils globalVariables
 #' @import tune
 NULL

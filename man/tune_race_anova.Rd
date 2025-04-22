@@ -122,7 +122,7 @@ library(doParallel)
 ## -----------------------------------------------------------------------------
 
 data(cells, package = "modeldata")
-cells <- cells \%>\% select(-case)
+cells <- cells |> select(-case)
 
 ## -----------------------------------------------------------------------------
 
@@ -135,24 +135,24 @@ We’ll only tune the model parameters (i.e., not recipe tuning):
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{## -----------------------------------------------------------------------------
 
 svm_spec <-
-  svm_rbf(cost = tune(), rbf_sigma = tune()) \%>\%
-  set_engine("kernlab") \%>\%
+  svm_rbf(cost = tune(), rbf_sigma = tune()) |>
+  set_engine("kernlab") |>
   set_mode("classification")
 
 svm_rec <-
-  recipe(class ~ ., data = cells) \%>\%
-  step_YeoJohnson(all_predictors()) \%>\%
+  recipe(class ~ ., data = cells) |>
+  step_YeoJohnson(all_predictors()) |>
   step_normalize(all_predictors())
 
 svm_wflow <-
-  workflow() \%>\%
-  add_model(svm_spec) \%>\%
+  workflow() |>
+  add_model(svm_spec) |>
   add_recipe(svm_rec)
 
 set.seed(1)
 svm_grid <-
-  svm_spec \%>\%
-  parameters() \%>\%
+  svm_spec |>
+  parameters() |>
   grid_latin_hypercube(size = 25)
 }\if{html}{\out{</div>}}
 
@@ -164,7 +164,7 @@ parallel processing:
 
 system.time(\{
   set.seed(2)
-  svm_wflow \%>\% tune_grid(resamples = rs, grid = svm_grid)
+  svm_wflow |> tune_grid(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}
 
@@ -177,7 +177,7 @@ system.time(\{
 
 system.time(\{
   set.seed(2)
-  svm_wflow \%>\% tune_race_anova(resamples = rs, grid = svm_grid)
+  svm_wflow |> tune_race_anova(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}
 
@@ -206,7 +206,7 @@ registerDoParallel(cl)
 
 system.time(\{
   set.seed(2)
-  svm_wflow \%>\% tune_grid(resamples = rs, grid = svm_grid)
+  svm_wflow |> tune_grid(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}
 
@@ -222,7 +222,7 @@ sequential grid search.
 
 system.time(\{
   set.seed(2)
-  svm_wflow \%>\% tune_race_anova(resamples = rs, grid = svm_grid)
+  svm_wflow |> tune_race_anova(resamples = rs, grid = svm_grid)
 \})
 }\if{html}{\out{</div>}}
 
@@ -257,7 +257,7 @@ if (rlang::is_installed(c("discrim", "lme4", "modeldata"))) {
 
   # optimize an regularized discriminant analysis model
   rda_spec <-
-    discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) \%>\%
+    discrim_regularized(frac_common_cov = tune(), frac_identity = tune()) |>
     set_engine("klaR")
 
   ## -----------------------------------------------------------------------------
@@ -265,7 +265,7 @@ if (rlang::is_installed(c("discrim", "lme4", "modeldata"))) {
   ctrl <- control_race(verbose_elim = TRUE)
   set.seed(11)
   grid_anova <-
-    rda_spec \%>\%
+    rda_spec |>
     tune_race_anova(Class ~ ., resamples = rs, grid = 10, control = ctrl)
 
   # Shows only the fully resampled parameters
