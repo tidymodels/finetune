@@ -77,7 +77,7 @@ new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.1
   }
 
   # filter for parameters
-  candidates %>% stats::na.exclude() %>% slice_sample(n = 1)
+  candidates %>% stats::na.exclude() %>% dplyr::slice_sample(n = 1)
 }
 
 random_discrete_neighbor <- function(current, pset, prob, retain = 1, tries = 500) {
