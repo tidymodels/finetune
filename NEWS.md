@@ -1,4 +1,6 @@
-# finetune (development version)
+# finetune 1.2.1
+
+* Maintenance release required by CRAN.
 
 * Transition from the magrittr pipe to the base R pipe.
 
