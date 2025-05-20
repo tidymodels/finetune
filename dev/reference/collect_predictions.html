@@ -105,18 +105,18 @@ model.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>For <code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics()</a></code> and <code>collect_predictions()</code>, when unsummarized,
-there are columns for each tuning parameter (using the <code>id</code> from <code><a href="https://hardhat.tidymodels.org/reference/tune.html" class="external-link">tune()</a></code>,
+    <p>For <code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">tune::collect_metrics()</a></code> and <code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">tune::collect_predictions()</a></code>, when unsummarized,
+there are columns for each tuning parameter (using the <code>id</code> from <code><a href="https://hardhat.tidymodels.org/reference/tune.html" class="external-link">hardhat::tune()</a></code>,
 if any).
-<code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics()</a></code> also has columns <code>.metric</code>, and <code>.estimator</code>.  When the
+<code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">tune::collect_metrics()</a></code> also has columns <code>.metric</code>, and <code>.estimator</code>.  When the
 results are summarized, there are columns for <code>mean</code>, <code>n</code>, and <code>std_err</code>.
 When not summarized, the additional columns for the resampling identifier(s)
 and <code>.estimate</code>.</p>
-<p>For <code>collect_predictions()</code>, there are additional columns for the resampling
+<p>For <code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">tune::collect_predictions()</a></code>, there are additional columns for the resampling
 identifier(s), columns for the predicted values (e.g., <code>.pred</code>,
 <code>.pred_class</code>, etc.), and a column for the outcome(s) using the original
 column name(s) in the data.</p>
-<p><code>collect_predictions()</code> can summarize the various results over
+<p><code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">tune::collect_predictions()</a></code> can summarize the various results over
 replicate out-of-sample predictions. For example, when using the bootstrap,
 each row in the original training set has multiple holdout predictions
 (across assessment sets). To convert these results to a format where every
