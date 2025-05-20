@@ -10,3 +10,5 @@
 ^docs$
 ^pkgdown$
 ^revdep
+^[\.]?air\.toml$
+^\.vscode$
