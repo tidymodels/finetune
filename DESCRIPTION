@@ -1,6 +1,6 @@
 Package: finetune
 Title: Additional Functions for Model Tuning
-Version: 1.2.0.9000
+Version: 1.2.1
 Authors@R: c(
     person("Max", "Kuhn", , "max@posit.co", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2402-136X")),
@@ -10,8 +10,8 @@ Authors@R: c(
 Description: The ability to tune models is important. 'finetune' enhances
     the 'tune' package by providing more specialized methods for finding
     reasonable values of model tuning parameters.  Two racing methods
-    described by Kuhn (2014) <arXiv:1405.6974> are included. An iterative
-    search method using generalized simulated annealing (Bohachevsky,
+    described by Kuhn (2014) <doi:10.48550/arXiv.1405.6974> are included. An 
+    iterative search method using generalized simulated annealing (Bohachevsky,
     Johnson and Stein, 1986) <doi:10.1080/00401706.1986.10488128> is also
     included.
 License: MIT + file LICENSE
