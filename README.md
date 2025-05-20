@@ -9,6 +9,8 @@
 [![Codecov test
 coverage](https://codecov.io/gh/tidymodels/finetune/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/finetune?branch=main)
 [![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![Codecov test
+coverage](https://codecov.io/gh/tidymodels/finetune/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/finetune)
 <!-- badges: end -->
 
 `finetune` contains some extra functions for model tuning that extend
@@ -58,33 +60,33 @@ sa_res <-
   rda_spec |> 
   tune_sim_anneal(Class ~ ., resamples = rs, iter = 20, initial = 4)
 #> Optimizing roc_auc
-#> Initial best: 0.86480
-#> 1 ♥ new best           roc_auc=0.87327 (+/-0.004592)
-#> 2 ♥ new best           roc_auc=0.87915 (+/-0.003864)
-#> 3 ◯ accept suboptimal  roc_auc=0.87029 (+/-0.004994)
-#> 4 + better suboptimal  roc_auc=0.87171 (+/-0.004717)
-#> 5 ◯ accept suboptimal  roc_auc=0.86944 (+/-0.005081)
-#> 6 ◯ accept suboptimal  roc_auc=0.86812 (+/-0.0052)
-#> 7 ♥ new best           roc_auc=0.88172 (+/-0.003647)
-#> 8 ◯ accept suboptimal  roc_auc=0.87678 (+/-0.004276)
-#> 9 ◯ accept suboptimal  roc_auc=0.8627 (+/-0.005784)
-#> 10 + better suboptimal  roc_auc=0.87003 (+/-0.005106)
-#> 11 + better suboptimal  roc_auc=0.87088 (+/-0.004962)
-#> 12 ◯ accept suboptimal  roc_auc=0.86803 (+/-0.005195)
-#> 13 ◯ accept suboptimal  roc_auc=0.85294 (+/-0.006498)
-#> 14 ─ discard suboptimal roc_auc=0.84689 (+/-0.006867)
-#> 15 ✖ restart from best  roc_auc=0.85021 (+/-0.006623)
-#> 16 ◯ accept suboptimal  roc_auc=0.87607 (+/-0.004318)
-#> 17 ◯ accept suboptimal  roc_auc=0.87245 (+/-0.004799)
-#> 18 + better suboptimal  roc_auc=0.87706 (+/-0.004131)
-#> 19 ◯ accept suboptimal  roc_auc=0.87213 (+/-0.004791)
-#> 20 ◯ accept suboptimal  roc_auc=0.86218 (+/-0.005773)
+#> Initial best: 0.88281
+#> 1 ◯ accept suboptimal  roc_auc=0.87797 (+/-0.004187)
+#> 2 + better suboptimal  roc_auc=0.87811 (+/-0.004082)
+#> 3 ◯ accept suboptimal  roc_auc=0.86938 (+/-0.005172)
+#> 4 ◯ accept suboptimal  roc_auc=0.85949 (+/-0.006067)
+#> 5 ◯ accept suboptimal  roc_auc=0.84727 (+/-0.006757)
+#> 6 ◯ accept suboptimal  roc_auc=0.84441 (+/-0.006885)
+#> 7 + better suboptimal  roc_auc=0.84715 (+/-0.006718)
+#> 8 ✖ restart from best  roc_auc=0.85368 (+/-0.006366)
+#> 9 ◯ accept suboptimal  roc_auc=0.88032 (+/-0.00397)
+#> 10 ◯ accept suboptimal  roc_auc=0.87373 (+/-0.004807)
+#> 11 + better suboptimal  roc_auc=0.87691 (+/-0.004533)
+#> 12 ◯ accept suboptimal  roc_auc=0.86149 (+/-0.005802)
+#> 13 + better suboptimal  roc_auc=0.86304 (+/-0.005684)
+#> 14 + better suboptimal  roc_auc=0.87479 (+/-0.004721)
+#> 15 ◯ accept suboptimal  roc_auc=0.86637 (+/-0.005425)
+#> 16 ✖ restart from best  roc_auc=0.85841 (+/-0.006111)
+#> 17 ◯ accept suboptimal  roc_auc=0.87862 (+/-0.004139)
+#> 18 + better suboptimal  roc_auc=0.88011 (+/-0.004023)
+#> 19 ◯ accept suboptimal  roc_auc=0.87175 (+/-0.004952)
+#> 20 ─ discard suboptimal roc_auc=0.86236 (+/-0.005762)
 show_best(sa_res, metric = "roc_auc", n = 2)
 #> # A tibble: 2 × 9
-#>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config
-#>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>  
-#> 1           0.308        0.0166 roc_auc binary     0.882    10 0.00365 Iter7  
-#> 2           0.121        0.0474 roc_auc binary     0.879    10 0.00386 Iter2  
+#>   frac_common_cov frac_identity .metric .estimator  mean     n std_err .config  
+#>             <dbl>         <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>    
+#> 1           0.667        0      roc_auc binary     0.883    10 0.00360 initial_…
+#> 2           0.793        0.0344 roc_auc binary     0.880    10 0.00397 Iter9    
 #> # ℹ 1 more variable: .iter <int>
 ```
 
@@ -103,6 +105,11 @@ grid <-
   rda_spec |>
   extract_parameter_set_dials() |>
   grid_max_entropy(size = 20)
+#> Warning: `grid_max_entropy()` was deprecated in dials 1.3.0.
+#> ℹ Please use `grid_space_filling()` instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 
 ctrl <- control_race(verbose_elim = TRUE)
 
