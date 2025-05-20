@@ -7,16 +7,22 @@ maximize_metric <- function(x, metric) {
 
 # Might not use this function
 treat_as_integer <- function(x, num_unique = 10) {
-  param_type <- purrr::map_chr(x$object, ~ .x$type)
+  param_type <- purrr::map_chr(x$object, \(x) x$type)
   is_int <- param_type == "integer"
-  x_vals <- purrr::map(x$object, ~ dials::value_seq(.x, n = 200))
-  x_vals <- purrr::map_int(x_vals, ~ length(unique(.x)))
+  x_vals <- purrr::map(x$object, \(x) dials::value_seq(x, n = 200))
+  x_vals <- purrr::map_int(x_vals, \(x) length(unique(x)))
   x_vals < num_unique & is_int
 }
 
-new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.15), flip = 0.1) {
+new_in_neighborhood <- function(
+  current,
+  hist_values,
+  pset,
+  radius = c(0.05, 0.15),
+  flip = 0.1
+) {
   current <- dplyr::select(current, !!!pset$id)
-  param_type <- purrr::map_chr(pset$object, ~ .x$type)
+  param_type <- purrr::map_chr(pset$object, \(x) x$type)
   if (any(param_type == "double")) {
     dbl_nms <- pset$id[param_type == "double"]
     new_dbl <-
@@ -77,11 +83,19 @@ random_discrete_neighbor <- function(current, pset, prob, change) {
 }
 
 
-random_integer_neighbor <- function(current, hist_values, pset, prob, change, retain = 1, tries = 500) {
+random_integer_neighbor <- function(
+  current,
+  hist_values,
+  pset,
+  prob,
+  change,
+  retain = 1,
+  tries = 500
+) {
   candidates <-
     purrr::map(
       1:tries,
-      ~ random_integer_neighbor_calc(current, pset, prob, change)
+      \(x) random_integer_neighbor_calc(current, pset, prob, change)
     ) |>
     purrr::list_rbind()
 
@@ -114,8 +128,14 @@ random_integer_neighbor_calc <- function(current, pset, prob, change) {
   current
 }
 
-random_real_neighbor <- function(current, hist_values, pset, retain = 1,
-                                 tries = 500, r = c(0.05, 0.15)) {
+random_real_neighbor <- function(
+  current,
+  hist_values,
+  pset,
+  retain = 1,
+  tries = 500,
+  r = c(0.05, 0.15)
+) {
   is_quant <- purrr::map_lgl(pset$object, inherits, "quant_param")
   current <- current[, is_quant]
   pset <- pset[is_quant, ]
@@ -145,9 +165,20 @@ random_real_neighbor <- function(current, hist_values, pset, retain = 1,
 
 encode_set_backwards <- function(x, pset, ...) {
   pset <- pset[pset$id %in% names(x), ]
-  mapply(check_backwards_encode, pset$object, x, pset$id,
-         SIMPLIFY = FALSE, USE.NAMES = FALSE)
-  new_vals <- purrr::map2(pset$object, x, dials::encode_unit, direction = "backward")
+  mapply(
+    check_backwards_encode,
+    pset$object,
+    x,
+    pset$id,
+    SIMPLIFY = FALSE,
+    USE.NAMES = FALSE
+  )
+  new_vals <- purrr::map2(
+    pset$object,
+    x,
+    dials::encode_unit,
+    direction = "backward"
+  )
   names(new_vals) <- names(x)
   tibble::as_tibble(new_vals)
 }
@@ -156,11 +187,12 @@ check_backwards_encode <- function(x, value, id) {
   if (!dials::has_unknowns(x)) {
     compl <- value[!is.na(value)]
     if (any(compl < 0) | any(compl > 1)) {
-      cli::cli_abort(c(
-        "!" = "The range for parameter {.val {noquote(id)}} used when \\
+      cli::cli_abort(
+        c(
+          "!" = "The range for parameter {.val {noquote(id)}} used when \\
                generating initial results isn't compatible with the range \\
                supplied in {.arg param_info}.",
-        "i" = "Possible values of parameters in {.arg param_info} should \\
+          "i" = "Possible values of parameters in {.arg param_info} should \\
                encompass all values evaluated in the initial grid."
         ),
         call = rlang::call2("tune_sim_anneal()")
@@ -306,7 +338,13 @@ percent_diff <- function(current, new, maximize = TRUE) {
   pct_diff * 100
 }
 
-acceptance_prob <- function(current, new, iter, maximize = TRUE, coef = 2 / 100) {
+acceptance_prob <- function(
+  current,
+  new,
+  iter,
+  maximize = TRUE,
+  coef = 2 / 100
+) {
   pct_diff <- percent_diff(current, new, maximize)
   if (pct_diff > 0) {
     return(1.0)
@@ -314,7 +352,14 @@ acceptance_prob <- function(current, new, iter, maximize = TRUE, coef = 2 / 100)
   exp(pct_diff * coef * iter)
 }
 
-log_sa_progress <- function(control = list(verbose_iter = TRUE), x, metric, max_iter, maximize = TRUE, digits = 5) {
+log_sa_progress <- function(
+  control = list(verbose_iter = TRUE),
+  x,
+  metric,
+  max_iter,
+  maximize = TRUE,
+  digits = 5
+) {
   if (!control$verbose_iter) {
     return(invisible(NULL))
   }
@@ -357,12 +402,16 @@ log_sa_progress <- function(control = list(verbose_iter = TRUE), x, metric, max_
     } else {
       initial_res <- min(x$mean[x$.iter == 0], na.rm = TRUE)
     }
-    msg <- paste0("Initial best: ", sprintf(dig, signif(initial_res, digits = digits)))
+    msg <- paste0(
+      "Initial best: ",
+      sprintf(dig, signif(initial_res, digits = digits))
+    )
   }
 
   cli::cli_bullets(cols$message$info(msg))
 }
 
+# fmt: skip
 format_event <- function(x) {
   result_key <- tibble::tribble(
     ~orig,               ~symb,
@@ -384,13 +433,13 @@ format_event <- function(x) {
 color_event <- function(x) {
   cols <- tune::get_tune_colors()
   dplyr::case_when(
-    grepl("initial", x)  ~ cols$symbol$info(x),
-    grepl("new", x)      ~ cols$symbol$success(x),
-    grepl("better", x)   ~ cols$symbol$success(x),
-    grepl("discard", x)  ~ cols$message$danger(x),
-    grepl("accept", x)   ~ cols$message$warning(x),
-    grepl("restart", x)  ~ cols$message$danger(x),
-    TRUE                 ~ cols$message$info(x)
+    grepl("initial", x) ~ cols$symbol$info(x),
+    grepl("new", x) ~ cols$symbol$success(x),
+    grepl("better", x) ~ cols$symbol$success(x),
+    grepl("discard", x) ~ cols$message$danger(x),
+    grepl("accept", x) ~ cols$message$warning(x),
+    grepl("restart", x) ~ cols$message$danger(x),
+    TRUE ~ cols$message$info(x)
   )
 }
 
@@ -415,26 +464,26 @@ update_config <- function(x, prefix = NULL, config = "new", save_pred) {
     x$.metrics <-
       purrr::map(
         x$.metrics,
-        ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config))
+        \(x) dplyr::mutate(x, .config = paste0(prefix, "_", .config))
       )
     if (save_pred) {
       x$.predictions <-
         purrr::map(
           x$.predictions,
-          ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config))
+          \(x) dplyr::mutate(x, .config = paste0(prefix, "_", .config))
         )
     }
   } else {
     x$.metrics <-
       purrr::map(
         x$.metrics,
-        ~ dplyr::mutate(.x, .config = config)
+        \(x) dplyr::mutate(x, .config = config)
       )
     if (save_pred) {
       x$.predictions <-
         purrr::map(
           x$.predictions,
-          ~ dplyr::mutate(.x, .config = config)
+          \(x) dplyr::mutate(x, .config = config)
         )
     }
   }

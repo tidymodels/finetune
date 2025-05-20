@@ -1,4 +1,3 @@
-
 ## -----------------------------------------------------------------------------
 
 test_that("anova filtering and logging", {
@@ -38,7 +37,12 @@ test_that("anova filtering and logging", {
   rmse_summary <- summary(rmse_mod)$coef
   rmse_res <- tibble::as_tibble(rmse_summary)
   rmse_res$.config <- gsub("\\.config", "", rownames(rmse_summary))
-  rmse_res$.config <- gsub("(Intercept)", configs[1], rmse_res$.config, fixed = TRUE)
+  rmse_res$.config <- gsub(
+    "(Intercept)",
+    configs[1],
+    rmse_res$.config,
+    fixed = TRUE
+  )
   rmse_ci <- confint(rmse_mod, level = 1 - alpha, method = "Wald", quiet = TRUE)
   rmse_ci <- rmse_ci[grepl("config", rownames(rmse_ci)), ]
 
@@ -54,12 +58,10 @@ test_that("anova filtering and logging", {
   # ------------------------------------------------------------------------------
   # top-level anova filter interfaces
 
-  expect_error({
+  expect_snapshot({
     set.seed(129)
     anova_mod <- spec |> tune_race_anova(mpg ~ ., folds, grid = grid)
-  },
-  regexp = NA
-  )
+  })
   expect_true(inherits(anova_mod, "tune_race"))
   expect_true(inherits(anova_mod, "tune_results"))
   expect_true(tibble::is_tibble((anova_mod)))
@@ -68,16 +70,16 @@ test_that("anova filtering and logging", {
     set.seed(129)
     anova_wlfow <-
       wflow |>
-      tune_race_anova(folds,
-                      grid = grid,
-                      control = control_race(verbose_elim = FALSE, save_pred = TRUE)
+      tune_race_anova(
+        folds,
+        grid = grid,
+        control = control_race(verbose_elim = FALSE, save_pred = TRUE)
       )
   })
   expect_true(inherits(anova_wlfow, "tune_race"))
   expect_true(inherits(anova_wlfow, "tune_results"))
   expect_true(tibble::is_tibble((anova_wlfow)))
   expect_true(sum(names(anova_wlfow) == ".predictions") == 1)
-
 
   ## -----------------------------------------------------------------------------
   ## anova formula
@@ -117,6 +119,7 @@ test_that("anova filtering and logging", {
   anova_res <- finetune:::test_parameters_gls(ames_grid_search)
   expect_equal(
     names(anova_res),
+    # fmt: skip
     c(
       ".config", "lower", "upper", "estimate", "pass", "K", "weight_func",
       "dist_power", "lon", "lat"
@@ -131,22 +134,29 @@ test_that("anova filtering and logging", {
 
   expect_snapshot(
     finetune:::log_racing(
-      control_race(verbose_elim = TRUE), anova_res,
-      ames_grid_search$splits, 10, "rmse"
+      control_race(verbose_elim = TRUE),
+      anova_res,
+      ames_grid_search$splits,
+      10,
+      "rmse"
     )
   )
   expect_snapshot(
     finetune:::log_racing(
-      control_race(verbose_elim = TRUE), anova_res,
-      ames_grid_search$splits, 10, "rmse"
+      control_race(verbose_elim = TRUE),
+      anova_res,
+      ames_grid_search$splits,
+      10,
+      "rmse"
     )
   )
   expect_snapshot(
     finetune:::log_racing(
-      control_race(verbose_elim = TRUE), anova_res,
-      ames_grid_search$splits, 10, "rmse"
+      control_race(verbose_elim = TRUE),
+      anova_res,
+      ames_grid_search$splits,
+      10,
+      "rmse"
     )
   )
-
 })
-

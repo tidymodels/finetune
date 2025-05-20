@@ -31,23 +31,25 @@
 #' control_sim_anneal()
 #' @export
 control_sim_anneal <-
-  function(verbose = FALSE,
-           verbose_iter = TRUE,
-           no_improve = Inf,
-           restart = 8L,
-           radius = c(0.05, 0.15),
-           flip = 3 / 4,
-           cooling_coef = 0.02,
-           extract = NULL,
-           save_pred = FALSE,
-           time_limit = NA,
-           pkgs = NULL,
-           save_workflow = FALSE,
-           save_history = FALSE,
-           event_level = "first",
-           parallel_over = NULL,
-           allow_par = TRUE,
-           backend_options = NULL) {
+  function(
+    verbose = FALSE,
+    verbose_iter = TRUE,
+    no_improve = Inf,
+    restart = 8L,
+    radius = c(0.05, 0.15),
+    flip = 3 / 4,
+    cooling_coef = 0.02,
+    extract = NULL,
+    save_pred = FALSE,
+    time_limit = NA,
+    pkgs = NULL,
+    save_workflow = FALSE,
+    save_history = FALSE,
+    event_level = "first",
+    parallel_over = NULL,
+    allow_par = TRUE,
+    backend_options = NULL
+  ) {
     # Any added arguments should also be added in superset control functions
     # in other package. In other words, if tune_grid adds an option, the same
     # object should be added here (regardless)
@@ -55,12 +57,24 @@ control_sim_anneal <-
     tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
     tune::val_class_and_single(verbose_iter, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
-    tune::val_class_and_single(no_improve, c("numeric", "integer"), "control_sim_anneal()")
-    tune::val_class_and_single(restart, c("numeric", "integer"), "control_sim_anneal()")
+    tune::val_class_and_single(
+      no_improve,
+      c("numeric", "integer"),
+      "control_sim_anneal()"
+    )
+    tune::val_class_and_single(
+      restart,
+      c("numeric", "integer"),
+      "control_sim_anneal()"
+    )
     tune::val_class_and_single(flip, "numeric", "control_sim_anneal()")
     tune::val_class_and_single(cooling_coef, "numeric", "control_sim_anneal()")
     tune::val_class_or_null(extract, "function", "control_sim_anneal()")
-    tune::val_class_and_single(time_limit, c("logical", "numeric"), "control_sim_anneal()")
+    tune::val_class_and_single(
+      time_limit,
+      c("logical", "numeric"),
+      "control_sim_anneal()"
+    )
     tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
     tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
     tune::val_class_and_single(save_history, "logical", "control_sim_anneal()")
@@ -127,6 +141,10 @@ print.control_sim_anneal <- function(x, ...) {
 
 val_parallel_over <- function(parallel_over, where) {
   val_class_and_single(parallel_over, "character", where)
-  rlang::arg_match0(parallel_over, c("resamples", "everything"), "parallel_over")
+  rlang::arg_match0(
+    parallel_over,
+    c("resamples", "everything"),
+    "parallel_over"
+  )
   invisible(NULL)
 }

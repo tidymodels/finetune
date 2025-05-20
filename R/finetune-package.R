@@ -17,6 +17,7 @@ NULL
 
 # ------------------------------------------------------------------------------
 
+# fmt: skip
 utils::globalVariables(
   c(
     ".config", ".estimate", ".iter", ".metric", ".parent", "B", "Estimate",
@@ -26,4 +27,3 @@ utils::globalVariables(
     "orig", "stage", "symb", "id2", ".rand", ".eval_time"
   )
 )
-

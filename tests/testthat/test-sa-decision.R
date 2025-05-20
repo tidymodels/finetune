@@ -1,4 +1,3 @@
-
 load(file.path(test_path(), "sa_cart_test_objects.RData"))
 
 ## -----------------------------------------------------------------------------
@@ -24,8 +23,15 @@ test_that("simulated annealing decisions", {
         eval_time_target = NULL,
         rset_info = cart_rset_info
       )
-    iter_new_hist <- finetune:::update_history(iter_hist, iter_res, iter_val, NULL)
-    iter_new_hist$random[1:nrow(iter_new_hist)] <- cart_history$random[1:nrow(iter_new_hist)]
+    iter_new_hist <- finetune:::update_history(
+      iter_hist,
+      iter_res,
+      iter_val,
+      NULL
+    )
+    iter_new_hist$random[1:nrow(iter_new_hist)] <- cart_history$random[
+      1:nrow(iter_new_hist)
+    ]
 
     expect_equal(
       iter_new_hist$mean[iter_new_hist$.iter == iter_val],
@@ -88,11 +94,19 @@ test_that("acceptance probabilities", {
 
   expect_equal(
     finetune:::acceptance_prob(1, 3, iter = 1, maximize = FALSE),
-    exp(finetune:::percent_diff(1, 3, maximize = FALSE) * 1 * control_sim_anneal()$cooling_coef)
+    exp(
+      finetune:::percent_diff(1, 3, maximize = FALSE) *
+        1 *
+        control_sim_anneal()$cooling_coef
+    )
   )
   expect_equal(
     finetune:::acceptance_prob(1, 3, iter = 10, maximize = FALSE),
-    exp(finetune:::percent_diff(1, 3, maximize = FALSE) * 10 * control_sim_anneal()$cooling_coef)
+    exp(
+      finetune:::percent_diff(1, 3, maximize = FALSE) *
+        10 *
+        control_sim_anneal()$cooling_coef
+    )
   )
 })
 

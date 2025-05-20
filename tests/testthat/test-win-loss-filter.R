@@ -24,7 +24,9 @@ test_that("top-level win/loss filter interfaces", {
   # ------------------------------------------------------------------------------
 
   set.seed(129)
-  suppressWarnings(wl_mod <- spec |> tune_race_win_loss(mpg ~ ., folds, grid = grid))
+  suppressWarnings(
+    wl_mod <- spec |> tune_race_win_loss(mpg ~ ., folds, grid = grid)
+  )
 
   expect_true(inherits(wl_mod, "tune_race"))
   expect_true(inherits(wl_mod, "tune_results"))
@@ -37,8 +39,10 @@ test_that("top-level win/loss filter interfaces", {
     suppressWarnings(
       wl_wlfow <-
         wflow |>
-        tune_race_win_loss(folds,
-          grid = grid, param_info = prm,
+        tune_race_win_loss(
+          folds,
+          grid = grid,
+          param_info = prm,
           control = control_race(verbose_elim = FALSE, save_pred = TRUE)
         )
     )
@@ -56,7 +60,9 @@ test_that("top-level win/loss filter interfaces", {
     suppressMessages(
       wl_rec <-
         spec |>
-        tune_race_win_loss(rec, folds,
+        tune_race_win_loss(
+          rec,
+          folds,
           grid = expand.grid(cost_complexity = c(.0001, .001), min_n = c(3, 5)),
           param_info = prm,
           control = control_race(

@@ -1,5 +1,4 @@
 test_that("control_race works with condense_control", {
-
   expect_equal(
     parsnip::condense_control(control_race(), control_grid()),
     control_grid(parallel_over = "everything")

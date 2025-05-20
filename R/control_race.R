@@ -21,28 +21,38 @@
 #' control_race()
 #' @export
 control_race <-
-  function(verbose = FALSE, verbose_elim = FALSE, allow_par = TRUE,
-           extract = NULL, save_pred = FALSE,
-           burn_in = 3, num_ties = 10, alpha = 0.05, randomize = TRUE,
-           pkgs = NULL, save_workflow = FALSE, event_level = "first",
-           parallel_over = "everything", backend_options = NULL) {
-
+  function(
+    verbose = FALSE,
+    verbose_elim = FALSE,
+    allow_par = TRUE,
+    extract = NULL,
+    save_pred = FALSE,
+    burn_in = 3,
+    num_ties = 10,
+    alpha = 0.05,
+    randomize = TRUE,
+    pkgs = NULL,
+    save_workflow = FALSE,
+    event_level = "first",
+    parallel_over = "everything",
+    backend_options = NULL
+  ) {
     # Any added arguments should also be added in superset control functions
     # in other package. In other words, if tune_grid adds an option, the same
     # object should be added here (regardless)
 
-    tune::val_class_and_single(verbose,       "logical",   "control_race()")
-    tune::val_class_and_single(verbose_elim,  "logical",   "control_race()")
-    tune::val_class_and_single(allow_par,     "logical",   "control_race()")
-    tune::val_class_and_single(alpha,         "numeric",   "control_race()")
-    tune::val_class_and_single(burn_in,       "numeric",   "control_race()")
-    tune::val_class_and_single(randomize,     "logical",   "control_race()")
-    tune::val_class_and_single(num_ties,      "numeric",   "control_race()")
-    tune::val_class_and_single(save_pred,     "logical",   "control_race()")
-    tune::val_class_or_null(pkgs,             "character", "control_race()")
-    tune::val_class_and_single(event_level,   "character", "control_race()")
-    tune::val_class_or_null(extract,          "function",  "control_race()")
-    tune::val_class_and_single(save_workflow, "logical",   "control_race()")
+    tune::val_class_and_single(verbose, "logical", "control_race()")
+    tune::val_class_and_single(verbose_elim, "logical", "control_race()")
+    tune::val_class_and_single(allow_par, "logical", "control_race()")
+    tune::val_class_and_single(alpha, "numeric", "control_race()")
+    tune::val_class_and_single(burn_in, "numeric", "control_race()")
+    tune::val_class_and_single(randomize, "logical", "control_race()")
+    tune::val_class_and_single(num_ties, "numeric", "control_race()")
+    tune::val_class_and_single(save_pred, "logical", "control_race()")
+    tune::val_class_or_null(pkgs, "character", "control_race()")
+    tune::val_class_and_single(event_level, "character", "control_race()")
+    tune::val_class_or_null(extract, "function", "control_race()")
+    tune::val_class_and_single(save_workflow, "logical", "control_race()")
     if (!is.null(parallel_over)) {
       val_parallel_over(parallel_over, "control_sim_anneal()")
     }

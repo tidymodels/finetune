@@ -40,7 +40,7 @@ default will automatically use the first evaluation time used by \code{x}.}
 \item{call}{The call to be shown in errors and warnings.}
 }
 \description{
-\code{\link[=show_best]{show_best()}} displays the top sub-models and their performance estimates.
+\code{\link[tune:show_best]{tune::show_best()}} displays the top sub-models and their performance estimates.
 }
 \details{
 For racing results (from the \pkg{finetune} package), it is best to only

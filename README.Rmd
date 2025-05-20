@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/tidymodels/finetune/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tidymodels/finetune/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/tidymodels/finetune/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/finetune?branch=main)
 [![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![Codecov test coverage](https://codecov.io/gh/tidymodels/finetune/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/finetune)
 <!-- badges: end -->
 
 `finetune` contains some extra functions for model tuning that extend what is currently in the `tune` package. You can install the CRAN version of the package with the following code:

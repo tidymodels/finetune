@@ -1,17 +1,20 @@
-
 test_that("formula interface", {
   skip_on_cran()
 
   expect_snapshot({
     set.seed(1)
     res <- f_wflow |>
-      tune_race_win_loss(cell_folds,
-                         grid = 5,
-                         control = control_race(verbose_elim = TRUE)
+      tune_race_win_loss(
+        cell_folds,
+        grid = 5,
+        control = control_race(verbose_elim = TRUE)
       )
   })
 
-  expect_equal(class(res), c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame"))
+  expect_equal(
+    class(res),
+    c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame")
+  )
   expect_true(nrow(collect_metrics(res)) == 12) # this run has one elimination
   expect_equal(res, .Last.tune.result)
 })
@@ -23,12 +26,16 @@ test_that("recipe interface", {
   expect_silent({
     set.seed(1)
     res <- rec_wflow |>
-      tune_race_win_loss(cell_folds,
-                         grid = 5,
-                         control = control_race(verbose_elim = FALSE)
+      tune_race_win_loss(
+        cell_folds,
+        grid = 5,
+        control = control_race(verbose_elim = FALSE)
       )
   })
-  expect_equal(class(res), c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame"))
+  expect_equal(
+    class(res),
+    c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame")
+  )
   expect_true(nrow(collect_metrics(res)) < 10)
   expect_equal(res, .Last.tune.result)
 })
@@ -40,12 +47,16 @@ test_that("variable interface", {
   expect_silent({
     set.seed(1)
     res <- var_wflow |>
-      tune_race_win_loss(cell_folds,
-                         grid = 5,
-                         control = control_race(verbose_elim = FALSE)
+      tune_race_win_loss(
+        cell_folds,
+        grid = 5,
+        control = control_race(verbose_elim = FALSE)
       )
   })
-  expect_equal(class(res), c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame"))
+  expect_equal(
+    class(res),
+    c("tune_race", "tune_results", "tbl_df", "tbl", "data.frame")
+  )
   expect_true(nrow(collect_metrics(res)) == 12) # one elimination
   expect_equal(res, .Last.tune.result)
 })
@@ -90,5 +101,4 @@ test_that("one player is really bad", {
 
   expect_snapshot(best_res <- show_best(tuning_results))
   expect_true(nrow(best_res) == 1)
-
 })

@@ -1,4 +1,3 @@
-
 ## -----------------------------------------------------------------------------
 
 test_that("control_sim_anneal arg passing", {
@@ -8,7 +7,10 @@ test_that("control_sim_anneal arg passing", {
   expect_equal(control_sim_anneal(radius = rep(.12, 2))$radius, rep(.12, 2))
   expect_equal(control_sim_anneal(flip = .122)$flip, .122)
   expect_equal(control_sim_anneal(cooling_coef = 1 / 10)$cooling_coef, 1 / 10)
-  expect_equal(control_sim_anneal(extract = function(x) x)$extract, function(x) x)
+  expect_equal(
+    control_sim_anneal(extract = function(x) x)$extract,
+    function(x) x
+  )
   expect_equal(control_sim_anneal(save_pred = TRUE)$save_pred, TRUE)
   expect_equal(control_sim_anneal(time_limit = 2)$time_limit, 2)
   expect_equal(control_sim_anneal(pkgs = "carrot")$pkgs, "carrot")
@@ -45,5 +47,8 @@ test_that("control_sim_anneal bad arg passing", {
 })
 
 test_that("casting control_sim_anneal to control_grid", {
-  expect_snapshot(parsnip::condense_control(control_sim_anneal(), control_grid()))
+  expect_snapshot(parsnip::condense_control(
+    control_sim_anneal(),
+    control_grid()
+  ))
 })

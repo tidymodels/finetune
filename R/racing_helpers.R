@@ -3,7 +3,6 @@ options(dplyr.summarise.inform = FALSE)
 ## -----------------------------------------------------------------------------
 # Racing via repeated measures ANOVA
 
-
 mod2tibble <- function(x) {
   x |>
     tibble::as_tibble(rownames = ".config") |>
@@ -160,8 +159,12 @@ test_parameters_bt <- function(x, alpha = 0.05, eval_time = NULL) {
 
   best_team <- levels(season_data$scoring$player_1)[1]
   suppressWarnings(
-    mod <- BradleyTerry2::BTm(cbind(wins_1, wins_2), player_1, player_2,
-      data = season_data$scoring, br = TRUE
+    mod <- BradleyTerry2::BTm(
+      cbind(wins_1, wins_2),
+      player_1,
+      player_2,
+      data = season_data$scoring,
+      br = TRUE
     )
   )
 
@@ -184,7 +187,10 @@ test_parameters_bt <- function(x, alpha = 0.05, eval_time = NULL) {
   ## TODO For both racing methods, make this a function with the configs as
   ## arguments.
   if (length(season_data$eliminated) > 0) {
-    mod_est <- dplyr::bind_rows(mod_est, make_elim_results(season_data$eliminated))
+    mod_est <- dplyr::bind_rows(
+      mod_est,
+      make_elim_results(season_data$eliminated)
+    )
   }
 
   mod_est <-
@@ -270,7 +276,12 @@ score_season <- function(x, dat, maximize = FALSE) {
       by = ".config",
       relationship = "many-to-many"
     ) |>
-    dplyr::select(player_1 = .config, metric_1 = .estimate, pair, dplyr::starts_with("id"))
+    dplyr::select(
+      player_1 = .config,
+      metric_1 = .estimate,
+      pair,
+      dplyr::starts_with("id")
+    )
 
   player_2 <-
     dplyr::left_join(
@@ -281,13 +292,33 @@ score_season <- function(x, dat, maximize = FALSE) {
       by = ".config",
       relationship = "many-to-many"
     ) |>
-    dplyr::select(player_2 = .config, metric_2 = .estimate, pair, dplyr::starts_with("id"))
+    dplyr::select(
+      player_2 = .config,
+      metric_2 = .estimate,
+      pair,
+      dplyr::starts_with("id")
+    )
 
   game_results <-
-    dplyr::full_join(player_1, player_2, by = c("id", "pair"), relationship = "many-to-many") |>
+    dplyr::full_join(
+      player_1,
+      player_2,
+      by = c("id", "pair"),
+      relationship = "many-to-many"
+    ) |>
     dplyr::mutate(
-      wins_1 = purrr::map2_dbl(metric_1, metric_2, score_match, maximize = maximize),
-      wins_2 = purrr::map2_dbl(metric_2, metric_1, score_match, maximize = maximize)
+      wins_1 = purrr::map2_dbl(
+        metric_1,
+        metric_2,
+        score_match,
+        maximize = maximize
+      ),
+      wins_2 = purrr::map2_dbl(
+        metric_2,
+        metric_1,
+        score_match,
+        maximize = maximize
+      )
     )
 
   season_results <-
@@ -413,7 +444,6 @@ restore_tune <- function(x, y, eval_time_target = NULL) {
   att$eval_time_target <- eval_time_target
   att$class <- c("tune_race", "tune_results", class(tibble::tibble()))
 
-
   ## -----------------------------------------------------------------------------
 
   x <- dplyr::bind_rows(tibble::as_tibble(x), tibble::as_tibble(y))
@@ -524,7 +554,7 @@ check_results <- function(dat, rm_zv = TRUE, rm_dup = FALSE) {
   }
 
   if (rm_zv) {
-    is_zv <- purrr::map_lgl(x, ~ length(unique(.x)) == 1)
+    is_zv <- purrr::map_lgl(x, \(x) length(unique(x)) == 1)
     if (any(is_zv)) {
       exclude <- c(exclude, names(x)[is_zv])
       x <- x[, !(names(x) %in% exclude)]
@@ -584,7 +614,7 @@ fit_anova <- function(x, dat, alpha) {
 metric_tibble <- function(x, ...) {
   metrics <- attributes(x)$metrics
   metrics <- attributes(metrics)$metrics
-  directions <- purrr::map_chr(metrics, ~ attr(.x, "direction"))
+  directions <- purrr::map_chr(metrics, \(x) attr(x, "direction"))
   tibble::tibble(metric = names(metrics), direction = directions)
 }
 
@@ -630,20 +660,20 @@ randomize_resamples <- function(x) {
 #' model.
 #' @details
 #'
-#' For [collect_metrics()] and [collect_predictions()], when unsummarized,
-#' there are columns for each tuning parameter (using the `id` from [tune()],
+#' For [tune::collect_metrics()] and [tune::collect_predictions()], when unsummarized,
+#' there are columns for each tuning parameter (using the `id` from [hardhat::tune()],
 #' if any).
-#' [collect_metrics()] also has columns `.metric`, and `.estimator`.  When the
+#' [tune::collect_metrics()] also has columns `.metric`, and `.estimator`.  When the
 #' results are summarized, there are columns for `mean`, `n`, and `std_err`.
 #' When not summarized, the additional columns for the resampling identifier(s)
 #' and `.estimate`.
 #'
-#' For [collect_predictions()], there are additional columns for the resampling
+#' For [tune::collect_predictions()], there are additional columns for the resampling
 #' identifier(s), columns for the predicted values (e.g., `.pred`,
 #' `.pred_class`, etc.), and a column for the outcome(s) using the original
 #' column name(s) in the data.
 #'
-#' [collect_predictions()] can summarize the various results over
+#' [tune::collect_predictions()] can summarize the various results over
 #'  replicate out-of-sample predictions. For example, when using the bootstrap,
 #'  each row in the original training set has multiple holdout predictions
 #'  (across assessment sets). To convert these results to a format where every
@@ -664,14 +694,14 @@ randomize_resamples <- function(x) {
 #' different resamples is likely to lead to inappropriate results.
 #' @name collect_predictions
 collect_predictions.tune_race <-
-  function(x,
-           ...,
-           summarize = FALSE,
-           parameters = NULL,
-           all_configs = FALSE) {
+  function(x, ..., summarize = FALSE, parameters = NULL, all_configs = FALSE) {
     rlang::check_dots_empty()
     x <- dplyr::select(x, -.order)
-    res <- collect_predictions(x, summarize = summarize, parameters = parameters)
+    res <- collect_predictions(
+      x,
+      summarize = summarize,
+      parameters = parameters
+    )
     if (!all_configs) {
       final_configs <- subset_finished_race(x)
       res <- dplyr::inner_join(res, final_configs, by = ".config")
@@ -682,7 +712,13 @@ collect_predictions.tune_race <-
 #' @inheritParams tune::collect_metrics
 #' @export
 #' @rdname collect_predictions
-collect_metrics.tune_race <- function(x, ..., summarize = TRUE, type = c("long", "wide"), all_configs = FALSE) {
+collect_metrics.tune_race <- function(
+  x,
+  ...,
+  summarize = TRUE,
+  type = c("long", "wide"),
+  all_configs = FALSE
+) {
   rlang::check_dots_empty()
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
@@ -696,7 +732,7 @@ collect_metrics.tune_race <- function(x, ..., summarize = TRUE, type = c("long",
 
 #' Investigate best tuning parameters
 #'
-#' [show_best()] displays the top sub-models and their performance estimates.
+#' [tune::show_best()] displays the top sub-models and their performance estimates.
 #' @inheritParams tune::show_best
 #' @rdname show_best
 #' @param n An integer for the maximum number of top results/rows to return.
@@ -706,12 +742,14 @@ collect_metrics.tune_race <- function(x, ..., summarize = TRUE, type = c("long",
 #' resampled). Comparing performance metrics for configurations averaged with
 #' different resamples is likely to lead to inappropriate results.
 #' @export
-show_best.tune_race <- function(x,
-                                ...,
-                                metric = NULL,
-                                eval_time = NULL,
-                                n = 5,
-                                call = rlang::current_env()) {
+show_best.tune_race <- function(
+  x,
+  ...,
+  metric = NULL,
+  eval_time = NULL,
+  n = 5,
+  call = rlang::current_env()
+) {
   rlang::check_dots_empty()
   if (!is.null(metric)) {
     # What was used to judge the race and how are they being sorted now?
@@ -720,24 +758,30 @@ show_best.tune_race <- function(x,
     opt_metric <- tune::first_metric(metrics)
     opt_metric_name <- opt_metric$metric
     if (metric[1] != opt_metric_name) {
-      cli::cli_warn("Metric {.val {opt_metric_name}} was used to evaluate model
+      cli::cli_warn(
+        "Metric {.val {opt_metric_name}} was used to evaluate model
                    candidates in the race but {.val {metric}} has been chosen
                    to rank the candidates. These results may not agree with the
-                   race.")
+                   race."
+      )
     }
   }
 
   x <- dplyr::select(x, -.order)
   final_configs <- subset_finished_race(x)
 
-  res <- NextMethod(metric = metric, eval_time = eval_time, n = Inf, call = call)
+  res <- NextMethod(
+    metric = metric,
+    eval_time = eval_time,
+    n = Inf,
+    call = call
+  )
   res$.ranked <- 1:nrow(res)
   res <- dplyr::inner_join(res, final_configs, by = ".config")
   res$.ranked <- NULL
   n <- min(n, nrow(res))
-  res[1:n,]
+  res[1:n, ]
 }
-
 
 
 # Only return configurations that were completely resampled
@@ -755,7 +799,12 @@ subset_finished_race <- function(x) {
 # ------------------------------------------------------------------------------
 # Log the objective function used for racing
 
-racing_obj_log <- function(analysis_metric, direction, control, metrics_time = NULL) {
+racing_obj_log <- function(
+  analysis_metric,
+  direction,
+  control,
+  metrics_time = NULL
+) {
   cols <- tune::get_tune_colors()
   if (control$verbose_elim) {
     msg <- paste("Racing will", direction, "the", analysis_metric, "metric")
@@ -773,5 +822,3 @@ racing_obj_log <- function(analysis_metric, direction, control, metrics_time = N
   }
   invisible(NULL)
 }
-
-

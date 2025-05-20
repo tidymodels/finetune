@@ -21,15 +21,19 @@ plot_race <- function(x) {
     tidyr::unnest(cols = .metrics) |>
     dplyr::filter(.metric == metric)
 
-  if(!is.null(eval_time) && any(names(rs) == ".eval_time")) {
+  if (!is.null(eval_time) && any(names(rs) == ".eval_time")) {
     rs <- dplyr::filter(rs, .eval_time == eval_time)
   }
 
-
   .order <- sort(unique(rs$.order))
-  purrr::map(.order, ~ stage_results(.x, rs)) |>
+  purrr::map(.order, \(x) stage_results(x, rs)) |>
     purrr::list_rbind() |>
-    ggplot2::ggplot(ggplot2::aes(x = stage, y = mean, group = .config, col = .config)) +
+    ggplot2::ggplot(ggplot2::aes(
+      x = stage,
+      y = mean,
+      group = .config,
+      col = .config
+    )) +
     ggplot2::geom_line(alpha = .5, show.legend = FALSE) +
     ggplot2::xlab("Analysis Stage") +
     ggplot2::ylab(metric) +

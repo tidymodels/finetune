@@ -123,15 +123,17 @@ tune_race_anova.default <- function(object, ...) {
 
 #' @export
 tune_race_anova.recipe <-
-  function(object,
-           model,
-           resamples,
-           ...,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race()) {
+  function(
+    object,
+    model,
+    resamples,
+    ...,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race()
+  ) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -150,15 +152,17 @@ tune_race_anova.recipe <-
 
 #' @export
 tune_race_anova.formula <-
-  function(formula,
-           model,
-           resamples,
-           ...,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race()) {
+  function(
+    formula,
+    model,
+    resamples,
+    ...,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race()
+  ) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -178,16 +182,20 @@ tune_race_anova.formula <-
 #' @export
 #' @rdname tune_race_anova
 tune_race_anova.model_spec <-
-  function(object,
-           preprocessor,
-           resamples,
-           ...,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race()) {
-    if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
+  function(
+    object,
+    preprocessor,
+    resamples,
+    ...,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race()
+  ) {
+    if (
+      rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)
+    ) {
       cli::cli_abort(
         "To tune a model spec, you must preprocess with a formula, recipe, \\
         or variable specification."
@@ -220,14 +228,16 @@ tune_race_anova.model_spec <-
 #' @export
 #' @rdname tune_race_anova
 tune_race_anova.workflow <-
-  function(object,
-           resamples,
-           ...,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race()) {
+  function(
+    object,
+    resamples,
+    ...,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race()
+  ) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -246,14 +256,16 @@ tune_race_anova.workflow <-
 ## -----------------------------------------------------------------------------
 
 tune_race_anova_workflow <-
-  function(object,
-           resamples,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race(),
-           call = caller_env()) {
+  function(
+    object,
+    resamples,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race(),
+    call = caller_env()
+  ) {
     rlang::check_installed("lme4")
 
     tune::initialize_catalog(control = control)
@@ -271,13 +283,21 @@ tune_race_anova_workflow <-
     metrics <- tune::check_metrics_arg(metrics, object, call = call)
     eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
 
-    control$pkgs <- c(control$pkgs, tune::required_pkgs(object), "workflows", "tidyr", "rlang")
+    control$pkgs <- c(
+      control$pkgs,
+      tune::required_pkgs(object),
+      "workflows",
+      "tidyr",
+      "rlang"
+    )
 
     if (control$verbose_elim) {
       tune_cols <- tune::get_tune_colors()
       msg <- tune_cols$message$info(
-        paste0(cli::symbol$info,
-               " Evaluating against the initial {min_rs} burn-in resamples.")
+        paste0(
+          cli::symbol$info,
+          " Evaluating against the initial {min_rs} burn-in resamples."
+        )
       )
 
       cli::cli_inform(msg)
@@ -308,7 +328,12 @@ tune_race_anova_workflow <-
       call = call
     )
 
-    racing_obj_log(opt_metric_name, opt_metric$direction, control, opt_metric_time)
+    racing_obj_log(
+      opt_metric_name,
+      opt_metric$direction,
+      control,
+      opt_metric_time
+    )
 
     filters_results <- test_parameters_gls(res, control$alpha, opt_metric_time)
     n_grid <- nrow(filters_results)
@@ -326,11 +351,23 @@ tune_race_anova_workflow <-
 
       if (nrow(new_grid) > 1) {
         tmp_resamples <- restore_rset(resamples, rs)
-        log_racing(control, filters_results, res$splits, n_grid, opt_metric_name)
+        log_racing(
+          control,
+          filters_results,
+          res$splits,
+          n_grid,
+          opt_metric_name
+        )
       } else {
         tmp_resamples <- restore_rset(resamples, rs:B)
         if (log_final) {
-          log_racing(control, filters_results, res$splits, n_grid, opt_metric_name)
+          log_racing(
+            control,
+            filters_results,
+            res$splits,
+            n_grid,
+            opt_metric_name
+          )
         }
         log_final <- FALSE
       }
@@ -350,9 +387,17 @@ tune_race_anova_workflow <-
       res <- restore_tune(res, tmp_res, opt_metric_time)
 
       if (nrow(new_grid) > 1) {
-        filters_results <- test_parameters_gls(res, control$alpha, opt_metric_time)
+        filters_results <- test_parameters_gls(
+          res,
+          control$alpha,
+          opt_metric_time
+        )
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
-          filters_results <- tie_breaker(res, control, eval_time = opt_metric_time)
+          filters_results <- tie_breaker(
+            res,
+            control,
+            eval_time = opt_metric_time
+          )
         }
       } else {
         # Depending on the value of control$parallel_over we don't need to do
@@ -369,6 +414,7 @@ tune_race_anova_workflow <-
     res
   }
 
+# fmt: skip
 check_num_resamples <- function(B, min_rs) {
   if (B <= min_rs) {
     cli::cli_abort(
@@ -380,4 +426,3 @@ check_num_resamples <- function(B, min_rs) {
   }
   invisible(NULL)
 }
-
