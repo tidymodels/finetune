@@ -56,20 +56,20 @@ model.
 Obtain and format results produced by racing functions
 }
 \details{
-For \code{\link[=collect_metrics]{collect_metrics()}} and \code{\link[=collect_predictions]{collect_predictions()}}, when unsummarized,
-there are columns for each tuning parameter (using the \code{id} from \code{\link[=tune]{tune()}},
+For \code{\link[tune:collect_predictions]{tune::collect_metrics()}} and \code{\link[tune:collect_predictions]{tune::collect_predictions()}}, when unsummarized,
+there are columns for each tuning parameter (using the \code{id} from \code{\link[hardhat:tune]{hardhat::tune()}},
 if any).
-\code{\link[=collect_metrics]{collect_metrics()}} also has columns \code{.metric}, and \code{.estimator}.  When the
+\code{\link[tune:collect_predictions]{tune::collect_metrics()}} also has columns \code{.metric}, and \code{.estimator}.  When the
 results are summarized, there are columns for \code{mean}, \code{n}, and \code{std_err}.
 When not summarized, the additional columns for the resampling identifier(s)
 and \code{.estimate}.
 
-For \code{\link[=collect_predictions]{collect_predictions()}}, there are additional columns for the resampling
+For \code{\link[tune:collect_predictions]{tune::collect_predictions()}}, there are additional columns for the resampling
 identifier(s), columns for the predicted values (e.g., \code{.pred},
 \code{.pred_class}, etc.), and a column for the outcome(s) using the original
 column name(s) in the data.
 
-\code{\link[=collect_predictions]{collect_predictions()}} can summarize the various results over
+\code{\link[tune:collect_predictions]{tune::collect_predictions()}} can summarize the various results over
 replicate out-of-sample predictions. For example, when using the bootstrap,
 each row in the original training set has multiple holdout predictions
 (across assessment sets). To convert these results to a format where every

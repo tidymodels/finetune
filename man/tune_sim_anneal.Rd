@@ -59,7 +59,7 @@ values must be non-negative and should probably be no greater than the
 largest event time in the training set (See Details below).}
 
 \item{initial}{An initial set of results in a tidy format (as would the result
-of \code{\link[=tune_grid]{tune_grid()}}, \code{\link[=tune_bayes]{tune_bayes()}}, \code{\link[=tune_race_win_loss]{tune_race_win_loss()}}, or
+of \code{\link[tune:tune_grid]{tune::tune_grid()}}, \code{\link[tune:tune_bayes]{tune::tune_bayes()}}, \code{\link[=tune_race_win_loss]{tune_race_win_loss()}}, or
 \code{\link[=tune_race_anova]{tune_race_anova()}}) or a positive integer. If the initial object was a
 sequential search method, the simulated annealing iterations start after the
 last iteration of the initial results.}

@@ -54,12 +54,10 @@ test_that("anova filtering and logging", {
   # ------------------------------------------------------------------------------
   # top-level anova filter interfaces
 
-  expect_error({
+  expect_snapshot({
     set.seed(129)
     anova_mod <- spec |> tune_race_anova(mpg ~ ., folds, grid = grid)
-  },
-  regexp = NA
-  )
+  })
   expect_true(inherits(anova_mod, "tune_race"))
   expect_true(inherits(anova_mod, "tune_results"))
   expect_true(tibble::is_tibble((anova_mod)))

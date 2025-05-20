@@ -524,7 +524,7 @@ check_results <- function(dat, rm_zv = TRUE, rm_dup = FALSE) {
   }
 
   if (rm_zv) {
-    is_zv <- purrr::map_lgl(x, ~ length(unique(.x)) == 1)
+    is_zv <- purrr::map_lgl(x, \(x) length(unique(x)) == 1)
     if (any(is_zv)) {
       exclude <- c(exclude, names(x)[is_zv])
       x <- x[, !(names(x) %in% exclude)]
@@ -584,7 +584,7 @@ fit_anova <- function(x, dat, alpha) {
 metric_tibble <- function(x, ...) {
   metrics <- attributes(x)$metrics
   metrics <- attributes(metrics)$metrics
-  directions <- purrr::map_chr(metrics, ~ attr(.x, "direction"))
+  directions <- purrr::map_chr(metrics, \(x) attr(x, "direction"))
   tibble::tibble(metric = names(metrics), direction = directions)
 }
 
@@ -630,20 +630,20 @@ randomize_resamples <- function(x) {
 #' model.
 #' @details
 #'
-#' For [collect_metrics()] and [collect_predictions()], when unsummarized,
-#' there are columns for each tuning parameter (using the `id` from [tune()],
+#' For [tune::collect_metrics()] and [tune::collect_predictions()], when unsummarized,
+#' there are columns for each tuning parameter (using the `id` from [hardhat::tune()],
 #' if any).
-#' [collect_metrics()] also has columns `.metric`, and `.estimator`.  When the
+#' [tune::collect_metrics()] also has columns `.metric`, and `.estimator`.  When the
 #' results are summarized, there are columns for `mean`, `n`, and `std_err`.
 #' When not summarized, the additional columns for the resampling identifier(s)
 #' and `.estimate`.
 #'
-#' For [collect_predictions()], there are additional columns for the resampling
+#' For [tune::collect_predictions()], there are additional columns for the resampling
 #' identifier(s), columns for the predicted values (e.g., `.pred`,
 #' `.pred_class`, etc.), and a column for the outcome(s) using the original
 #' column name(s) in the data.
 #'
-#' [collect_predictions()] can summarize the various results over
+#' [tune::collect_predictions()] can summarize the various results over
 #'  replicate out-of-sample predictions. For example, when using the bootstrap,
 #'  each row in the original training set has multiple holdout predictions
 #'  (across assessment sets). To convert these results to a format where every

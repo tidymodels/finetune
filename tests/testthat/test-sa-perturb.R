@@ -16,7 +16,7 @@ test_that("numerical neighborhood", {
       new_vals$mixture, new_vals$threshold,
       ~ sqrt((.x - .5)^2 + (.y - .5)^2)
     ) |>
-    purrr::map_lgl(~ .x >= rad[1] & .x <= rad[2])
+    purrr::map_lgl(\(x) x >= rad[1] & x <= rad[2])
   expect_true(all(correct_r))
 
   set.seed(1)
@@ -51,7 +51,7 @@ test_that("categorical value switching", {
   new_vals <-
     purrr::map(
       1:1000,
-      ~ finetune:::random_discrete_neighbor(vals, cat_prm, prob = 1 / 4, change = FALSE)
+      \(x) finetune:::random_discrete_neighbor(vals, cat_prm, prob = 1 / 4, change = FALSE)
     ) |>
     purrr::list_rbind()
   relu_same <- mean(new_vals$activation == "relu")

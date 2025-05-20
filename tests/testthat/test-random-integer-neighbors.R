@@ -5,7 +5,7 @@ test_that("random integers in range", {
   random_integer_neigbors <-
     purrr::map(
       1:500,
-      ~ finetune:::random_integer_neighbor_calc(
+      \(x) finetune:::random_integer_neighbor_calc(
         tibble::tibble(tree_depth = 3),
         parameters, 0.75, FALSE
       )

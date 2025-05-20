@@ -78,8 +78,8 @@ test_that("tune_sim_anneal interfaces", {
 ## -----------------------------------------------------------------------------
 
 test_that("tune_sim_anneal with wrong type", {
-  expect_error(
+  expect_snapshot(
     tune_sim_anneal(1),
-    "should be either a model or workflow"
+    error = TRUE
   )
 })

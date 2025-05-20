@@ -7,16 +7,16 @@ maximize_metric <- function(x, metric) {
 
 # Might not use this function
 treat_as_integer <- function(x, num_unique = 10) {
-  param_type <- purrr::map_chr(x$object, ~ .x$type)
+  param_type <- purrr::map_chr(x$object, \(x) x$type)
   is_int <- param_type == "integer"
-  x_vals <- purrr::map(x$object, ~ dials::value_seq(.x, n = 200))
-  x_vals <- purrr::map_int(x_vals, ~ length(unique(.x)))
+  x_vals <- purrr::map(x$object, \(x) dials::value_seq(x, n = 200))
+  x_vals <- purrr::map_int(x_vals, \(x) length(unique(x)))
   x_vals < num_unique & is_int
 }
 
 new_in_neighborhood <- function(current, hist_values, pset, radius = c(0.05, 0.15), flip = 0.1) {
   current <- dplyr::select(current, !!!pset$id)
-  param_type <- purrr::map_chr(pset$object, ~ .x$type)
+  param_type <- purrr::map_chr(pset$object, \(x) x$type)
   if (any(param_type == "double")) {
     dbl_nms <- pset$id[param_type == "double"]
     new_dbl <-
@@ -81,7 +81,7 @@ random_integer_neighbor <- function(current, hist_values, pset, prob, change, re
   candidates <-
     purrr::map(
       1:tries,
-      ~ random_integer_neighbor_calc(current, pset, prob, change)
+      \(x) random_integer_neighbor_calc(current, pset, prob, change)
     ) |>
     purrr::list_rbind()
 
@@ -415,26 +415,26 @@ update_config <- function(x, prefix = NULL, config = "new", save_pred) {
     x$.metrics <-
       purrr::map(
         x$.metrics,
-        ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config))
+        \(x) dplyr::mutate(x, .config = paste0(prefix, "_", .config))
       )
     if (save_pred) {
       x$.predictions <-
         purrr::map(
           x$.predictions,
-          ~ dplyr::mutate(.x, .config = paste0(prefix, "_", .config))
+          \(x) dplyr::mutate(x, .config = paste0(prefix, "_", .config))
         )
     }
   } else {
     x$.metrics <-
       purrr::map(
         x$.metrics,
-        ~ dplyr::mutate(.x, .config = config)
+        \(x) dplyr::mutate(x, .config = config)
       )
     if (save_pred) {
       x$.predictions <-
         purrr::map(
           x$.predictions,
-          ~ dplyr::mutate(.x, .config = config)
+          \(x) dplyr::mutate(x, .config = config)
         )
     }
   }
