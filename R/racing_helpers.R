@@ -732,7 +732,7 @@ collect_metrics.tune_race <- function(
 
 #' Investigate best tuning parameters
 #'
-#' [show_best()] displays the top sub-models and their performance estimates.
+#' [tune::show_best()] displays the top sub-models and their performance estimates.
 #' @inheritParams tune::show_best
 #' @rdname show_best
 #' @param n An integer for the maximum number of top results/rows to return.
