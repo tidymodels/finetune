@@ -22,7 +22,10 @@ cell_folds <- rsample::vfold_cv(cells, v = 3, repeats = 2)
 ## -----------------------------------------------------------------------------
 
 cart_spec <-
-  parsnip::decision_tree(cost_complexity = parsnip::tune(), min_n = parsnip::tune()) |>
+  parsnip::decision_tree(
+    cost_complexity = parsnip::tune(),
+    min_n = parsnip::tune()
+  ) |>
   parsnip::set_mode("classification") |>
   parsnip::set_engine("rpart")
 
@@ -35,21 +38,21 @@ cart_rec <-
 
 rec_wflow <-
   cell_knn <-
-  workflows::workflow() |>
-  workflows::add_model(cart_spec) |>
-  workflows::add_recipe(cart_rec)
+    workflows::workflow() |>
+    workflows::add_model(cart_spec) |>
+    workflows::add_recipe(cart_rec)
 
 f_wflow <-
   cell_knn <-
-  workflows::workflow() |>
-  workflows::add_model(cart_spec) |>
-  workflows::add_formula(class ~ .)
+    workflows::workflow() |>
+    workflows::add_model(cart_spec) |>
+    workflows::add_formula(class ~ .)
 
 var_wflow <-
   cell_knn <-
-  workflows::workflow() |>
-  workflows::add_model(cart_spec) |>
-  workflows::add_variables(class, dplyr::everything())
+    workflows::workflow() |>
+    workflows::add_model(cart_spec) |>
+    workflows::add_variables(class, dplyr::everything())
 
 
 # ------------------------------------------------------------------------------
@@ -61,5 +64,3 @@ grid_mod_rec <-
   expand.grid(cost_complexity = c(0.001, 0.0001), min_n = 3:4, num_comp = 19:20)
 
 # ------------------------------------------------------------------------------
-
-

@@ -3,12 +3,16 @@ test_that("formula interface", {
   expect_snapshot({
     set.seed(1)
     res <- f_wflow |>
-      tune_sim_anneal(cell_folds,
-                      iter = 2,
-                      control = control_sim_anneal(verbose = TRUE)
+      tune_sim_anneal(
+        cell_folds,
+        iter = 2,
+        control = control_sim_anneal(verbose = TRUE)
       )
   })
-  expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
+  expect_equal(
+    class(res),
+    c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame")
+  )
   expect_true(nrow(collect_metrics(res)) == 9)
   expect_equal(res, .Last.tune.result)
   expect_null(.get_tune_eval_times(res))
@@ -25,13 +29,17 @@ test_that("recipe interface", {
   expect_silent({
     set.seed(1)
     res <- rec_wflow |>
-      tune_sim_anneal(cell_folds,
-                      iter = 2,
-                      control = control_sim_anneal(verbose = FALSE, verbose_iter = FALSE)
+      tune_sim_anneal(
+        cell_folds,
+        iter = 2,
+        control = control_sim_anneal(verbose = FALSE, verbose_iter = FALSE)
       )
   })
 
-  expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
+  expect_equal(
+    class(res),
+    c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame")
+  )
   expect_true(nrow(collect_metrics(res)) == 9)
   expect_equal(res, .Last.tune.result)
 })
@@ -43,12 +51,16 @@ test_that("variable interface", {
   expect_snapshot({
     set.seed(1)
     res <- var_wflow |>
-      tune_sim_anneal(cell_folds,
-                      iter = 2,
-                      control = control_sim_anneal(verbose = TRUE, verbose_iter = TRUE)
+      tune_sim_anneal(
+        cell_folds,
+        iter = 2,
+        control = control_sim_anneal(verbose = TRUE, verbose_iter = TRUE)
       )
   })
-  expect_equal(class(res), c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame"))
+  expect_equal(
+    class(res),
+    c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame")
+  )
   expect_true(nrow(collect_metrics(res)) == 9)
   expect_equal(res, .Last.tune.result)
 
@@ -58,9 +70,11 @@ test_that("variable interface", {
   expect_snapshot({
     set.seed(1)
     new_res <- var_wflow |>
-      tune_sim_anneal(cell_folds,
-                      iter = 2, initial = res,
-                      control = control_sim_anneal(verbose = FALSE)
+      tune_sim_anneal(
+        cell_folds,
+        iter = 2,
+        initial = res,
+        control = control_sim_anneal(verbose = FALSE)
       )
   })
   expect_true(nrow(collect_metrics(new_res)) == 15)
@@ -76,9 +90,11 @@ test_that("variable interface", {
   expect_snapshot({
     set.seed(1)
     new_new_res <- var_wflow |>
-      tune_sim_anneal(cell_folds,
-                      iter = 2, initial = grid_res,
-                      control = control_sim_anneal(verbose = FALSE)
+      tune_sim_anneal(
+        cell_folds,
+        iter = 2,
+        initial = grid_res,
+        control = control_sim_anneal(verbose = FALSE)
       )
   })
   expect_true(nrow(collect_metrics(new_new_res)) == 12)
@@ -204,21 +220,26 @@ test_that("set event-level", {
   # ------------------------------------------------------------------------------
   # high sensitivity and low specificity
 
-
   set.seed(3)
   cart_res_first <-
     cart_spec |>
-    tune_sim_anneal(class ~ .,
-                    rs,
-                    control = control_sim_anneal(event_level = "first", verbose_iter = FALSE),
-                    metrics = stats)
+    tune_sim_anneal(
+      class ~ .,
+      rs,
+      control = control_sim_anneal(event_level = "first", verbose_iter = FALSE),
+      metrics = stats
+    )
 
   results_first <-
     cart_res_first |>
     collect_metrics() |>
     dplyr::filter(.metric != "accuracy") |>
     dplyr::select(.config, .metric, mean) |>
-    tidyr::pivot_wider(id_cols = .config, names_from = .metric, values_from = mean)
+    tidyr::pivot_wider(
+      id_cols = .config,
+      names_from = .metric,
+      values_from = mean
+    )
 
   dir_check <- all(results_first$sensitivity > results_first$specificity)
   expect_true(dir_check)
@@ -229,20 +250,27 @@ test_that("set event-level", {
   set.seed(3)
   cart_res_second <-
     cart_spec |>
-    tune_sim_anneal(class ~ .,
-                    rs,
-                    control = control_sim_anneal(event_level = "second", verbose_iter = FALSE),
-                    metrics = stats)
+    tune_sim_anneal(
+      class ~ .,
+      rs,
+      control = control_sim_anneal(
+        event_level = "second",
+        verbose_iter = FALSE
+      ),
+      metrics = stats
+    )
 
   results_second <-
     cart_res_second |>
     collect_metrics() |>
     dplyr::filter(.metric != "accuracy") |>
     dplyr::select(.config, .metric, mean) |>
-    tidyr::pivot_wider(id_cols = .config, names_from = .metric, values_from = mean)
+    tidyr::pivot_wider(
+      id_cols = .config,
+      names_from = .metric,
+      values_from = mean
+    )
 
   rev_dir_check <- all(results_second$sensitivity < results_second$specificity)
   expect_true(rev_dir_check)
-
 })
-

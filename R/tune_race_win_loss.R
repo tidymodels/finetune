@@ -120,39 +120,46 @@ tune_race_win_loss.default <- function(object, ...) {
 
 #' @export
 tune_race_win_loss.recipe <-
-  function(object,
-           model,
-           resamples,
-           ...,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race()) {
+  function(
+    object,
+    model,
+    resamples,
+    ...,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race()
+  ) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
 
     tune_race_win_loss(
       model,
-      preprocessor = object, resamples = resamples,
-      param_info = param_info, grid = grid,
-      metrics = metrics, control = control,
+      preprocessor = object,
+      resamples = resamples,
+      param_info = param_info,
+      grid = grid,
+      metrics = metrics,
+      control = control,
       eval_time = eval_time
     )
   }
 
 #' @export
 tune_race_win_loss.formula <-
-  function(formula,
-           model,
-           resamples,
-           ...,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race()) {
+  function(
+    formula,
+    model,
+    resamples,
+    ...,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race()
+  ) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_race())
@@ -172,16 +179,20 @@ tune_race_win_loss.formula <-
 #' @export
 #' @rdname tune_race_win_loss
 tune_race_win_loss.model_spec <-
-  function(object,
-           preprocessor,
-           resamples,
-           ...,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race()) {
-    if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
+  function(
+    object,
+    preprocessor,
+    resamples,
+    ...,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race()
+  ) {
+    if (
+      rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)
+    ) {
       cli::cli_abort(
         "To tune a model spec, you must preprocess with a formula, recipe, \\
         or variable specification."
@@ -213,14 +224,16 @@ tune_race_win_loss.model_spec <-
 
 #' @export
 #' @rdname tune_race_win_loss
-tune_race_win_loss.workflow <- function(object,
-                                        resamples,
-                                        ...,
-                                        param_info = NULL,
-                                        grid = 10,
-                                        metrics = NULL,
-                                        eval_time = NULL,
-                                        control = control_race()) {
+tune_race_win_loss.workflow <- function(
+  object,
+  resamples,
+  ...,
+  param_info = NULL,
+  grid = 10,
+  metrics = NULL,
+  eval_time = NULL,
+  control = control_race()
+) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_race())
@@ -239,14 +252,16 @@ tune_race_win_loss.workflow <- function(object,
 ## -----------------------------------------------------------------------------
 
 tune_race_win_loss_workflow <-
-  function(object,
-           resamples,
-           param_info = NULL,
-           grid = 10,
-           metrics = NULL,
-           eval_time = NULL,
-           control = control_race(),
-           call = caller_env()) {
+  function(
+    object,
+    resamples,
+    param_info = NULL,
+    grid = 10,
+    metrics = NULL,
+    eval_time = NULL,
+    control = control_race(),
+    call = caller_env()
+  ) {
     rlang::check_installed("BradleyTerry2")
 
     B <- nrow(resamples)
@@ -276,7 +291,6 @@ tune_race_win_loss_workflow <-
 
     param_names <- tune::.get_tune_parameter_names(res)
 
-
     opt_metric <- tune::first_metric(metrics)
     opt_metric_name <- opt_metric$metric
     maximize <- opt_metric$direction == "maximize"
@@ -288,7 +302,12 @@ tune_race_win_loss_workflow <-
       call = call
     )
 
-    racing_obj_log(opt_metric_name, opt_metric$direction, control, opt_metric_time)
+    racing_obj_log(
+      opt_metric_name,
+      opt_metric$direction,
+      control,
+      opt_metric_time
+    )
 
     filters_results <- test_parameters_bt(res, control$alpha, opt_metric_time)
     n_grid <- nrow(filters_results)
@@ -306,11 +325,23 @@ tune_race_win_loss_workflow <-
 
       if (nrow(new_grid) > 1) {
         tmp_resamples <- restore_rset(resamples, rs)
-        log_racing(control, filters_results, res$splits, n_grid, opt_metric_name)
+        log_racing(
+          control,
+          filters_results,
+          res$splits,
+          n_grid,
+          opt_metric_name
+        )
       } else {
         tmp_resamples <- restore_rset(resamples, rs:B)
         if (log_final) {
-          log_racing(control, filters_results, res$splits, n_grid, opt_metric_name)
+          log_racing(
+            control,
+            filters_results,
+            res$splits,
+            n_grid,
+            opt_metric_name
+          )
         }
         log_final <- FALSE
       }
@@ -329,9 +360,17 @@ tune_race_win_loss_workflow <-
       res <- restore_tune(res, tmp_res, opt_metric_time)
 
       if (nrow(new_grid) > 1) {
-        filters_results <- test_parameters_bt(res, control$alpha, opt_metric_time)
+        filters_results <- test_parameters_bt(
+          res,
+          control$alpha,
+          opt_metric_time
+        )
         if (sum(filters_results$pass) == 2 & num_ties >= control$num_ties) {
-          filters_results <- tie_breaker(res, control, eval_time = opt_metric_time)
+          filters_results <- tie_breaker(
+            res,
+            control,
+            eval_time = opt_metric_time
+          )
         }
       } else {
         # Depending on the value of control$parallel_over we don't need to do

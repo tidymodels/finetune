@@ -1,4 +1,3 @@
-
 ## -----------------------------------------------------------------------------
 
 test_that("tune_sim_anneal interfaces", {
@@ -21,7 +20,6 @@ test_that("tune_sim_anneal interfaces", {
       frac_identity = frac_identity(c(.3, .6))
     )
 
-
   set.seed(813)
   rs <- bootstraps(two_class_dat, times = 3)
 
@@ -31,7 +29,6 @@ test_that("tune_sim_anneal interfaces", {
   # ------------------------------------------------------------------------------
   # formula interface
 
-
   expect_snapshot({
     set.seed(1)
     f_res_1 <- rda_spec |> tune_sim_anneal(Class ~ ., rs, iter = 3)
@@ -39,7 +36,8 @@ test_that("tune_sim_anneal interfaces", {
 
   expect_snapshot({
     set.seed(1)
-    f_res_2 <- rda_spec |> tune_sim_anneal(Class ~ ., rs, iter = 3, param_info = rda_param)
+    f_res_2 <- rda_spec |>
+      tune_sim_anneal(Class ~ ., rs, iter = 3, param_info = rda_param)
   })
 
   expect_true(all(collect_metrics(f_res_2)$frac_common_cov >= 0.3))

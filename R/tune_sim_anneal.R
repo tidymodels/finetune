@@ -182,16 +182,18 @@ tune_sim_anneal.default <- function(object, ...) {
 }
 
 #' @export
-tune_sim_anneal.recipe <- function(object,
-                                   model,
-                                   resamples,
-                                   ...,
-                                   iter = 10,
-                                   param_info = NULL,
-                                   metrics = NULL,
-                                   eval_time = NULL,
-                                   initial = 1,
-                                   control = control_sim_anneal()) {
+tune_sim_anneal.recipe <- function(
+  object,
+  model,
+  resamples,
+  ...,
+  iter = 10,
+  param_info = NULL,
+  metrics = NULL,
+  eval_time = NULL,
+  initial = 1,
+  control = control_sim_anneal()
+) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_sim_anneal())
@@ -210,16 +212,18 @@ tune_sim_anneal.recipe <- function(object,
 }
 
 #' @export
-tune_sim_anneal.formula <- function(formula,
-                                    model,
-                                    resamples,
-                                    ...,
-                                    iter = 10,
-                                    param_info = NULL,
-                                    metrics = NULL,
-                                    eval_time = NULL,
-                                    initial = 1,
-                                    control = control_sim_anneal()) {
+tune_sim_anneal.formula <- function(
+  formula,
+  model,
+  resamples,
+  ...,
+  iter = 10,
+  param_info = NULL,
+  metrics = NULL,
+  eval_time = NULL,
+  initial = 1,
+  control = control_sim_anneal()
+) {
   tune::empty_ellipses(...)
 
   control <- parsnip::condense_control(control, control_sim_anneal())
@@ -239,21 +243,23 @@ tune_sim_anneal.formula <- function(formula,
 
 #' @export
 #' @rdname tune_sim_anneal
-tune_sim_anneal.model_spec <- function(object,
-                                       preprocessor,
-                                       resamples,
-                                       ...,
-                                       iter = 10,
-                                       param_info = NULL,
-                                       metrics = NULL,
-                                       eval_time = NULL,
-                                       initial = 1,
-                                       control = control_sim_anneal()) {
+tune_sim_anneal.model_spec <- function(
+  object,
+  preprocessor,
+  resamples,
+  ...,
+  iter = 10,
+  param_info = NULL,
+  metrics = NULL,
+  eval_time = NULL,
+  initial = 1,
+  control = control_sim_anneal()
+) {
   if (rlang::is_missing(preprocessor) || !tune::is_preprocessor(preprocessor)) {
-      cli::cli_abort(
-        "To tune a model spec, you must preprocess with a formula, recipe, \\
+    cli::cli_abort(
+      "To tune a model spec, you must preprocess with a formula, recipe, \\
         or variable specification"
-      )
+    )
   }
 
   tune::empty_ellipses(...)
@@ -287,15 +293,17 @@ tune_sim_anneal.model_spec <- function(object,
 #' @export
 #' @rdname tune_sim_anneal
 tune_sim_anneal.workflow <-
-  function(object,
-           resamples,
-           ...,
-           iter = 10,
-           param_info = NULL,
-           metrics = NULL,
-           eval_time = NULL,
-           initial = 1,
-           control = control_sim_anneal()) {
+  function(
+    object,
+    resamples,
+    ...,
+    iter = 10,
+    param_info = NULL,
+    metrics = NULL,
+    eval_time = NULL,
+    initial = 1,
+    control = control_sim_anneal()
+  ) {
     tune::empty_ellipses(...)
 
     control <- parsnip::condense_control(control, control_sim_anneal())
@@ -317,16 +325,18 @@ tune_sim_anneal.workflow <-
 
 ## -----------------------------------------------------------------------------
 
-
 tune_sim_anneal_workflow <-
-  function(object,
-           resamples, iter = 10,
-           param_info = NULL,
-           metrics = NULL,
-           eval_time = NULL,
-           initial = 5,
-           control = control_sim_anneal(),
-           call = caller_env()) {
+  function(
+    object,
+    resamples,
+    iter = 10,
+    param_info = NULL,
+    metrics = NULL,
+    eval_time = NULL,
+    initial = 5,
+    control = control_sim_anneal(),
+    call = caller_env()
+  ) {
     start_time <- proc.time()[3]
     cols <- tune::get_tune_colors()
 
@@ -343,11 +353,11 @@ tune_sim_anneal_workflow <-
 
     eval_time <- tune::check_eval_time_arg(eval_time, metrics, call = call)
     opt_metric_time <- tune::first_eval_time(
-        metrics,
-        metric = opt_metric_name,
-        eval_time = eval_time,
-        call = call
-      )
+      metrics,
+      metric = opt_metric_name,
+      eval_time = eval_time,
+      call = call
+    )
 
     if (is.null(param_info)) {
       param_info <- extract_parameter_set_dials(object)
@@ -361,11 +371,14 @@ tune_sim_anneal_workflow <-
       grid_names = character(0)
     )
 
-    tune::check_workflow(object, check_dials = !is.null(param_info), pset = param_info)
+    tune::check_workflow(
+      object,
+      check_dials = !is.null(param_info),
+      pset = param_info
+    )
 
     # ------------------------------------------------------------------------------
     # Check or generate initial results
-
 
     control_init <- parsnip::condense_control(control, tune::control_grid())
     control_init$save_workflow <- TRUE
@@ -406,12 +419,18 @@ tune_sim_anneal_workflow <-
     i <- max(unsummarized$.iter) # In case things fail before iteration.
     iter <- iter + i
     if (i > 0 && control$verbose_iter) {
-      cli::cli_inform(cols$message$info("There were ", i, " previous iterations"))
+      cli::cli_inform(cols$message$info(
+        "There were ",
+        i,
+        " previous iterations"
+      ))
     }
 
     on.exit({
       if (i < iter) {
-        cli::cli_alert_danger("Optimization stopped prematurely; returning current results.")
+        cli::cli_alert_danger(
+          "Optimization stopped prematurely; returning current results."
+        )
       }
       out <-
         tune::new_iteration_results(
@@ -432,17 +451,24 @@ tune_sim_anneal_workflow <-
     if (control$verbose_iter) {
       msg <- paste("Optimizing", opt_metric_name)
       if (!is.null(opt_metric_time)) {
-        msg <- paste(msg, "at evaluation time", format(opt_metric_time, digits = 3))
+        msg <- paste(
+          msg,
+          "at evaluation time",
+          format(opt_metric_time, digits = 3)
+        )
       }
       cli::cli_bullets(msg)
     }
-
 
     ## -----------------------------------------------------------------------------
 
     result_history <- initialize_history(unsummarized, opt_metric_time)
     best_param <-
-      tune::select_best(unsummarized, metric = opt_metric_name, eval_time = opt_metric_time) |>
+      tune::select_best(
+        unsummarized,
+        metric = opt_metric_name,
+        eval_time = opt_metric_time
+      ) |>
       dplyr::mutate(.parent = NA_character_)
     grid_history <- best_param
     current_param <- best_param
@@ -522,7 +548,8 @@ tune_sim_anneal_workflow <-
         current_parent <- current_param$.config
         count_improve <- count_improve + 1
         count_restart <- count_restart + 1
-      } else { # discard
+      } else {
+        # discard
         count_improve <- count_improve + 1
         count_restart <- count_restart + 1
       }
@@ -573,7 +600,10 @@ tune_sim_anneal_workflow <-
     if (control$save_history) {
       result_history <-
         result_history |>
-        dplyr::full_join(grid_history |> dplyr::select(.config, .parent), by = ".config") |>
+        dplyr::full_join(
+          grid_history |> dplyr::select(.config, .parent),
+          by = ".config"
+        ) |>
         dplyr::arrange(.iter, .config)
       save(result_history, file = file.path(tempdir(), "sa_history.RData"))
     }
