@@ -6,9 +6,9 @@
     Message
       Optimizing roc_auc
       Initial best: 0.85731
-      1 ( ) accept suboptimal  roc_auc=0.85682 (+/-0.01022)
-      2 ( ) accept suboptimal  roc_auc=0.85238 (+/-0.01078)
-      3 ( ) accept suboptimal  roc_auc=0.85138 (+/-0.0109)
+      1 ( ) accept suboptimal  roc_auc=0.85432 (+/-0.01039)
+      2 <3 new best           roc_auc=0.86674 (+/-0.009097)
+      3 <3 new best           roc_auc=0.87245 (+/-0.008363)
 
 ---
 
@@ -18,9 +18,9 @@
     Message
       Optimizing roc_auc
       Initial best: 0.85325
-      1 ( ) accept suboptimal  roc_auc=0.85313 (+/-0.0106)
-      2 ( ) accept suboptimal  roc_auc=0.85181 (+/-0.01065)
-      3 ( ) accept suboptimal  roc_auc=0.85165 (+/-0.01055)
+      1 ( ) accept suboptimal  roc_auc=0.85268 (+/-0.01056)
+      2 <3 new best           roc_auc=0.85618 (+/-0.01015)
+      3 <3 new best           roc_auc=0.85799 (+/-0.009991)
 
 ---
 
@@ -30,9 +30,9 @@
     Message
       Optimizing roc_auc
       Initial best: 0.86616
-      1 ( ) accept suboptimal  roc_auc=0.86399 (+/-0.01081)
-      2 <3 new best           roc_auc=0.86768 (+/-0.009563)
-      3 <3 new best           roc_auc=0.87329 (+/-0.008273)
+      1 ( ) accept suboptimal  roc_auc=0.86568 (+/-0.01027)
+      2 <3 new best           roc_auc=0.86654 (+/-0.009714)
+      3 <3 new best           roc_auc=0.8688 (+/-0.009487)
 
 ---
 
@@ -42,7 +42,15 @@
     Message
       Optimizing roc_auc
       Initial best: 0.86616
-      1 ( ) accept suboptimal  roc_auc=0.86399 (+/-0.01081)
-      2 <3 new best           roc_auc=0.86768 (+/-0.009563)
-      3 <3 new best           roc_auc=0.87329 (+/-0.008273)
+      1 ( ) accept suboptimal  roc_auc=0.86568 (+/-0.01027)
+      2 <3 new best           roc_auc=0.86654 (+/-0.009714)
+      3 <3 new best           roc_auc=0.8688 (+/-0.009487)
+
+# tune_sim_anneal with wrong type
+
+    Code
+      tune_sim_anneal(1)
+    Condition
+      Error in `tune_sim_anneal()`:
+      ! The first argument to `tune_sim_anneal()` should be either a model or workflow.
 
