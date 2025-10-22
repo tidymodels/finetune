@@ -18,7 +18,8 @@ control_race(
   save_workflow = FALSE,
   event_level = "first",
   parallel_over = "everything",
-  backend_options = NULL
+  backend_options = NULL,
+  workflow_size = 100
 )
 }
 \arguments{
@@ -97,6 +98,10 @@ reproducible between runs.}
 \item{backend_options}{An object of class \code{"tune_backend_options"} as created
 by \code{tune::new_backend_options()}, used to pass arguments to specific tuning
 backend. Defaults to \code{NULL} for default backend options.}
+
+\item{workflow_size}{A non-negative number (in MB) that is used as a
+threshold for a warning regarding the size of the workflow. Only used when
+\code{save_workflow = TRUE}.}
 }
 \value{
 An object of class \code{control_race} that echos the argument values.
