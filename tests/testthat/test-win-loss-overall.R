@@ -80,7 +80,7 @@ test_that("one player is really bad", {
   df_folds <- vfold_cv(df, strata = y)
 
   rf_spec <-
-    rand_forest(min_n = tune(), trees = 10) |>
+    rand_forest(trees = tune()) |>
     set_engine("ranger") |>
     set_mode("classification")
 
@@ -88,7 +88,8 @@ test_that("one player is really bad", {
     add_formula(y ~ .) |>
     add_model(rf_spec)
 
-  grid <- tibble(min_n = c(1, 100))
+  grid <- tibble(trees = c(1, 200))
+
   ctrl <- control_race(burn_in = 2, alpha = .05, randomize = TRUE)
   set.seed(3355)
   tuning_results <- tune_race_win_loss(
