@@ -5,6 +5,7 @@ Codecov
 Lifecycle
 ORCID
 PBC
+ROR
 Technometrics
 doi
 dplyr
@@ -18,4 +19,3 @@ suboptimal
 tibble
 tidymodels
 unsummarized
-wc

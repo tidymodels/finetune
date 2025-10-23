@@ -51,7 +51,8 @@ data frame should have columns for each parameter being tuned and rows for
 tuning parameter candidates. An integer denotes the number of candidate
 parameter sets to be created automatically.}
 
-\item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} or \code{NULL}.}
+\item{metrics}{A \code{\link[yardstick:metric_set]{yardstick::metric_set()}} or \code{NULL}. The first metric in
+metrics is the one that will be optimized.}
 
 \item{eval_time}{A numeric vector of time points where dynamic event time
 metrics should be computed (e.g. the time-dependent ROC curve, etc). The
@@ -111,8 +112,9 @@ The next resample is used with the remaining parameter combinations and the
 statistical analysis is updated. More candidate parameters may be excluded
 with each new resample that is processed.
 
-The \code{\link[=control_race]{control_race()}} function contains are parameter for the significance cutoff
+The \code{\link[=control_race]{control_race()}} function contains parameters for the significance cutoff
 applied to the Bradley-Terry model results as well as other relevant arguments.
+The first metric in the \code{metrics} argument is the one that will be optimized.
 \subsection{Censored regression models}{
 
 With dynamic performance metrics (e.g. Brier or ROC curves), performance is
