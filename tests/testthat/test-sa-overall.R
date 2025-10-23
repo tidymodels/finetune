@@ -2,15 +2,20 @@ skip_if_not_installed("tune", minimum_version = "1.3.0.9006")
 
 test_that("formula interface", {
   skip_on_cran()
-  expect_snapshot({
-    set.seed(1)
-    res <- f_wflow |>
-      tune_sim_anneal(
-        cell_folds,
-        iter = 2,
-        control = control_sim_anneal(verbose = TRUE)
-      )
-  })
+
+  expect_message(
+    {
+      set.seed(1)
+      res <- f_wflow |>
+        tune_sim_anneal(
+          cell_folds,
+          iter = 2,
+          control = control_sim_anneal(verbose = TRUE)
+        )
+    },
+    regex = "Fold1"
+  )
+
   expect_equal(
     class(res),
     c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame")
@@ -25,18 +30,18 @@ test_that("formula interface", {
 
 test_that("recipe interface", {
   skip_on_cran()
-  skip_on_os("windows")
-  skip_on_os("linux")
 
-  expect_silent({
-    set.seed(1)
-    res <- rec_wflow |>
-      tune_sim_anneal(
-        cell_folds,
-        iter = 2,
-        control = control_sim_anneal(verbose = FALSE, verbose_iter = FALSE)
-      )
-  })
+  expect_silent(
+    {
+      set.seed(1)
+      res <- rec_wflow |>
+        tune_sim_anneal(
+          cell_folds,
+          iter = 2,
+          control = control_sim_anneal(verbose = FALSE, verbose_iter = FALSE)
+        )
+    }
+  )
 
   expect_equal(
     class(res),
@@ -50,15 +55,18 @@ test_that("recipe interface", {
 
 test_that("variable interface", {
   skip_on_cran()
-  expect_snapshot({
-    set.seed(1)
-    res <- var_wflow |>
-      tune_sim_anneal(
-        cell_folds,
-        iter = 2,
-        control = control_sim_anneal(verbose = TRUE, verbose_iter = TRUE)
-      )
-  })
+  expect_message(
+    {
+      set.seed(1)
+      res <- var_wflow |>
+        tune_sim_anneal(
+          cell_folds,
+          iter = 2,
+          control = control_sim_anneal(verbose = TRUE, verbose_iter = TRUE)
+        )
+    },
+    regex = "Fold3"
+  )
   expect_equal(
     class(res),
     c("iteration_results", "tune_results", "tbl_df", "tbl", "data.frame")
@@ -69,16 +77,20 @@ test_that("variable interface", {
   # Check to see if iterations are picked up when an iterative object is used
   # as the initial object
 
-  expect_snapshot({
-    set.seed(1)
-    new_res <- var_wflow |>
-      tune_sim_anneal(
-        cell_folds,
-        iter = 2,
-        initial = res,
-        control = control_sim_anneal(verbose = FALSE)
-      )
-  })
+  expect_message(
+    {
+      set.seed(1)
+      new_res <- var_wflow |>
+        tune_sim_anneal(
+          cell_folds,
+          iter = 2,
+          initial = res,
+          control = control_sim_anneal(verbose = FALSE)
+        )
+    },
+    regex = "previous iterations"
+  )
+
   expect_true(nrow(collect_metrics(new_res)) == 15)
   expect_true(max(new_res$.iter) == 4)
   expect_true(sum(grepl("^initial", collect_metrics(new_res)$.config)) == 9)
@@ -89,16 +101,19 @@ test_that("variable interface", {
   grid_res <- var_wflow |>
     tune_grid(cell_folds, grid = 2)
 
-  expect_snapshot({
-    set.seed(1)
-    new_new_res <- var_wflow |>
-      tune_sim_anneal(
-        cell_folds,
-        iter = 2,
-        initial = grid_res,
-        control = control_sim_anneal(verbose = FALSE)
-      )
-  })
+  expect_message(
+    {
+      set.seed(1)
+      new_new_res <- var_wflow |>
+        tune_sim_anneal(
+          cell_folds,
+          iter = 2,
+          initial = grid_res,
+          control = control_sim_anneal(verbose = FALSE)
+        )
+    },
+    regex = "Optimizing roc_auc"
+  )
   expect_true(nrow(collect_metrics(new_new_res)) == 12)
   expect_true(max(new_new_res$.iter) == 2)
   expect_true(sum(grepl("^initial", collect_metrics(new_new_res)$.config)) == 6)

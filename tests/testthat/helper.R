@@ -37,23 +37,19 @@ cart_rec <-
 ## -----------------------------------------------------------------------------
 
 rec_wflow <-
-  cell_knn <-
-    workflows::workflow() |>
-    workflows::add_model(cart_spec) |>
-    workflows::add_recipe(cart_rec)
+  workflows::workflow() |>
+  workflows::add_model(cart_spec) |>
+  workflows::add_recipe(cart_rec)
 
 f_wflow <-
-  cell_knn <-
-    workflows::workflow() |>
-    workflows::add_model(cart_spec) |>
-    workflows::add_formula(class ~ .)
+  workflows::workflow() |>
+  workflows::add_model(cart_spec) |>
+  workflows::add_formula(class ~ .)
 
 var_wflow <-
-  cell_knn <-
-    workflows::workflow() |>
-    workflows::add_model(cart_spec) |>
-    workflows::add_variables(class, dplyr::everything())
-
+  workflows::workflow() |>
+  workflows::add_model(cart_spec) |>
+  workflows::add_variables(class, dplyr::everything())
 
 # ------------------------------------------------------------------------------
 
