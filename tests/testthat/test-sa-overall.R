@@ -1,3 +1,5 @@
+skip_if_not_installed("tune", minimum_version = "1.3.0.9006")
+
 test_that("formula interface", {
   skip_on_cran()
   expect_snapshot({
@@ -125,9 +127,11 @@ test_that("unfinalized parameters", {
     add_model(model_rf) |>
     add_recipe(rec_example)
 
-  set.seed(30)
-  rf_res <- wf_rf |>
-    tune_grid(resamples = bt, grid = 4)
+  expect_message({
+    set.seed(30)
+    rf_res <- wf_rf |>
+      tune_grid(resamples = bt, grid = 4)
+  })
 
   expect_snapshot({
     set.seed(40)
