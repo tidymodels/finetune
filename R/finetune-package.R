@@ -13,6 +13,7 @@ NULL
 #' @importFrom dplyr distinct
 #' @importFrom utils globalVariables
 #' @import tune
+#' @import rlang
 NULL
 
 # ------------------------------------------------------------------------------
