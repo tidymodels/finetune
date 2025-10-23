@@ -89,6 +89,7 @@ test_that("one player is really bad", {
     add_model(rf_spec)
 
   grid <- tibble(trees = c(1, 200))
+
   ctrl <- control_race(burn_in = 2, alpha = .05, randomize = TRUE)
   set.seed(3355)
   tuning_results <- tune_race_win_loss(

@@ -19,7 +19,8 @@
 #'  data frame should have columns for each parameter being tuned and rows for
 #'  tuning parameter candidates. An integer denotes the number of candidate
 #'  parameter sets to be created automatically.
-#' @param metrics A [yardstick::metric_set()] or `NULL`.
+#' @param metrics A [yardstick::metric_set()] or `NULL`. The first metric in
+#' metrics is the one that will be optimized.
 #' @param eval_time A numeric vector of time points where dynamic event time
 #' metrics should be computed (e.g. the time-dependent ROC curve, etc). The
 #' values must be non-negative and should probably be no greater than the

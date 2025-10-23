@@ -51,8 +51,9 @@
 #'  statistical analysis is updated. More candidate parameters may be excluded
 #'  with each new resample that is processed.
 #'
-#' The [control_race()] function contains are parameter for the significance cutoff
+#' The [control_race()] function contains parameters for the significance cutoff
 #'  applied to the Bradley-Terry model results as well as other relevant arguments.
+#'  The first metric in the `metrics` argument is the one that will be optimized.
 #'
 #' ## Censored regression models
 #'
