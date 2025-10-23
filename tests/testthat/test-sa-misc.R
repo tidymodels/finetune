@@ -1,3 +1,5 @@
+skip_if_not_installed("tune", minimum_version = "1.3.0.9006")
+
 ## -----------------------------------------------------------------------------
 
 test_that("tune_sim_anneal interfaces", {
