@@ -252,9 +252,6 @@ Function Optimization", <em>Technometrics</em>, 28:3, 209-217</p>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:MASS’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     select</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
@@ -306,29 +303,29 @@ Function Optimization", <em>Technometrics</em>, 28:3, 209-217</p>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Optimizing roc_auc</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">Initial best: 0.76901</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">1 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.74976 (+/-0.01312)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">2 </span><span style="color: #BB0000;">─ discard suboptimal</span><span style="color: #000000;"> roc_auc=0.71709 (+/-0.002085)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">3 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.77048 (+/-0.01401)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">4 </span><span style="color: #BB0000;">─ discard suboptimal</span><span style="color: #000000;"> roc_auc=0.73095 (+/-0.005275)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">5 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.77262 (+/-0.01389)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">6 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.79846 (+/-0.01101)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">7 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.80686 (+/-0.01047)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">8 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.81519 (+/-0.01146)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">9 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.82479 (+/-0.009238)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">10 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.82235 (+/-0.01177)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">1 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.77048 (+/-0.01401)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">2 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.73095 (+/-0.005275)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">3 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.71709 (+/-0.002085)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">4 </span><span style="color: #00BB00;">+ better suboptimal </span><span style="color: #000000;"> roc_auc=0.74976 (+/-0.01312)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">5 </span><span style="color: #00BB00;">+ better suboptimal </span><span style="color: #000000;"> roc_auc=0.75418 (+/-0.01388)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">6 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.77262 (+/-0.01389)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">7 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.79848 (+/-0.01004)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">8 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.81059 (+/-0.01009)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">9 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.79846 (+/-0.01101)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">10 </span><span style="color: #00BB00;">+ better suboptimal </span><span style="color: #000000;"> roc_auc=0.80628 (+/-0.01041)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">There were 10 previous iterations</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Optimizing roc_auc</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">10 </span><span style="color: #0000BB;">✔ initial           </span><span style="color: #000000;"> roc_auc=0.82479 (+/-0.009238)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">11 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.83912 (+/-0.007893)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">12 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.84381 (+/-0.006581)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">13 </span><span style="color: #BB0000;">─ discard suboptimal</span><span style="color: #000000;"> roc_auc=0.83949 (+/-0.008792)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">14 </span><span style="color: #BB0000;">─ discard suboptimal</span><span style="color: #000000;"> roc_auc=0.83949 (+/-0.008792)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">15 </span><span style="color: #BB0000;">─ discard suboptimal</span><span style="color: #000000;"> roc_auc=0.83754 (+/-0.008797)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">16 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.84114 (+/-0.00662)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">17 </span><span style="color: #BB0000;">─ discard suboptimal</span><span style="color: #000000;"> roc_auc=0.83928 (+/-0.007538)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">18 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.83912 (+/-0.007893)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">19 </span><span style="color: #00BB00;">+ better suboptimal </span><span style="color: #000000;"> roc_auc=0.8421 (+/-0.007206)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">20 </span><span style="color: #BB0000;">✖ restart from best </span><span style="color: #000000;"> roc_auc=0.83751 (+/-0.01065)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">10 </span><span style="color: #0000BB;">✔ initial           </span><span style="color: #000000;"> roc_auc=0.81059 (+/-0.01009)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">11 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.82235 (+/-0.01177)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">12 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.83797 (+/-0.008248)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">13 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.83912 (+/-0.007893)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">14 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.8421 (+/-0.007206)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">15 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.83751 (+/-0.01065)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">16 </span><span style="color: #00BB00;">+ better suboptimal </span><span style="color: #000000;"> roc_auc=0.83949 (+/-0.008792)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">17 </span><span style="color: #00BB00;">♥ new best          </span><span style="color: #000000;"> roc_auc=0.84381 (+/-0.006581)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">18 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.83754 (+/-0.008797)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">19 </span><span style="color: #00BB00;">+ better suboptimal </span><span style="color: #000000;"> roc_auc=0.84114 (+/-0.00662)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #000000;">20 </span><span style="color: #BBBB00;">◯ accept suboptimal </span><span style="color: #000000;"> roc_auc=0.83805 (+/-0.008188)</span></span>
 <span class="r-plt img"><img src="tune_sim_anneal-1.png" alt="" width="768" height="552"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
@@ -344,7 +341,7 @@ Function Optimization", <em>Technometrics</em>, 28:3, 209-217</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
   </div></footer></body></html>
