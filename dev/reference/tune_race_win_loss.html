@@ -123,7 +123,8 @@ parameter sets to be created automatically.</p></dd>
 
 
 <dt id="arg-metrics">metrics<a class="anchor" aria-label="anchor" href="#arg-metrics"></a></dt>
-<dd><p>A <code><a href="https://yardstick.tidymodels.org/reference/metric_set.html" class="external-link">yardstick::metric_set()</a></code> or <code>NULL</code>.</p></dd>
+<dd><p>A <code><a href="https://yardstick.tidymodels.org/reference/metric_set.html" class="external-link">yardstick::metric_set()</a></code> or <code>NULL</code>. The first metric in
+metrics is the one that will be optimized.</p></dd>
 
 
 <dt id="arg-eval-time">eval_time<a class="anchor" aria-label="anchor" href="#arg-eval-time"></a></dt>
@@ -175,8 +176,9 @@ any settings whose interval includes zero are retained for future resamples
 <p>The next resample is used with the remaining parameter combinations and the
 statistical analysis is updated. More candidate parameters may be excluded
 with each new resample that is processed.</p>
-<p>The <code><a href="control_race.html">control_race()</a></code> function contains are parameter for the significance cutoff
-applied to the Bradley-Terry model results as well as other relevant arguments.</p><div class="section">
+<p>The <code><a href="control_race.html">control_race()</a></code> function contains parameters for the significance cutoff
+applied to the Bradley-Terry model results as well as other relevant arguments.
+The first metric in the <code>metrics</code> argument is the one that will be optimized.</p><div class="section">
 <h3 id="censored-regression-models">Censored regression models<a class="anchor" aria-label="anchor" href="#censored-regression-models"></a></h3>
 
 
