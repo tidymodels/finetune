@@ -10,17 +10,17 @@ Authors@R: c(
 Description: The ability to tune models is important. 'finetune' enhances
     the 'tune' package by providing more specialized methods for finding
     reasonable values of model tuning parameters.  Two racing methods
-    described by Kuhn (2014) <doi:10.48550/arXiv.1405.6974> are included. An 
-    iterative search method using generalized simulated annealing (Bohachevsky,
-    Johnson and Stein, 1986) <doi:10.1080/00401706.1986.10488128> is also
-    included.
+    described by Kuhn (2014) <doi:10.48550/arXiv.1405.6974> are included.
+    An iterative search method using generalized simulated annealing
+    (Bohachevsky, Johnson and Stein, 1986)
+    <doi:10.1080/00401706.1986.10488128> is also included.
 License: MIT + file LICENSE
 URL: https://github.com/tidymodels/finetune,
     https://finetune.tidymodels.org
 BugReports: https://github.com/tidymodels/finetune/issues
 Depends: 
     R (>= 4.1),
-    tune (>= 2.0.0)
+    tune (>= 2.0.1.9000)
 Imports: 
     cli,
     dials (>= 0.3.0),
@@ -28,7 +28,7 @@ Imports:
     ggplot2,
     parsnip (>= 1.1.0),
     purrr (>= 1.0.0),
-    rlang,
+    rlang (>= 1.1.0),
     tibble,
     tidyr,
     tidyselect,
@@ -50,6 +50,8 @@ Suggests:
     spelling,
     testthat,
     yardstick
+Remotes:
+    tidymodels/tune
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Config/usethis/last-upkeep: 2025-05-20

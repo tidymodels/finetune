@@ -48,7 +48,8 @@ control_sim_anneal <-
     event_level = "first",
     parallel_over = NULL,
     allow_par = TRUE,
-    backend_options = NULL
+    backend_options = NULL,
+    workflow_size = 100
   ) {
     # Any added arguments should also be added in superset control functions
     # in other package. In other words, if tune_grid adds an option, the same
@@ -125,7 +126,8 @@ control_sim_anneal <-
         event_level = event_level,
         parallel_over = parallel_over,
         allow_par = allow_par,
-        backend_options = backend_options
+        backend_options = backend_options,
+        workflow_size = workflow_size
       )
 
     class(res) <- "control_sim_anneal"

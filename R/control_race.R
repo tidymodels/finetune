@@ -35,7 +35,8 @@ control_race <-
     save_workflow = FALSE,
     event_level = "first",
     parallel_over = "everything",
-    backend_options = NULL
+    backend_options = NULL,
+    workflow_size = 100
   ) {
     # Any added arguments should also be added in superset control functions
     # in other package. In other words, if tune_grid adds an option, the same
@@ -53,6 +54,7 @@ control_race <-
     tune::val_class_and_single(event_level, "character", "control_race()")
     tune::val_class_or_null(extract, "function", "control_race()")
     tune::val_class_and_single(save_workflow, "logical", "control_race()")
+    check_number_decimal(workflow_size)
     if (!is.null(parallel_over)) {
       val_parallel_over(parallel_over, "control_sim_anneal()")
     }
@@ -79,7 +81,8 @@ control_race <-
       save_workflow = save_workflow,
       parallel_over = parallel_over,
       event_level = event_level,
-      backend_options = backend_options
+      backend_options = backend_options,
+      workflow_size = workflow_size
     )
 
     class(res) <- c("control_race")
