@@ -459,31 +459,42 @@ get_outcome_names <- function(x, rs) {
   res
 }
 
+set_config <- function(x, config = NULL, prefix = NULL) {
+  if (!is.null(x)) {
+    if (!is.null(prefix)) {
+      x <- dplyr::mutate(x, .config = paste0(prefix, "_", .config))
+    } else {
+      x <- dplyr::mutate(x, .config = config)
+    }
+  }
+  x
+}
+
 update_config <- function(x, prefix = NULL, config = "new", save_pred) {
   if (!is.null(prefix)) {
     x$.metrics <-
       purrr::map(
         x$.metrics,
-        \(x) dplyr::mutate(x, .config = paste0(prefix, "_", .config))
+        \(x) set_config(x, prefix = prefix)
       )
     if (save_pred) {
       x$.predictions <-
         purrr::map(
           x$.predictions,
-          \(x) dplyr::mutate(x, .config = paste0(prefix, "_", .config))
+          \(x) set_config(x, prefix = prefix)
         )
     }
   } else {
     x$.metrics <-
       purrr::map(
         x$.metrics,
-        \(x) dplyr::mutate(x, .config = config)
+        \(x) set_config(x, config = config)
       )
     if (save_pred) {
       x$.predictions <-
         purrr::map(
           x$.predictions,
-          \(x) dplyr::mutate(x, .config = config)
+          \(x) set_config(x, config = config)
         )
     }
   }

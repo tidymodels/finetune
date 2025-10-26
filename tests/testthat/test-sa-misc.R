@@ -83,3 +83,26 @@ test_that("tune_sim_anneal with wrong type", {
     error = TRUE
   )
 })
+
+# ------------------------------------------------------------------------------
+
+test_that("tune_sim_anneal loggining doesn't error with failed model", {
+  # no failed results:
+  res_1 <- purrr::map_dfr(
+    ames_iter_search$.metrics,
+    finetune:::set_config,
+    config = "beratna"
+  )
+  expect_true(all(res_1$.config == "beratna"))
+
+  has_failure <- tune:::vec_list_rowwise(ames_iter_search$.metrics[[1]])[1:3]
+  has_failure[2] <- list(NULL)
+  res_2 <- purrr::map(
+    has_failure,
+    finetune:::set_config,
+    config = "sasa ke?"
+  )
+  expect_null(res_2[[2]])
+  expect_equal(res_2[[1]]$.config, "sasa ke?")
+  expect_equal(res_2[[3]]$.config, "sasa ke?")
+})
