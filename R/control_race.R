@@ -56,7 +56,7 @@ control_race <-
     check_bool(save_workflow)
     check_number_decimal(workflow_size)
     if (!is.null(parallel_over)) {
-      val_parallel_over(parallel_over)
+      rlang::arg_match0(parallel_over, c("resamples", "everything"))
     }
 
     if (alpha <= 0 | alpha >= 1) {

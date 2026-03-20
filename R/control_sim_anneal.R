@@ -70,7 +70,7 @@ control_sim_anneal <-
     check_bool(allow_par)
 
     if (!is.null(parallel_over)) {
-      val_parallel_over(parallel_over)
+      rlang::arg_match0(parallel_over, c("resamples", "everything"))
     }
 
     if (!is.numeric(radius) | !length(radius) == 2) {
@@ -120,15 +120,4 @@ control_sim_anneal <-
 print.control_sim_anneal <- function(x, ...) {
   cat("Simulated annealing control object\n")
   invisible(x)
-}
-
-
-val_parallel_over <- function(parallel_over) {
-  check_string(parallel_over)
-  rlang::arg_match0(
-    parallel_over,
-    c("resamples", "everything"),
-    "parallel_over"
-  )
-  invisible(NULL)
 }

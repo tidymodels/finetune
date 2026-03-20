@@ -196,7 +196,7 @@
     Code
       control_sim_anneal(parallel_over = "other")
     Condition
-      Error in `val_parallel_over()`:
+      Error in `control_sim_anneal()`:
       ! `parallel_over` must be one of "resamples" or "everything", not "other".
 
 # casting control_sim_anneal to control_grid

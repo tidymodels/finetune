@@ -179,7 +179,7 @@
     Code
       control_race(parallel_over = "other")
     Condition
-      Error in `val_parallel_over()`:
+      Error in `control_race()`:
       ! `parallel_over` must be one of "resamples" or "everything", not "other".
 
 # casting control_race to control_grid
