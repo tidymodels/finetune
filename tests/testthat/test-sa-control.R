@@ -20,6 +20,7 @@ test_that("control_sim_anneal arg passing", {
 test_that("control_sim_anneal bad arg passing", {
   expect_snapshot(error = TRUE, control_sim_anneal(verbose = "TRUE"))
   expect_snapshot(error = TRUE, control_sim_anneal(verbose = rep(TRUE, 2)))
+  expect_snapshot(error = TRUE, control_sim_anneal(verbose_iter = "TRUE"))
   expect_snapshot(error = TRUE, control_sim_anneal(save_pred = "TRUE"))
   expect_snapshot(error = TRUE, control_sim_anneal(save_pred = rep(TRUE, 2)))
   expect_snapshot(error = TRUE, control_sim_anneal(save_workflow = "TRUE"))
@@ -27,6 +28,8 @@ test_that("control_sim_anneal bad arg passing", {
     error = TRUE,
     control_sim_anneal(save_workflow = rep(TRUE, 2))
   )
+  expect_snapshot(error = TRUE, control_sim_anneal(save_history = "TRUE"))
+  expect_snapshot(error = TRUE, control_sim_anneal(allow_par = "TRUE"))
   expect_snapshot(error = TRUE, control_sim_anneal(no_improve = "yes"))
   expect_snapshot(error = TRUE, control_sim_anneal(no_improve = 0:1))
   expect_snapshot(error = TRUE, control_sim_anneal(no_improve = 1))
@@ -45,8 +48,10 @@ test_that("control_sim_anneal bad arg passing", {
   expect_snapshot(error = TRUE, control_sim_anneal(cooling_coef = "huge"))
   expect_equal(control_sim_anneal(cooling_coef = -1)$cooling_coef, 0.0001)
   expect_equal(control_sim_anneal(cooling_coef = 2)$cooling_coef, 2)
+  expect_snapshot(error = TRUE, control_sim_anneal(time_limit = "soon"))
   expect_snapshot(error = TRUE, control_sim_anneal(pkg = 0:1))
   expect_snapshot(error = TRUE, control_sim_anneal(extract = 0:1))
+  expect_snapshot(error = TRUE, control_sim_anneal(parallel_over = "other"))
 })
 
 test_that("casting control_sim_anneal to control_grid", {

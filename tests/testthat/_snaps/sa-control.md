@@ -17,6 +17,14 @@
 ---
 
     Code
+      control_sim_anneal(verbose_iter = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `verbose_iter` must be `TRUE` or `FALSE`, not the string "TRUE".
+
+---
+
+    Code
       control_sim_anneal(save_pred = "TRUE")
     Condition
       Error in `control_sim_anneal()`:
@@ -45,6 +53,22 @@
     Condition
       Error in `control_sim_anneal()`:
       ! `save_workflow` must be `TRUE` or `FALSE`, not a logical vector.
+
+---
+
+    Code
+      control_sim_anneal(save_history = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `save_history` must be `TRUE` or `FALSE`, not the string "TRUE".
+
+---
+
+    Code
+      control_sim_anneal(allow_par = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `allow_par` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
@@ -146,6 +170,14 @@
 ---
 
     Code
+      control_sim_anneal(time_limit = "soon")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `time_limit` must be a number or `NA`, not the string "soon".
+
+---
+
+    Code
       control_sim_anneal(pkg = 0:1)
     Condition
       Error in `control_sim_anneal()`:
@@ -158,6 +190,14 @@
     Condition
       Error in `control_sim_anneal()`:
       ! `extract` must be a function or `NULL`, not an integer vector.
+
+---
+
+    Code
+      control_sim_anneal(parallel_over = "other")
+    Condition
+      Error in `val_parallel_over()`:
+      ! `parallel_over` must be one of "resamples" or "everything", not "other".
 
 # casting control_sim_anneal to control_grid
 

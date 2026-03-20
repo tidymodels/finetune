@@ -33,6 +33,14 @@
 ---
 
     Code
+      control_race(allow_par = "TRUE")
+    Condition
+      Error in `control_race()`:
+      ! `allow_par` must be `TRUE` or `FALSE`, not the string "TRUE".
+
+---
+
+    Code
       control_race(save_pred = "TRUE")
     Condition
       Error in `control_race()`:
@@ -61,6 +69,14 @@
     Condition
       Error in `control_race()`:
       ! `save_workflow` must be `TRUE` or `FALSE`, not a logical vector.
+
+---
+
+    Code
+      control_race(randomize = "TRUE")
+    Condition
+      Error in `control_race()`:
+      ! `randomize` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
@@ -129,6 +145,22 @@
 ---
 
     Code
+      control_race(event_level = TRUE)
+    Condition
+      Error in `control_race()`:
+      ! `event_level` must be a single string, not `TRUE`.
+
+---
+
+    Code
+      control_race(workflow_size = "big")
+    Condition
+      Error in `control_race()`:
+      ! `workflow_size` must be a number, not the string "big".
+
+---
+
+    Code
       control_race(pkg = 0:1)
     Condition
       Error in `control_race()`:
@@ -141,6 +173,14 @@
     Condition
       Error in `control_race()`:
       ! `extract` must be a function or `NULL`, not an integer vector.
+
+---
+
+    Code
+      control_race(parallel_over = "other")
+    Condition
+      Error in `val_parallel_over()`:
+      ! `parallel_over` must be one of "resamples" or "everything", not "other".
 
 # casting control_race to control_grid
 
