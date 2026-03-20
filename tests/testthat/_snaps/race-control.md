@@ -1,74 +1,146 @@
 # control_race bad arg passing
 
-    `verbose` must be `TRUE` or `FALSE`, not the string "TRUE".
+    Code
+      control_race(verbose = "TRUE")
+    Condition
+      Error in `control_race()`:
+      ! `verbose` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    `verbose` must be `TRUE` or `FALSE`, not a logical vector.
+    Code
+      control_race(verbose = rep(TRUE, 2))
+    Condition
+      Error in `control_race()`:
+      ! `verbose` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    `verbose_elim` must be `TRUE` or `FALSE`, not the string "TRUE".
+    Code
+      control_race(verbose_elim = "TRUE")
+    Condition
+      Error in `control_race()`:
+      ! `verbose_elim` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    `verbose_elim` must be `TRUE` or `FALSE`, not a logical vector.
+    Code
+      control_race(verbose_elim = rep(TRUE, 2))
+    Condition
+      Error in `control_race()`:
+      ! `verbose_elim` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    `save_pred` must be `TRUE` or `FALSE`, not the string "TRUE".
+    Code
+      control_race(save_pred = "TRUE")
+    Condition
+      Error in `control_race()`:
+      ! `save_pred` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    `save_pred` must be `TRUE` or `FALSE`, not a logical vector.
+    Code
+      control_race(save_pred = rep(TRUE, 2))
+    Condition
+      Error in `control_race()`:
+      ! `save_pred` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    `save_workflow` must be `TRUE` or `FALSE`, not the string "TRUE".
+    Code
+      control_race(save_workflow = "TRUE")
+    Condition
+      Error in `control_race()`:
+      ! `save_workflow` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    `save_workflow` must be `TRUE` or `FALSE`, not a logical vector.
+    Code
+      control_race(save_workflow = rep(TRUE, 2))
+    Condition
+      Error in `control_race()`:
+      ! `save_workflow` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    `burn_in` must be a whole number, not the string "yes".
+    Code
+      control_race(burn_in = "yes")
+    Condition
+      Error in `control_race()`:
+      ! `burn_in` must be a whole number, not the string "yes".
 
 ---
 
-    `burn_in` must be a whole number, not an integer vector.
+    Code
+      control_race(burn_in = 0:1)
+    Condition
+      Error in `control_race()`:
+      ! `burn_in` must be a whole number, not an integer vector.
 
 ---
 
-    `burn_in` must be a whole number larger than or equal to 2, not the number 1.
+    Code
+      control_race(burn_in = 1)
+    Condition
+      Error in `control_race()`:
+      ! `burn_in` must be a whole number larger than or equal to 2, not the number 1.
 
 ---
 
-    `num_ties` must be a whole number, not the string "yes".
+    Code
+      control_race(num_ties = "yes")
+    Condition
+      Error in `control_race()`:
+      ! `num_ties` must be a whole number, not the string "yes".
 
 ---
 
-    `num_ties` must be a whole number, not an integer vector.
+    Code
+      control_race(num_ties = 0:1)
+    Condition
+      Error in `control_race()`:
+      ! `num_ties` must be a whole number, not an integer vector.
 
 ---
 
-    `alpha` must be a number, not an integer vector.
+    Code
+      control_race(alpha = 0:1)
+    Condition
+      Error in `control_race()`:
+      ! `alpha` must be a number, not an integer vector.
 
 ---
 
-    `alpha` must be a number, not the string "huge".
+    Code
+      control_race(alpha = "huge")
+    Condition
+      Error in `control_race()`:
+      ! `alpha` must be a number, not the string "huge".
 
 ---
 
-    `alpha` should be on (0, 1).
+    Code
+      control_race(alpha = 1)
+    Condition
+      Error in `control_race()`:
+      ! `alpha` should be on (0, 1).
 
 ---
 
-    `pkgs` must be a character vector or `NULL`, not an integer vector.
+    Code
+      control_race(pkg = 0:1)
+    Condition
+      Error in `control_race()`:
+      ! `pkgs` must be a character vector or `NULL`, not an integer vector.
 
 ---
 
-    `extract` must be a function or `NULL`, not an integer vector.
+    Code
+      control_race(extract = 0:1)
+    Condition
+      Error in `control_race()`:
+      ! `extract` must be a function or `NULL`, not an integer vector.
 
 # casting control_race to control_grid
 
