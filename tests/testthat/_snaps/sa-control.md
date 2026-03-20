@@ -1,50 +1,50 @@
 # control_sim_anneal bad arg passing
 
-    Argument 'verbose' should be a single logical value in `control_sim_anneal()`
+    `verbose` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    Argument 'verbose' should be a single logical value in `control_sim_anneal()`
+    `verbose` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    Argument 'save_pred' should be a single logical value in `control_sim_anneal()`
+    `save_pred` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    Argument 'save_pred' should be a single logical value in `control_sim_anneal()`
+    `save_pred` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    Argument 'save_workflow' should be a single logical value in `control_sim_anneal()`
+    `save_workflow` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    Argument 'save_workflow' should be a single logical value in `control_sim_anneal()`
+    `save_workflow` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    Argument 'no_improve' should be a single numeric or integer value in `control_sim_anneal()`
+    `no_improve` must be a whole number, not the string "yes".
 
 ---
 
-    Argument 'no_improve' should be a single numeric or integer value in `control_sim_anneal()`
+    `no_improve` must be a whole number, not an integer vector.
 
 ---
 
-    `no_improve` should be > 1.
+    `no_improve` must be a whole number larger than or equal to 2, not the number 1.
 
 ---
 
-    Argument 'restart' should be a single numeric or integer value in `control_sim_anneal()`
+    `restart` must be a whole number, not the string "yes".
 
 ---
 
-    Argument 'restart' should be a single numeric or integer value in `control_sim_anneal()`
+    `restart` must be a whole number, not an integer vector.
 
 ---
 
-    `restart` should be > 1.
+    `restart` must be a whole number larger than or equal to 2, not the number 1.
 
 ---
 
@@ -61,32 +61,42 @@
 
 ---
 
-    Argument 'flip' should be a single numeric value in `control_sim_anneal()`
+    `flip` must be a number, not an integer vector.
 
 ---
 
-    Argument 'flip' should be a single numeric value in `control_sim_anneal()`
+    `flip` must be a number, not the string "huge".
 
 ---
 
-    Argument 'cooling_coef' should be a single numeric value in `control_sim_anneal()`
+    `cooling_coef` must be a number, not an integer vector.
 
 ---
 
-    Argument 'cooling_coef' should be a single numeric value in `control_sim_anneal()`
+    `cooling_coef` must be a number, not the string "huge".
 
 ---
 
-    Argument 'pkgs' should be a character or NULL in `control_sim_anneal()`
+    `pkgs` must be a character vector or `NULL`, not an integer vector.
 
 ---
 
-    Argument 'extract' should be a function or NULL in `control_sim_anneal()`
+    `extract` must be a function or `NULL`, not an integer vector.
 
 # casting control_sim_anneal to control_grid
 
     Code
       parsnip::condense_control(control_sim_anneal(), control_grid())
-    Output
-      grid/resamples control object
+    Message
+      Grid/resamples control object
+        `verbose`: FALSE
+        `allow_par`: TRUE
+        `extract`: NULL
+        `save_pred`: FALSE
+        `pkgs`: NULL
+        `save_workflow`: FALSE
+        `event_level`: "first"
+        `parallel_over`: NULL
+        `backend_options`: NULL
+        `workflow_size`: 100
 
