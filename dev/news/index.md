@@ -5,6 +5,9 @@
 - A bug was fixed where `NULL` results generated during simulated
   annealing would cause errors when logging.
 
+- Input checks now provide more informative error messages for invalid
+  arguments ([\#79](https://github.com/tidymodels/finetune/issues/79)).
+
 ## finetune 1.2.1
 
 CRAN release: 2025-05-20

@@ -14,13 +14,13 @@
 Source:
 [`DESCRIPTION`](https://github.com/tidymodels/finetune/blob/main/DESCRIPTION)
 
-Kuhn M (2025). *finetune: Additional Functions for Model Tuning*. R
+Kuhn M (2026). *finetune: Additional Functions for Model Tuning*. R
 package version 1.2.1.9000, <https://github.com/tidymodels/finetune>.
 
     @Manual{,
       title = {finetune: Additional Functions for Model Tuning},
       author = {Max Kuhn},
-      year = {2025},
+      year = {2026},
       note = {R package version 1.2.1.9000},
       url = {https://github.com/tidymodels/finetune},
     }
