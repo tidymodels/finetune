@@ -55,34 +55,22 @@ control_sim_anneal <-
     # in other package. In other words, if tune_grid adds an option, the same
     # object should be added here (regardless)
 
-    tune::val_class_and_single(verbose, "logical", "control_sim_anneal()")
-    tune::val_class_and_single(verbose_iter, "logical", "control_sim_anneal()")
-    tune::val_class_and_single(save_pred, "logical", "control_sim_anneal()")
-    tune::val_class_and_single(
-      no_improve,
-      c("numeric", "integer"),
-      "control_sim_anneal()"
-    )
-    tune::val_class_and_single(
-      restart,
-      c("numeric", "integer"),
-      "control_sim_anneal()"
-    )
-    tune::val_class_and_single(flip, "numeric", "control_sim_anneal()")
-    tune::val_class_and_single(cooling_coef, "numeric", "control_sim_anneal()")
-    tune::val_class_or_null(extract, "function", "control_sim_anneal()")
-    tune::val_class_and_single(
-      time_limit,
-      c("logical", "numeric"),
-      "control_sim_anneal()"
-    )
-    tune::val_class_or_null(pkgs, "character", "control_sim_anneal()")
-    tune::val_class_and_single(save_workflow, "logical", "control_sim_anneal()")
-    tune::val_class_and_single(save_history, "logical", "control_sim_anneal()")
-    tune::val_class_and_single(allow_par, "logical", "control_sim_anneal()")
+    check_bool(verbose)
+    check_bool(verbose_iter)
+    check_bool(save_pred)
+    check_number_whole(no_improve, min = 2, allow_infinite = TRUE)
+    check_number_whole(restart, min = 2)
+    check_number_decimal(flip)
+    check_number_decimal(cooling_coef)
+    check_function(extract, allow_null = TRUE)
+    check_number_decimal(time_limit, allow_na = TRUE)
+    check_character(pkgs, allow_null = TRUE)
+    check_bool(save_workflow)
+    check_bool(save_history)
+    check_bool(allow_par)
 
     if (!is.null(parallel_over)) {
-      val_parallel_over(parallel_over, "control_sim_anneal()")
+      rlang::arg_match0(parallel_over, c("resamples", "everything"))
     }
 
     if (!is.numeric(radius) | !length(radius) == 2) {
@@ -96,12 +84,6 @@ control_sim_anneal <-
     flip[flip > 1] <- 1
     cooling_coef[cooling_coef <= 0] <- 0.0001
 
-    if (no_improve < 2) {
-      cli::cli_abort("{.arg no_improve} should be > 1.")
-    }
-    if (restart < 2) {
-      cli::cli_abort("{.arg restart} should be > 1.")
-    }
     if (!is.infinite(restart) && restart > no_improve) {
       cli::cli_alert_warning(
         "Parameter restart is scheduled after {restart} poor iterations but the search will stop after {no_improve}."
@@ -138,15 +120,4 @@ control_sim_anneal <-
 print.control_sim_anneal <- function(x, ...) {
   cat("Simulated annealing control object\n")
   invisible(x)
-}
-
-
-val_parallel_over <- function(parallel_over, where) {
-  val_class_and_single(parallel_over, "character", where)
-  rlang::arg_match0(
-    parallel_over,
-    c("resamples", "everything"),
-    "parallel_over"
-  )
-  invisible(NULL)
 }

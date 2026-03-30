@@ -13,9 +13,19 @@
 
 # too few resamples
 
-    The number of resamples (2) needs to be more than the number of burn-in resamples (3) set by the control function `control_race()`.
+    Code
+      tune_race_anova(f_wflow, rs, grid = grid_mod, control = control_race(
+        verbose_elim = TRUE))
+    Condition
+      Error in `tune_race_anova()`:
+      ! The number of resamples (2) needs to be more than the number of burn-in resamples (3) set by the control function `control_race()`.
 
 ---
 
-    The number of resamples (2) needs to be more than the number of burn-in resamples (3) set by the control function `control_race()`.
+    Code
+      tune_race_win_loss(f_wflow, rs, grid = grid_mod, control = control_race(
+        verbose_elim = TRUE))
+    Condition
+      Error in `tune_race_win_loss()`:
+      ! The number of resamples (2) needs to be more than the number of burn-in resamples (3) set by the control function `control_race()`.
 
