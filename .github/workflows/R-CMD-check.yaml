@@ -51,12 +51,13 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      # Matrix requires R >= 4.4, which means BradleyTerry2 and lme4
+      # (Suggests) can't be installed on older R. Use hard dependencies
+      # only on oldrel-4 to avoid the unsolvable dependency chain.
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages:
-            any::rcmdcheck,
-            lme4=?ignore-before-r=4.4,
-            BradleyTerry2=?ignore-before-r=4.4
+          extra-packages: any::rcmdcheck
+          dependencies: ${{ matrix.config.r == 'oldrel-4' && '"hard"' || 'NA' }}
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
