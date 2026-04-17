@@ -278,7 +278,7 @@ tune_race_anova_workflow <-
     resamples <- dplyr::mutate(resamples, .order = dplyr::row_number())
 
     min_rs <- control$burn_in
-    check_num_resamples(B, min_rs)
+    check_num_resamples(B, min_rs, call = call)
     tmp_resamples <- restore_rset(resamples, 1:min_rs)
 
     metrics <- tune::check_metrics_arg(metrics, object, call = call)
@@ -416,13 +416,13 @@ tune_race_anova_workflow <-
   }
 
 # fmt: skip
-check_num_resamples <- function(B, min_rs) {
+check_num_resamples <- function(B, min_rs, call = rlang::caller_env()) {
   if (B <= min_rs) {
     cli::cli_abort(
-      paste0("The number of resamples (", B, ") needs to be more than the ",
-             "number of burn-in resamples (", min_rs, ") set by the control ",
-             "function `control_race()`."),
-      call = NULL
+      "The number of resamples ({B}) needs to be more than the number of
+      burn-in resamples ({min_rs}) set by the control function
+      {.fun control_race}.",
+      call = call
     )
   }
   invisible(NULL)

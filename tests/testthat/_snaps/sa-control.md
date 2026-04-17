@@ -1,50 +1,122 @@
 # control_sim_anneal bad arg passing
 
-    Argument 'verbose' should be a single logical value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(verbose = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `verbose` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    Argument 'verbose' should be a single logical value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(verbose = rep(TRUE, 2))
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `verbose` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    Argument 'save_pred' should be a single logical value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(verbose_iter = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `verbose_iter` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    Argument 'save_pred' should be a single logical value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(save_pred = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `save_pred` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    Argument 'save_workflow' should be a single logical value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(save_pred = rep(TRUE, 2))
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `save_pred` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    Argument 'save_workflow' should be a single logical value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(save_workflow = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `save_workflow` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    Argument 'no_improve' should be a single numeric or integer value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(save_workflow = rep(TRUE, 2))
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `save_workflow` must be `TRUE` or `FALSE`, not a logical vector.
 
 ---
 
-    Argument 'no_improve' should be a single numeric or integer value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(save_history = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `save_history` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    `no_improve` should be > 1.
+    Code
+      control_sim_anneal(allow_par = "TRUE")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `allow_par` must be `TRUE` or `FALSE`, not the string "TRUE".
 
 ---
 
-    Argument 'restart' should be a single numeric or integer value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(no_improve = "yes")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `no_improve` must be a whole number, not the string "yes".
 
 ---
 
-    Argument 'restart' should be a single numeric or integer value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(no_improve = 0:1)
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `no_improve` must be a whole number, not an integer vector.
 
 ---
 
-    `restart` should be > 1.
+    Code
+      control_sim_anneal(no_improve = 1)
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `no_improve` must be a whole number larger than or equal to 2, not the number 1.
+
+---
+
+    Code
+      control_sim_anneal(restart = "yes")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `restart` must be a whole number, not the string "yes".
+
+---
+
+    Code
+      control_sim_anneal(restart = 0:1)
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `restart` must be a whole number, not an integer vector.
+
+---
+
+    Code
+      control_sim_anneal(restart = 1)
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `restart` must be a whole number larger than or equal to 2, not the number 1.
 
 ---
 
@@ -57,36 +129,90 @@
 
 ---
 
-    Argument `radius` should be two numeric values.
+    Code
+      control_sim_anneal(radius = "huge")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! Argument `radius` should be two numeric values.
 
 ---
 
-    Argument 'flip' should be a single numeric value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(flip = 0:1)
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `flip` must be a number, not an integer vector.
 
 ---
 
-    Argument 'flip' should be a single numeric value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(flip = "huge")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `flip` must be a number, not the string "huge".
 
 ---
 
-    Argument 'cooling_coef' should be a single numeric value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(cooling_coef = 0:1)
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `cooling_coef` must be a number, not an integer vector.
 
 ---
 
-    Argument 'cooling_coef' should be a single numeric value in `control_sim_anneal()`
+    Code
+      control_sim_anneal(cooling_coef = "huge")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `cooling_coef` must be a number, not the string "huge".
 
 ---
 
-    Argument 'pkgs' should be a character or NULL in `control_sim_anneal()`
+    Code
+      control_sim_anneal(time_limit = "soon")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `time_limit` must be a number or `NA`, not the string "soon".
 
 ---
 
-    Argument 'extract' should be a function or NULL in `control_sim_anneal()`
+    Code
+      control_sim_anneal(pkg = 0:1)
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `pkgs` must be a character vector or `NULL`, not an integer vector.
+
+---
+
+    Code
+      control_sim_anneal(extract = 0:1)
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `extract` must be a function or `NULL`, not an integer vector.
+
+---
+
+    Code
+      control_sim_anneal(parallel_over = "other")
+    Condition
+      Error in `control_sim_anneal()`:
+      ! `parallel_over` must be one of "resamples" or "everything", not "other".
 
 # casting control_sim_anneal to control_grid
 
     Code
       parsnip::condense_control(control_sim_anneal(), control_grid())
-    Output
-      grid/resamples control object
+    Message
+      Grid/resamples control object
+        `verbose`: FALSE
+        `allow_par`: TRUE
+        `extract`: NULL
+        `save_pred`: FALSE
+        `pkgs`: NULL
+        `save_workflow`: FALSE
+        `event_level`: "first"
+        `parallel_over`: NULL
+        `backend_options`: NULL
+        `workflow_size`: 100
 
