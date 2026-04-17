@@ -393,6 +393,9 @@ restore_rset <- function(x, index) {
   att <- attributes(x)
   x <- x |> dplyr::slice(index)
   att$row.names <- att$row.names[index]
+  if (!is.null(att[[".resample_weights"]])) {
+    att[[".resample_weights"]] <- att[[".resample_weights"]][index]
+  }
   attributes(x) <- att
   x
 }
@@ -633,6 +636,7 @@ randomize_resamples <- function(x) {
   att <- attributes(x)
   B <- nrow(x)
   x$.rand <- runif(B)
+  x$.orig_order <- seq_len(B)
   reps <- attr(x, "repeats")
   if (!is.null(reps) && reps > 1) {
     x <- x |>
@@ -641,8 +645,13 @@ randomize_resamples <- function(x) {
   } else {
     x <- x |> dplyr::arrange(.rand)
   }
+  new_order <- x$.orig_order
   x$.rand <- NULL
+  x$.orig_order <- NULL
   att$row.names <- att$row.names
+  if (!is.null(att[[".resample_weights"]])) {
+    att[[".resample_weights"]] <- att[[".resample_weights"]][new_order]
+  }
   attributes(x) <- att
   x
 }
