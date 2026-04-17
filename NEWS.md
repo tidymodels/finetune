@@ -4,6 +4,8 @@
 
 * Input checks now provide more informative error messages for invalid arguments (#79).
 
+* When calculating resampling estimates, the tune package can now use a weighted mean based on the number of rows in the assessment set. finetune was updated to preserve those weights during racing (#135). 
+
 # finetune 1.2.1
 
 * Maintenance release required by CRAN.
