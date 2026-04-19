@@ -12,7 +12,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/tidymodels/finetune/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/tidymodels/finetune/blob/v1.3.0/DESCRIPTION)
 
 Kuhn M (2026). *finetune: Additional Functions for Model Tuning*. R
 package version 1.3.0, <https://github.com/tidymodels/finetune>.

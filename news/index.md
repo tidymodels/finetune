@@ -2,6 +2,8 @@
 
 ## finetune 1.3.0
 
+CRAN release: 2026-04-18
+
 - A bug was fixed where `NULL` results generated during simulated
   annealing would cause errors when logging.
 
