@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">finetune</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.2.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,8 +33,12 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="finetune-development-version">finetune (development version)<a class="anchor" aria-label="anchor" href="#finetune-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.3.0" id="finetune-130">finetune 1.3.0<a class="anchor" aria-label="anchor" href="#finetune-130"></a></h2><p class="text-muted">CRAN release: 2026-04-18</p>
 <ul><li><p>A bug was fixed where <code>NULL</code> results generated during simulated annealing would cause errors when logging.</p></li>
 <li><p>Input checks now provide more informative error messages for invalid arguments (<a href="https://github.com/tidymodels/finetune/issues/79" class="external-link">#79</a>).</p></li>
+<li><p>When calculating resampling estimates, the tune package can now use a weighted mean based on the number of rows in the assessment set. finetune was updated to preserve those weights during racing (<a href="https://github.com/tidymodels/finetune/issues/135" class="external-link">#135</a>).</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.2.1" id="finetune-121">finetune 1.2.1<a class="anchor" aria-label="anchor" href="#finetune-121"></a></h2><p class="text-muted">CRAN release: 2025-05-20</p>

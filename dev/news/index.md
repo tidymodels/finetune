@@ -2,11 +2,20 @@
 
 ## finetune (development version)
 
+## finetune 1.3.0
+
+CRAN release: 2026-04-18
+
 - A bug was fixed where `NULL` results generated during simulated
   annealing would cause errors when logging.
 
 - Input checks now provide more informative error messages for invalid
   arguments ([\#79](https://github.com/tidymodels/finetune/issues/79)).
+
+- When calculating resampling estimates, the tune package can now use a
+  weighted mean based on the number of rows in the assessment set.
+  finetune was updated to preserve those weights during racing
+  ([\#135](https://github.com/tidymodels/finetune/issues/135)).
 
 ## finetune 1.2.1
 
