@@ -119,6 +119,7 @@ converted to win/loss/tie results. For example, for two parameters (`j`
 and `k`) in a classification model that have each been resampled three
 times:
 
+
                 |  area under the ROC curve |
                 -----------------------------
        resample | parameter j | parameter k | winner

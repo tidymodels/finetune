@@ -5,12 +5,14 @@ what is currently in the `tune` package. You can install the CRAN
 version of the package with the following code:
 
 ``` r
+
 install.packages("finetune")
 ```
 
 To install the development version of the package, run:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("tidymodels/finetune")
 ```
@@ -22,6 +24,7 @@ Tuning via *simulated annealing* optimization is an iterative search
 tool for finding good values:
 
 ``` r
+
 library(tidymodels)
 library(finetune)
 
@@ -87,6 +90,7 @@ For example, using an ANOVA-type analysis to filter out parameter
 combinations:
 
 ``` r
+
 set.seed(3)
 grid <-
   rda_spec |>
@@ -125,6 +129,7 @@ can also be used. It treats the tuning parameters as sports teams in a
 tournament and computed win/loss statistics.
 
 ``` r
+
 set.seed(4)
 grid_win_loss<- 
   rda_spec |> 
