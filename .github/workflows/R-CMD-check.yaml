@@ -52,9 +52,18 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      # The macOS leg alone builds `gower` on the runner. The RSPM arm64
+      # binary links the OpenMP symbol `___kmpc_barrier`, and the runner
+      # image ships no libomp, so `dlopen` of `gower/libs/gower.so` fails
+      # with "symbol not found in flat namespace" and takes down the
+      # install step of `R CMD build`. `gower` is a transitive Suggests
+      # dependency (via recipes), so no package code can route around it.
+      # `?source` builds this one package from source and leaves every
+      # other package, and every other leg, on the binary path.
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: ${{ matrix.config.os == 'macos-latest' && 'any::rcmdcheck, gower?source' || 'any::rcmdcheck' }}
+          needs: check
 
       - uses: r-lib/actions/check-r-package@v2
         with:
