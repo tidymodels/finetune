@@ -1,5 +1,9 @@
 # finetune (development version)
 
+* `tune_race_anova()` no longer errors when a racing metric is constant across configurations (#137).
+
+* `tune_race_anova()` now keeps configurations that exactly tie with the best one instead of eliminating them (#137).
+
 # finetune 1.3.0
 
 * A bug was fixed where `NULL` results generated during simulated annealing would cause errors when logging. 
