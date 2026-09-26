@@ -160,3 +160,29 @@ test_that("anova filtering and logging", {
     )
   )
 })
+
+test_that("constant racing metric does not error or eliminate ties (#137)", {
+  skip_if(getRversion() < "4.0.0")
+  skip_if_not_installed("Matrix", "1.6-2")
+  skip_if_not_installed("lme4", "1.1-35.1")
+
+  set.seed(1)
+  dat <- data.frame(y = rep(1, 60), x1 = rnorm(60), x2 = rnorm(60))
+  folds <- vfold_cv(dat, v = 5)
+  spec <-
+    decision_tree(cost_complexity = tune(), tree_depth = tune()) |>
+    set_engine("rpart") |>
+    set_mode("regression")
+
+  grid_res <- spec |>
+    tune_grid(y ~ ., folds, grid = 6, metrics = metric_set(rmse))
+
+  filtered <- finetune:::test_parameters_gls(grid_res)
+  expect_all_true(filtered$pass)
+  expect_equal(nrow(filtered), 6)
+
+  race_res <- spec |>
+    tune_race_anova(y ~ ., folds, grid = 6)
+  race_configs <- collect_metrics(race_res, summarize = FALSE)$.config
+  expect_length(unique(race_configs), 6)
+})

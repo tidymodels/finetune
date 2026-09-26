@@ -88,11 +88,12 @@ test_parameters_gls <- function(x, alpha = 0.05, eval_time = NULL) {
   if (maximize) {
     mod_est <-
       mod_est |>
-      dplyr::mutate(pass = ifelse(upper > 0, TRUE, FALSE))
+      # Non-strict so that exact ties (e.g. a constant metric) survive
+      dplyr::mutate(pass = ifelse(upper >= 0, TRUE, FALSE))
   } else {
     mod_est <-
       mod_est |>
-      dplyr::mutate(pass = ifelse(lower < 0, TRUE, FALSE))
+      dplyr::mutate(pass = ifelse(lower <= 0, TRUE, FALSE))
   }
 
   best_res <-
@@ -597,13 +598,24 @@ fit_anova <- function(x, dat, alpha) {
     )
   )
 
-  if (inherits(mod, "try-error") || !isTRUE(mod@optinfo$conv$opt == 0)) {
-    mod <- lm(.estimate ~ .config, data = dat)
+  point_est <- NULL
+  if (!inherits(mod, "try-error") && isTRUE(mod@optinfo$conv$opt == 0)) {
+    # A converged fit can still have a degenerate vcov (e.g. constant metric)
+    point_est <- suppressWarnings(try(
+      coef(summary(mod)) |>
+        mod2tibble() |>
+        dplyr::select(.config, estimate = Estimate),
+      silent = TRUE
+    ))
   }
-  point_est <-
-    coef(summary(mod)) |>
-    mod2tibble() |>
-    dplyr::select(.config, estimate = Estimate)
+
+  if (is.null(point_est) || inherits(point_est, "try-error")) {
+    mod <- lm(.estimate ~ .config, data = dat)
+    point_est <-
+      coef(summary(mod)) |>
+      mod2tibble() |>
+      dplyr::select(.config, estimate = Estimate)
+  }
   interval_est <-
     confint(mod, method = "Wald", level = 1 - alpha, quiet = TRUE) |>
     mod2tibble() |>
